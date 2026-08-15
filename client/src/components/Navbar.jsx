@@ -26,7 +26,7 @@ export default function Navbar() {
           </div>
           
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="AVF Logo" className="h-12 w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
+            <img src="/logo.png" alt="AVF Logo" className="h-20 w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
           </div>
         </div>
 
