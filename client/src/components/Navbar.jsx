@@ -26,12 +26,7 @@ export default function Navbar() {
           </div>
           
           <div className="flex items-center gap-3">
-            <span className="font-bebas text-4xl text-[#D9A11E] tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">AVF</span>
-            <div className="w-[1px] h-8 bg-neutral-700 mx-1" />
-            <div className="flex flex-col justify-center pt-1">
-              <span className="font-montserrat font-semibold text-[10px] tracking-[0.2em] leading-tight text-white uppercase drop-shadow-[0_1px_1px_rgba(0,0,0,1)]">Akash Verma</span>
-              <span className="font-montserrat text-[8px] tracking-[0.3em] leading-tight text-neutral-400 uppercase">Film Products</span>
-            </div>
+            <img src="/logo.png" alt="AVF Logo" className="h-12 w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
           </div>
         </div>
 
