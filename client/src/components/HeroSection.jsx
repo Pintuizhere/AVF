@@ -1,8 +1,21 @@
-import { Play, Camera, BatteryMedium } from "lucide-react";
+import { Play, BatteryMedium } from "lucide-react";
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <section id="home" className="relative min-h-screen pt-24 pb-12 flex items-center justify-center overflow-hidden bg-noise">
+    <section id="home" className="relative min-h-screen pt-24 pb-12 flex items-center justify-center overflow-hidden bg-black">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/hero-bg.jpg"
+          alt="Cinematic Camera Setup"
+          fill
+          className="object-cover opacity-80"
+          priority
+        />
+        {/* Gradient overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10" />
+      </div>
       <div className="absolute top-28 left-8 w-16 h-16 border-t-2 border-l-2 border-white/30" />
       <div className="absolute top-28 right-8 w-16 h-16 border-t-2 border-r-2 border-white/30" />
       <div className="absolute bottom-8 left-8 w-16 h-16 border-b-2 border-l-2 border-white/30" />
@@ -14,6 +27,13 @@ export default function HeroSection() {
         <span className="tracking-widest font-bold">REC</span>
       </div>
 
+      {/* Audio meter bars mockup */}
+      <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-60 z-20 hidden md:flex">
+        {[...Array(20)].map((_, i) => (
+          <div key={i} className={`h-1 w-6 ${i > 15 ? 'bg-red-500' : i > 10 ? 'bg-yellow-500' : 'bg-white'}`} />
+        ))}
+      </div>
+
 
       <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         
@@ -21,7 +41,7 @@ export default function HeroSection() {
         <div className="flex flex-col items-start gap-8">
           <div className="flex flex-col">
             <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] text-white">
-              We Don't Just<br />
+              We Don&apos;t Just<br />
               Create Videos,
             </h1>
             <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 font-bold">
@@ -47,20 +67,8 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Right Content - Camera Image Placeholder */}
-        <div className="relative h-[400px] w-full flex items-center justify-center">
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-40">
-            {/* Audio meter bars mockup */}
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className={`h-1 w-8 ${i > 15 ? 'bg-red-500' : i > 10 ? 'bg-yellow-500' : 'bg-white'}`} />
-            ))}
-          </div>
-          
-          <div className="w-full max-w-md aspect-video bg-neutral-900/50 border border-white/5 rounded-2xl flex flex-col items-center justify-center shadow-2xl backdrop-blur-sm relative group overflow-hidden">
-             <Camera className="w-24 h-24 text-neutral-700 group-hover:scale-110 transition-transform duration-700" />
-             <span className="mt-4 text-neutral-500 font-mono text-xs uppercase tracking-widest">Camera Asset</span>
-          </div>
-        </div>
+        {/* Right Content - Empty to let background show */}
+        <div className="hidden lg:block relative h-[400px] w-full"></div>
       </div>
 
       {/* Bottom info */}

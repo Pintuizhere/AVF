@@ -11,7 +11,6 @@ const steps = [
 export default function ProcessSection() {
   return (
     <section className="relative bg-[#f5f0e6] text-black py-32 px-6">
-      <div className="paper-edge-top" />
       
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="mb-16">
@@ -49,8 +48,6 @@ export default function ProcessSection() {
           })}
         </div>
       </div>
-      
-      <div className="paper-edge-bottom" />
     </section>
   );
 }

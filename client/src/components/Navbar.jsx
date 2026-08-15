@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import { CircleDot } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const pathname = usePathname();
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-[1400px] z-50">
       {/* Main Camera Body Frame */}
@@ -33,24 +36,27 @@ export default function Navbar() {
         {/* Center: Navigation Panel */}
         <nav className="relative z-10 hidden md:flex items-center gap-2 px-8 h-[56px] bg-black/40 border border-[#1a1a1a] rounded-[16px] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
           {[
-            { name: "Home", href: "#home", active: true },
-            { name: "About Us", href: "#about" },
-            { name: "Services", href: "#services" },
-            { name: "Our Work", href: "#work" },
-            { name: "BTS", href: "#bts" },
-            { name: "Contact Us", href: "#contact" }
-          ].map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`font-montserrat font-semibold text-xs tracking-[0.15em] uppercase px-5 py-2.5 rounded-sm transition-all duration-300 ${link.active
-                  ? "bg-[#FCA603] text-black shadow-[0_0_15px_rgba(252,166,3,0.4)]"
-                  : "text-white hover:text-[#FCA603]"
-                }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+            { name: "Home", href: "/" },
+            { name: "About Us", href: "/about" },
+            { name: "Services", href: "/services" },
+            { name: "Our Work", href: "/#work" },
+            { name: "BTS", href: "/#bts" },
+            { name: "Contact Us", href: "/#contact" }
+          ].map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`font-montserrat font-semibold text-xs tracking-[0.15em] uppercase px-5 py-2.5 rounded-sm transition-all duration-300 ${isActive
+                    ? "bg-[#FCA603] text-black shadow-[0_0_15px_rgba(252,166,3,0.4)]"
+                    : "text-white hover:text-[#FCA603]"
+                  }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right Side: Camera Dial */}

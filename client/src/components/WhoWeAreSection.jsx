@@ -3,7 +3,6 @@ import { ArrowRight, Image as ImageIcon } from "lucide-react";
 export default function WhoWeAreSection() {
   return (
     <section id="about" className="relative bg-[#f5f0e6] text-black py-32 px-6">
-      <div className="paper-edge-top" />
       
       <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
@@ -64,8 +63,6 @@ export default function WhoWeAreSection() {
         </div>
         
       </div>
-
-      <div className="paper-edge-bottom" />
     </section>
   );
 }
