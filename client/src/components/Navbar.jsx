@@ -1,12 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
+import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-[1400px] z-50">
+    <>
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-[1400px] z-50">
       {/* Main Camera Body Frame */}
       <header className="relative w-full h-[88px] rounded-[24px] bg-[#0A0A0A] border border-[#2C2C2C] shadow-[0_20px_40px_rgba(0,0,0,0.8),_inset_0_2px_4px_rgba(255,255,255,0.1),_inset_0_-4px_10px_rgba(0,0,0,0.5)] flex items-center justify-between px-2 overflow-visible">
 
@@ -39,9 +45,9 @@ export default function Navbar() {
             { name: "Home", href: "/" },
             { name: "About Us", href: "/about" },
             { name: "Services", href: "/services" },
-            { name: "Our Work", href: "/#work" },
-            { name: "BTS", href: "/#bts" },
-            { name: "Contact Us", href: "/#contact" }
+            { name: "Our Work", href: "/our-work" },
+            { name: "BTS", href: "/bts" },
+            { name: "Contact Us", href: "/contact" }
           ].map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -59,9 +65,10 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Side: Camera Dial */}
+        {/* Right Side: Camera Dial (Desktop) & Hamburger (Mobile) */}
         <div className="relative z-10 pr-2">
-          <div className="w-[64px] h-[64px] rounded-full bg-[#111] border-2 border-[#222] shadow-[inset_0_4px_10px_rgba(255,255,255,0.05),_0_4px_10px_rgba(0,0,0,0.8)] relative flex items-center justify-center cursor-pointer group">
+          {/* Desktop Dial */}
+          <div className="hidden md:flex w-[64px] h-[64px] rounded-full bg-[#111] border-2 border-[#222] shadow-[inset_0_4px_10px_rgba(255,255,255,0.05),_0_4px_10px_rgba(0,0,0,0.8)] relative items-center justify-center cursor-pointer group">
             {/* Ridges around dial */}
             <div className="absolute inset-1 rounded-full border-2 border-[#333] border-dashed opacity-50 group-hover:rotate-12 transition-transform duration-500" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/5 to-transparent mix-blend-overlay" />
@@ -72,6 +79,14 @@ export default function Navbar() {
               <div className="w-2 h-2 rounded-full bg-[#222]" />
             </div>
           </div>
+
+          {/* Mobile Hamburger Trigger */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="md:hidden w-12 h-12 flex items-center justify-center text-white hover:text-[#FCA603] transition-colors bg-black/40 border border-[#1a1a1a] rounded-xl shadow-inner"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
         </div>
 
         {/* Screw heads details */}
@@ -99,5 +114,11 @@ export default function Navbar() {
       </div>
 
     </div>
+
+      <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)} 
+      />
+    </>
   );
 }
