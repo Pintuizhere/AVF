@@ -10,7 +10,7 @@ export default function AdminLoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <main className="relative h-screen w-full bg-black flex flex-col justify-between overflow-hidden text-white font-sans">
+    <main className="relative min-h-screen w-full bg-black flex flex-col justify-between overflow-x-hidden text-white font-sans">
       
       {/* Background with Camera Image */}
       <div className="absolute inset-0 z-0">
@@ -31,8 +31,8 @@ export default function AdminLoginPage() {
       <div className="absolute top-8 right-8 w-12 h-12 border-t-[1px] border-r-[1px] border-neutral-500 z-10 opacity-50" />
       <div className="absolute bottom-32 right-8 w-12 h-12 border-b-[1px] border-r-[1px] border-neutral-500 z-10 opacity-50" />
 
-      {/* Header */}
-      <header className="relative z-20 flex items-center justify-between px-8 md:px-16 pt-8">
+      {/* Desktop Header */}
+      <header className="hidden md:flex absolute top-0 left-0 w-full z-30 items-center justify-between px-8 md:px-16 pt-8">
         <Link href="/">
           <img src="/logo.png" alt="AVF Logo" className="h-10 w-auto object-contain" />
         </Link>
@@ -42,10 +42,15 @@ export default function AdminLoginPage() {
       </header>
 
       {/* Main Content (Centered Login Card) */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-4 py-8 md:py-12 my-auto">
         
+        {/* Mobile Logo */}
+        <Link href="/" className="md:hidden mb-10 mt-2 z-30 flex justify-center">
+          <img src="/logo.png" alt="AVF Logo" className="h-12 w-auto object-contain drop-shadow-lg" />
+        </Link>
+
         {/* Card Container */}
-        <div className="relative w-full max-w-md bg-[#0a0a0a] rounded-sm shadow-2xl border border-[#222] p-8 md:p-10 pb-12">
+        <div className="relative w-full max-w-md bg-[#0a0a0a] rounded-sm shadow-2xl border border-[#222] p-6 pb-10 md:p-10 md:pb-12">
           
           {/* Torn Paper Label (Absolute Top Center) */}
           <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-48 h-14 bg-[#ebe4d8] shadow-[0_5px_15px_rgba(0,0,0,0.5)] flex items-center justify-center z-30">
