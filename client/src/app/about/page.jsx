@@ -5,7 +5,6 @@ import AboutStorySection from "@/components/AboutStorySection";
 import DirectorNoteSection from "@/components/DirectorNoteSection";
 import PhilosophySection from "@/components/PhilosophySection";
 import ManifestoSection from "@/components/ManifestoSection";
-import CtaSection from "@/components/CtaSection";
 
 export default function AboutPage() {
   return (
@@ -18,7 +17,6 @@ export default function AboutPage() {
         <DirectorNoteSection />
         <PhilosophySection />
         <ManifestoSection />
-        <CtaSection />
       </main>
 
       <Footer />
