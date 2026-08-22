@@ -24,15 +24,6 @@ export default function Navbar() {
 
         {/* Left Side: Camera Lens & Logo */}
         <div className="relative z-10 flex items-center gap-6 pl-2">
-          {/* Big Lens Element */}
-          <div className="w-[72px] h-[72px] rounded-full border-4 border-[#1a1a1a] bg-black shadow-[inset_0_4px_15px_rgba(0,0,0,1),_0_2px_5px_rgba(255,255,255,0.05)] flex items-center justify-center relative overflow-hidden">
-            {/* Lens reflections */}
-            <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent,rgba(255,255,255,0.1),transparent,rgba(255,255,255,0.1),transparent)] opacity-50" />
-            <div className="absolute top-2 left-2 w-10 h-10 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-[2px]" />
-            <div className="w-10 h-10 rounded-full border border-[#333] bg-[#050505] relative flex items-center justify-center shadow-inner">
-              <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-green-900/40 to-blue-900/40 border border-white/5" />
-            </div>
-          </div>
 
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="AVF Logo" className="h-15 w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
@@ -46,8 +37,7 @@ export default function Navbar() {
             { name: "About Us", href: "/about" },
             { name: "Services", href: "/services" },
             { name: "Our Work", href: "/our-work" },
-            { name: "BTS", href: "/bts" },
-            { name: "Contact Us", href: "/contact" }
+            { name: "BTS", href: "/bts" }
           ].map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -65,19 +55,15 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Side: Camera Dial (Desktop) & Hamburger (Mobile) */}
-        <div className="relative z-10 pr-2">
-          {/* Desktop Dial */}
-          <div className="hidden md:flex w-[64px] h-[64px] rounded-full bg-[#111] border-2 border-[#222] shadow-[inset_0_4px_10px_rgba(255,255,255,0.05),_0_4px_10px_rgba(0,0,0,0.8)] relative items-center justify-center cursor-pointer group">
-            {/* Ridges around dial */}
-            <div className="absolute inset-1 rounded-full border-2 border-[#333] border-dashed opacity-50 group-hover:rotate-12 transition-transform duration-500" />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/5 to-transparent mix-blend-overlay" />
-            <div className="w-1.5 h-4 bg-[#FCA603] absolute top-2 rounded-full shadow-[0_0_5px_rgba(252,166,3,0.5)]" />
-
-            {/* Center button */}
-            <div className="w-6 h-6 rounded-full bg-black shadow-inner border border-[#333] flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-[#222]" />
-            </div>
+        {/* Right Side: Contact Button (Desktop) & Hamburger (Mobile) */}
+        <div className="relative z-10 pr-2 flex items-center gap-4">
+          <div className="hidden md:flex items-center h-[56px] px-2 bg-black/40 border border-[#1a1a1a] rounded-[16px] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+            <Link
+              href="/contact"
+              className="font-montserrat font-semibold text-xs tracking-[0.15em] uppercase px-5 py-2.5 rounded-sm bg-[#FCA603] text-black shadow-[0_0_15px_rgba(252,166,3,0.4)] hover:shadow-[0_0_25px_rgba(252,166,3,0.6)] transition-all duration-300"
+            >
+              Contact Us
+            </Link>
           </div>
 
           {/* Mobile Hamburger Trigger */}
@@ -89,22 +75,22 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Screw heads details */}
-        <div className="absolute top-3 left-[140px] w-1.5 h-1.5 rounded-full bg-[#111] border border-[#333] z-10 shadow-inner flex items-center justify-center">
-          <div className="w-1 h-[0.5px] bg-[#444] rotate-45" />
-        </div>
-        <div className="absolute top-3 right-[100px] w-1.5 h-1.5 rounded-full bg-[#111] border border-[#333] z-10 shadow-inner flex items-center justify-center">
-          <div className="w-1 h-[0.5px] bg-[#444] -rotate-12" />
-        </div>
-        <div className="absolute bottom-3 left-[140px] w-1.5 h-1.5 rounded-full bg-[#111] border border-[#333] z-10 shadow-inner flex items-center justify-center">
-          <div className="w-1 h-[0.5px] bg-[#444] rotate-90" />
-        </div>
       </header>
 
       {/* Hanging HUD Panel (ISO / f-stop / FPS) */}
-      <div className="absolute -bottom-[22px] left-1/2 -translate-x-1/2 z-0">
+      <div className="absolute top-[88px] left-1/2 -translate-x-1/2 z-0">
         <div className="bg-[#151515] border border-[#2c2c2c] border-t-0 rounded-b-lg px-8 py-1.5 flex items-center gap-6 shadow-[0_10px_20px_rgba(0,0,0,0.8)] relative">
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent rounded-b-lg pointer-events-none" />
+          
+          {/* Left Flare */}
+          <div className="absolute -top-[1px] -left-[12px] w-[13px] h-[13px] overflow-hidden pointer-events-none">
+            <div className="absolute top-0 right-0 w-[26px] h-[26px] bg-transparent rounded-tr-[13px] border border-[#2c2c2c] shadow-[0_0_0_13px_#151515]" />
+          </div>
+
+          {/* Right Flare */}
+          <div className="absolute -top-[1px] -right-[12px] w-[13px] h-[13px] overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-0 w-[26px] h-[26px] bg-transparent rounded-tl-[13px] border border-[#2c2c2c] shadow-[0_0_0_13px_#151515]" />
+          </div>
           <span className="font-montserrat font-semibold text-[9px] tracking-[0.2em] text-[#888] uppercase relative z-10">ISO 800</span>
           <div className="w-1 h-1 rounded-full bg-[#333] relative z-10" />
           <span className="font-montserrat font-semibold text-[9px] tracking-[0.2em] text-[#888] uppercase relative z-10">f/2.8</span>
