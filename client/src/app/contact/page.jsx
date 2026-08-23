@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import ContactHeroSection from "@/components/ContactHeroSection";
 import ContactFormSection from "@/components/ContactFormSection";
 import ContactFeaturesSection from "@/components/ContactFeaturesSection";
-import ContactCtaSection from "@/components/ContactCtaSection";
 
 export const metadata = {
   title: "Contact Us | Akash Verma Film Products",
@@ -20,8 +19,6 @@ export default function ContactPage() {
       <ContactFormSection />
 
       <ContactFeaturesSection />
-
-      <ContactCtaSection />
 
       <Footer />
     </main>

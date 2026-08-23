@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function BtsHeroSection() {
   return (
-    <section className="relative min-h-[90vh] pt-32 pb-16 flex flex-col justify-center bg-black overflow-hidden border-b-[1px] border-neutral-900">
+    <section className="relative min-h-[100dvh] pt-32 pb-16 flex flex-col justify-center bg-black overflow-hidden border-b-[1px] border-neutral-900">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image

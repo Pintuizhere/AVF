@@ -1,22 +1,57 @@
-import { ArrowRight, Film } from "lucide-react";
+import { ArrowRight, ChevronRight, Phone, Mail, MapPin } from "lucide-react";
+import Image from "next/image";
+
+const FacebookIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.61l.39-4H14V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+const InstagramIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+  </svg>
+);
+const YoutubeIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+  </svg>
+);
+const LinkedinIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect x="2" y="9" width="4" height="12"/>
+    <circle cx="4" cy="4" r="2"/>
+  </svg>
+);
 
 export default function Footer() {
   return (
     <footer id="contact" className="relative bg-black pt-24 pb-12 overflow-hidden border-t border-white/10 text-white">
       {/* Background cinematic elements */}
-      <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-full z-0 opacity-20 pointer-events-none">
+        <Image 
+          src="/images/hero-bg.jpg"
+          alt="Cinematic Background"
+          fill
+          className="object-cover object-center"
+        />
+      </div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-black/80 to-transparent z-0 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none mix-blend-overlay" />
       
       <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
         
         {/* Left: Lens element */}
-        <div className="hidden md:flex w-64 h-64 border-4 border-neutral-800 rounded-full items-center justify-center -ml-16 bg-neutral-950 relative shadow-2xl">
-           <div className="absolute inset-0 rounded-full border-t border-white/5" />
-           <div className="w-48 h-48 border-8 border-black rounded-full flex items-center justify-center bg-gradient-to-br from-neutral-800 to-black relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent opacity-50" />
-              <div className="w-24 h-24 rounded-full bg-black border-2 border-neutral-700 relative flex items-center justify-center shadow-inner">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-green-900/20 to-blue-900/20 border border-white/5" />
-              </div>
-           </div>
+        <div className="hidden md:flex w-72 h-72 items-center justify-center -ml-16 relative z-10">
+           <Image
+             src="/images/camera_lens_PNG7.png"
+             alt="Camera Lens"
+             fill
+             className="object-contain object-center filter drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]"
+           />
         </div>
 
         {/* Center: CTA */}
@@ -31,30 +66,107 @@ export default function Footer() {
           </button>
         </div>
 
-        {/* Right: Paper Note / Film roll */}
-        <div className="relative w-64 h-64 hidden md:flex items-center justify-center">
-           <div className="absolute -left-8 top-12 z-0 opacity-40">
-             <Film className="w-32 h-32 text-neutral-600 -rotate-12" />
-           </div>
-           
-           <div className="w-48 aspect-square bg-[#f5f0e6] text-black p-6 shadow-xl rotate-6 z-10 relative border border-neutral-300 flex flex-col justify-center">
-             <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/60 backdrop-blur-sm -rotate-2 shadow-sm" />
-             <p className="font-script text-3xl leading-snug">
-               Lights,<br />
-               Camera,<br />
-               AVF.
-             </p>
-           </div>
+        {/* Right: Image */}
+        <div className="relative w-72 h-72 hidden md:flex items-center justify-center -mr-8">
+           <Image
+             src="/images/retakeflip.png"
+             alt="Retake Flipboard"
+             fill
+             className="object-contain object-center filter drop-shadow-[0_0_20px_rgba(0,0,0,0.6)]"
+           />
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 mt-24 flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 text-neutral-500 text-xs tracking-wider">
-        <p>&copy; {new Date().getFullYear()} AVF Akash Verma Film Products. All Rights Reserved.</p>
-        <div className="flex gap-6 mt-4 md:mt-0 uppercase font-bold text-[10px]">
-          <a href="#" className="hover:text-gold transition-colors">Instagram</a>
-          <a href="#" className="hover:text-gold transition-colors">Vimeo</a>
-          <a href="#" className="hover:text-gold transition-colors">YouTube</a>
-          <a href="#" className="hover:text-gold transition-colors">LinkedIn</a>
+      <div className="container mx-auto px-6 relative z-10 mt-24 pt-16 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          
+          {/* Column 1: Brand Info */}
+          <div className="flex flex-col gap-6">
+            <div className="relative w-32 h-16">
+              <Image 
+                src="/logo.png" 
+                alt="AVF Logo" 
+                fill 
+                className="object-contain object-left" 
+              />
+            </div>
+            <p className="text-sm text-neutral-400 leading-relaxed">
+              AVF is committed to creating premium visual experiences and telling stories with trust, quality, and excellence.
+            </p>
+            <div className="flex gap-3 mt-2">
+              {[FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon].map((Icon, idx) => (
+                <a key={idx} href="#" className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center hover:bg-gold hover:border-gold hover:text-black transition-all group">
+                  <Icon className="w-4 h-4 text-neutral-400 group-hover:text-black transition-colors" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Column 2: Quick Links */}
+          <div className="flex flex-col gap-6">
+            <h4 className="text-lg font-bold uppercase tracking-wider text-white">Quick Links</h4>
+            <ul className="flex flex-col gap-4">
+              {['Home', 'About Us', 'Projects', 'Amenities', 'Contact Us'].map((link, idx) => (
+                <li key={idx}>
+                  <a href="#" className="text-sm text-neutral-400 hover:text-gold transition-colors flex items-center gap-2 group">
+                    <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-gold transition-colors" />
+                    {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Services / Projects */}
+          <div className="flex flex-col gap-6">
+            <h4 className="text-lg font-bold uppercase tracking-wider text-white">Projects</h4>
+            <ul className="flex flex-col gap-4">
+              {['Corporate Films', 'Documentaries', 'Commercial Ads', 'Music Videos', 'All Projects'].map((link, idx) => (
+                <li key={idx}>
+                  <a href="#" className="text-sm text-neutral-400 hover:text-gold transition-colors flex items-center gap-2 group">
+                    <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-gold transition-colors" />
+                    {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Contact Us */}
+          <div className="flex flex-col gap-6">
+            <h4 className="text-lg font-bold uppercase tracking-wider text-white">Contact Us</h4>
+            <div className="flex flex-col gap-5">
+              <div className="flex items-start gap-4">
+                <Phone className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                <a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                  +91 9334713774 <br/> +91 9431584755
+                </a>
+              </div>
+              <div className="flex items-start gap-4">
+                <Mail className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                <a href="mailto:info@avf.com" className="text-sm text-neutral-400 hover:text-white transition-colors break-all">
+                  info@avf.com
+                </a>
+              </div>
+              <div className="flex items-start gap-4">
+                <MapPin className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                <span className="text-sm text-neutral-400 leading-relaxed">
+                  AVF Pvt. Ltd.<br/>
+                  Opposite Film City,<br/>
+                  Mumbai - 400001
+                </span>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        {/* Bottom Copyright Bar */}
+        <div className="border-t border-white/10 pt-8 pb-4 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-500 tracking-wider">
+          <p>&copy; {new Date().getFullYear()} AVF Productions. All Rights Reserved.</p>
+          <p className="mt-3 md:mt-0">
+            Developed by <span className="text-[#3b82f6] font-medium hover:text-blue-400 transition-colors cursor-pointer">anymediaworks</span>
+          </p>
         </div>
       </div>
     </footer>

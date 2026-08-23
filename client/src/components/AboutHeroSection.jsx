@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function AboutHeroSection() {
   return (
-    <section className="relative min-h-[85vh] pt-32 pb-24 flex items-center bg-black overflow-hidden">
+    <section className="relative min-h-screen pt-32 pb-24 flex items-center bg-black overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -35,7 +35,7 @@ export default function AboutHeroSection() {
           </h1>
 
           <p className="text-sm font-semibold tracking-wide text-neutral-300 leading-loose max-w-lg mt-4 border-l-2 border-gold pl-4">
-            AVF Akash Verma Film Products is a creative production house driven by passion, purpose and a relentless pursuit of visual excellence.
+            AVF Productions is a creative production house driven by passion, purpose and a relentless pursuit of visual excellence.
             <br/><br/>
             We don&apos;t just make videos, we create emotions that last a lifetime.
           </p>

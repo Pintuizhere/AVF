@@ -16,14 +16,13 @@ export default function WorkCtaSection() {
           <div className="lg:col-span-5 relative h-[300px] flex items-center justify-start">
             
             {/* Camera Lens Image */}
-            <div className="absolute -left-12 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full overflow-hidden filter drop-shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-neutral-800">
+            <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-96 h-96 filter drop-shadow-[0_0_30px_rgba(0,0,0,0.8)] z-10">
                <Image
-                 src="/images/hero-bg.jpg" // A placeholder lens
+                 src="/images/camera_lens_PNG7.png"
                  alt="Camera Lens"
                  fill
-                 className="object-cover object-center mix-blend-luminosity opacity-80"
+                 className="object-contain object-center"
                />
-               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/60" />
             </div>
 
             {/* Torn Paper Note */}

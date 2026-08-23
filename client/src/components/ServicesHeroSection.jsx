@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function ServicesHeroSection() {
   return (
-    <section className="relative min-h-[85vh] pt-32 pb-24 flex items-center bg-black overflow-hidden border-b-[8px] border-black border-dashed">
+    <section className="relative min-h-screen pt-32 pb-24 flex items-center bg-black overflow-hidden border-b-[8px] border-black border-dashed">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
