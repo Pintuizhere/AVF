@@ -25,14 +25,6 @@ export default function BtsHeroSection() {
       <div className="absolute top-24 right-10 w-8 h-8 border-t-2 border-r-2 border-neutral-600 z-20" />
       <div className="absolute bottom-24 right-10 w-8 h-8 border-b-2 border-r-2 border-neutral-600 z-20" />
 
-      {/* Camera HUD Elements */}
-      <div className="absolute top-24 left-1/2 -translate-x-1/2 flex items-center gap-6 text-neutral-400 font-mono text-[10px] uppercase tracking-widest z-20 bg-black/50 px-6 py-2 rounded-full border border-neutral-800 shadow-md">
-        <span>ISO 800</span>
-        <span className="w-1 h-1 rounded-full bg-gold"></span>
-        <span>F/2.8</span>
-        <span className="w-1 h-1 rounded-full bg-gold"></span>
-        <span>24FPS</span>
-      </div>
 
       {/* REC Indicator */}
       <div className="absolute top-24 right-12 flex items-center gap-2 text-red-600 font-mono text-sm z-20">
