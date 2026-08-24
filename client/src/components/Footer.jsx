@@ -82,9 +82,9 @@ export default function Footer() {
           
           {/* Column 1: Brand Info */}
           <div className="flex flex-col gap-6">
-            <div className="relative w-32 h-16">
+            <div className="relative w-44 h-24">
               <Image 
-                src="/logo.png" 
+                src="/images/logo.png" 
                 alt="AVF Logo" 
                 fill 
                 className="object-contain object-left" 
