@@ -81,29 +81,6 @@ export default function WorkHeroSection() {
           </div>
         </div>
       </section>
-
-      {/* Filter Navigation on Torn Paper Texture */}
-      <div className="relative w-full pt-8 pb-8 bg-[#eae3d5] z-30 shadow-[0_-15px_30px_rgba(0,0,0,0.8)] border-y-2 border-dashed border-[#b38f51]/40">
-        <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none mix-blend-multiply" />
-        
-        {/* Rough Top Edge effect */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-black opacity-10 blur-sm" />
-        
-        <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-wrap items-center justify-center lg:justify-start gap-4 md:gap-8">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              className={`px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all rounded-full ${
-                cat.active 
-                  ? "bg-gold text-black shadow-md" 
-                  : "bg-transparent text-[#2a2a2a] hover:text-black hover:bg-black/5"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </>
   );
 }

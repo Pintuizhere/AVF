@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WorkHeroSection from "@/components/WorkHeroSection";
+import WorkCategoryNav from "@/components/WorkCategoryNav";
 import WorkCategoryRow from "@/components/WorkCategoryRow";
 import WorkCtaSection from "@/components/WorkCtaSection";
 import { 
@@ -124,6 +125,8 @@ export default function OurWorkPage() {
       <Navbar />
       
       <WorkHeroSection />
+
+      <WorkCategoryNav />
 
       {/* Main Content Areas */}
       <div className="flex flex-col">

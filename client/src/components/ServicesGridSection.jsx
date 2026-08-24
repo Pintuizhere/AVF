@@ -62,7 +62,7 @@ export default function ServicesGridSection() {
   ];
 
   return (
-    <section className="relative bg-[#fdfbf7] text-black py-24 px-6 overflow-hidden">
+    <section className="relative bg-[#f5f0e6] text-black py-24 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
       <div className="container mx-auto max-w-[1400px]">
         
         {/* Section Title */}

@@ -2,7 +2,7 @@ import { Image as ImageIcon, Clapperboard, Film, Users, Globe } from "lucide-rea
 
 export default function AboutStorySection() {
   return (
-    <section id="story" className="relative bg-[#f5f0e6] text-black py-32 px-6">
+    <section id="story" className="relative bg-[#f5f0e6] text-black py-32 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
       
       <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         

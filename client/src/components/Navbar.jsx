@@ -57,10 +57,10 @@ export default function Navbar() {
 
         {/* Right Side: Contact Button (Desktop) & Hamburger (Mobile) */}
         <div className="relative z-10 pr-2 flex items-center gap-4">
-          <div className="hidden md:flex items-center h-[56px] px-2 bg-black/40 border border-[#1a1a1a] rounded-[16px] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+          <div className="hidden md:flex p-2 bg-[#151515] border border-[#252525] rounded-[24px] shadow-[inset_0_4px_10px_rgba(0,0,0,0.8)]">
             <Link
               href="/contact"
-              className="font-montserrat font-semibold text-xs tracking-[0.15em] uppercase px-5 py-2.5 rounded-sm bg-[#FCA603] text-black shadow-[0_0_15px_rgba(252,166,3,0.4)] hover:shadow-[0_0_25px_rgba(252,166,3,0.6)] transition-all duration-300"
+              className="font-montserrat font-bold text-[11px] tracking-[0.2em] uppercase px-5 py-3.5 rounded-[16px] bg-[#FCA603] text-black shadow-[0_0_25px_rgba(252,166,3,0.3)] hover:shadow-[0_0_35px_rgba(252,166,3,0.5)] hover:scale-[1.02] transition-all duration-300 flex items-center justify-center"
             >
               Contact Us
             </Link>

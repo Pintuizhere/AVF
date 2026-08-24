@@ -40,20 +40,20 @@ export default function HeroSection() {
         {/* Left Content */}
         <div className="flex flex-col items-start gap-8">
           <div className="flex flex-col">
-            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] text-white">
+            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] text-white opacity-0 animate-fade-up [animation-delay:200ms]">
               We Don&apos;t Just<br />
               Create Videos,
             </h1>
-            <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 font-bold">
+            <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 font-bold opacity-0 animate-fade-up [animation-delay:400ms]">
               We Tell Stories.
             </h2>
           </div>
 
-          <p className="text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4">
+          <p className="text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4 opacity-0 animate-fade-up [animation-delay:600ms]">
             Cinematic Visuals. Powerful Stories.<br />Timeless Impact.
           </p>
 
-          <div className="flex items-center gap-8 mt-4">
+          <div className="flex items-center gap-8 mt-4 opacity-0 animate-fade-up [animation-delay:800ms]">
             <button className="bg-gold text-black px-8 py-4 text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
               View Our Work
               <Play className="w-4 h-4" />
@@ -72,12 +72,29 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom info */}
-      <div className="absolute bottom-8 left-12 flex items-center gap-2 text-neutral-400">
+      <div className="absolute bottom-8 left-12 flex items-center gap-2 text-neutral-400 opacity-0 animate-fade-in [animation-delay:1000ms]">
         <BatteryMedium className="w-6 h-6" />
       </div>
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-sm tracking-[0.2em]">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-sm tracking-[0.2em] opacity-0 animate-fade-in [animation-delay:1000ms]">
         00:00:12:05
       </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes fade-up {
+          0% { opacity: 0; transform: translateY(40px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        .animate-fade-up {
+          animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-in {
+          animation: fade-in 1.5s ease-out forwards;
+        }
+      `}} />
     </section>
   );
 }

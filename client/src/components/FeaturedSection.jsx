@@ -72,7 +72,7 @@ export default function FeaturedSection() {
       <div className="container mx-auto px-6 relative group">
         <div 
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scrollbar-hide -mx-6 px-6"
+          className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 scroll-pl-6 md:scroll-pl-0"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {featuredItems.map((item) => (

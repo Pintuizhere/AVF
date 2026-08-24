@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function PhilosophySection() {
   return (
-    <section className="relative bg-[#f5f0e6] text-black py-32 px-6 overflow-hidden">
+    <section className="relative bg-[#f5f0e6] text-black py-32 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
       
       <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center z-10 relative">
         
