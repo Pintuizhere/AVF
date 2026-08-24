@@ -32,9 +32,16 @@ export default function BtsGallerySection() {
         {/* Modern Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {galleryImages.map((img, i) => (
-            <Link href={`/bts/${img.slug}`} key={i} className="block group">
+            <Link href={`/bts/${img.slug}`} key={i} className="block group relative mt-3 mr-3 md:mt-4 md:mr-4">
+              
+              {/* Stack Layer 2 (Deepest) */}
+              <div className="absolute inset-0 bg-white rounded-[5px] -translate-y-3 translate-x-3 md:-translate-y-4 md:translate-x-4 opacity-40 z-0 shadow-lg" />
+              
+              {/* Stack Layer 1 (Middle) */}
+              <div className="absolute inset-0 bg-white rounded-[5px] -translate-y-1.5 translate-x-1.5 md:-translate-y-2 md:translate-x-2 opacity-70 z-10 shadow-lg" />
+
               <div 
-                className="relative w-full aspect-[4/5] bg-neutral-900 overflow-hidden cursor-pointer rounded-sm"
+                className="relative w-full aspect-[4/5] bg-neutral-900 overflow-hidden cursor-pointer rounded-[5px] z-20 shadow-2xl border border-white/5"
               >
                 
                 {/* Main Image */}
@@ -71,7 +78,7 @@ export default function BtsGallerySection() {
                 </div>
                 
                 {/* Glassmorphic border effect on hover */}
-                <div className="absolute inset-0 border border-white/0 group-hover:border-white/10 transition-colors duration-700 pointer-events-none rounded-sm" />
+                <div className="absolute inset-0 border border-white/0 group-hover:border-white/10 transition-colors duration-700 pointer-events-none rounded-[5px]" />
               </div>
             </Link>
           ))}
