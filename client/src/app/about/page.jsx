@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AboutHeroSection from "@/components/AboutHeroSection";
 import AboutStorySection from "@/components/AboutStorySection";
 import DirectorNoteSection from "@/components/DirectorNoteSection";
 import PhilosophySection from "@/components/PhilosophySection";
@@ -12,9 +11,8 @@ export default function AboutPage() {
       <Navbar />
       
       <main>
-        <AboutHeroSection />
-        <AboutStorySection />
         <DirectorNoteSection />
+        <AboutStorySection />
         <PhilosophySection />
         <ManifestoSection />
       </main>

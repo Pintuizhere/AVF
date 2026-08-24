@@ -2,21 +2,21 @@ import { Image as ImageIcon, Clapperboard, Film, Users, Globe } from "lucide-rea
 
 export default function AboutStorySection() {
   return (
-    <section id="story" className="relative bg-[#f5f0e6] text-black py-32 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
+    <section id="story" className="relative bg-[#f5f0e6] text-black py-20 lg:py-32 px-4 md:px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden w-full">
       
       <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
         {/* Left: Scattered Photos / Polaroids */}
-        <div className="relative h-[500px] w-full flex items-center justify-center">
+        <div className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center">
           {/* Back photo */}
-          <div className="absolute top-10 left-10 w-64 aspect-[4/5] bg-white p-4 pb-16 shadow-xl -rotate-12 flex flex-col grayscale opacity-80 border border-neutral-200">
+          <div className="absolute top-4 md:top-10 left-4 md:left-10 w-48 md:w-64 aspect-[4/5] bg-white p-2 md:p-4 pb-12 md:pb-16 shadow-xl -rotate-12 flex flex-col grayscale opacity-80 border border-neutral-200">
             <div className="flex-1 bg-neutral-200 flex items-center justify-center border border-neutral-300">
-               <ImageIcon className="w-12 h-12 text-neutral-400" />
+               <ImageIcon className="w-8 h-8 md:w-12 md:h-12 text-neutral-400" />
             </div>
           </div>
           
           {/* Main front photo */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 aspect-square bg-white p-4 pb-20 shadow-2xl rotate-3 border border-neutral-200 z-10">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-80 aspect-square bg-white p-2 md:p-4 pb-16 md:pb-20 shadow-2xl rotate-3 border border-neutral-200 z-10">
             <div className="w-full h-full bg-neutral-900 flex items-center justify-center rounded-sm overflow-hidden relative border-4 border-black/10 shadow-inner">
                <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.8)_100%)] z-10" />
                {/* Simulating a lens center in the photo */}
@@ -24,10 +24,10 @@ export default function AboutStorySection() {
                   <div className="w-16 h-16 rounded-full border-4 border-neutral-600 bg-neutral-900" />
                </div>
             </div>
-            <div className="absolute bottom-6 left-6 font-script text-2xl text-neutral-800 -rotate-2">
+            <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 font-script text-lg md:text-2xl text-neutral-800 -rotate-2">
               AVF - Behind every frame
             </div>
-            <div className="absolute bottom-1 right-6 font-script text-2xl text-neutral-800 -rotate-2">
+            <div className="absolute bottom-1 right-4 md:right-6 font-script text-lg md:text-2xl text-neutral-800 -rotate-2">
               is a vision
             </div>
           </div>
@@ -38,9 +38,9 @@ export default function AboutStorySection() {
         </div>
 
         {/* Right: Text Content */}
-        <div className="flex flex-col items-start z-10 w-full">
-          <span className="font-script text-gold text-3xl mb-2 font-bold">Our Story</span>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-tight mb-6">
+        <div className="flex flex-col items-start z-10 w-full mt-8 lg:mt-0">
+          <span className="font-script text-gold text-2xl md:text-3xl mb-2 font-bold">Our Story</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-tight mb-6">
             The Journey Behind AVF
           </h2>
           <p className="text-neutral-800 leading-relaxed mb-10 text-sm max-w-lg font-medium">

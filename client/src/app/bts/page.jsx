@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import BtsHeroSection from "@/components/BtsHeroSection";
 import BtsStatsSection from "@/components/BtsStatsSection";
 import BtsGallerySection from "@/components/BtsGallerySection";
-import BtsCtaSection from "@/components/BtsCtaSection";
 
 export const metadata = {
   title: "Behind The Scenes | Akash Verma Film Products",
@@ -20,8 +19,6 @@ export default function BtsPage() {
       <BtsStatsSection />
 
       <BtsGallerySection />
-
-      <BtsCtaSection />
 
       <Footer />
     </main>

@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import WorkHeroSection from "@/components/WorkHeroSection";
 import WorkCategoryNav from "@/components/WorkCategoryNav";
 import WorkCategoryRow from "@/components/WorkCategoryRow";
-import WorkCtaSection from "@/components/WorkCtaSection";
 import { 
   Film, 
   CalendarDays, 
@@ -141,8 +140,6 @@ export default function OurWorkPage() {
           </section>
         ))}
       </div>
-
-      <WorkCtaSection />
 
       <Footer />
     </main>
