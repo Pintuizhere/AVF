@@ -8,6 +8,7 @@ import ReviewsSection from "@/components/ReviewsSection";
 import ClientsSection from "@/components/ClientsSection";
 import Footer from "@/components/Footer";
 import FloatingQuickActions from "@/components/FloatingQuickActions";
+import ExploreWorkSection from "@/components/ExploreWorkSection";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <ReelsSection />
         <ServicesSection />
         <ProcessSection />
+        <ExploreWorkSection />
         <ReviewsSection />
         <ClientsSection />
       </main>

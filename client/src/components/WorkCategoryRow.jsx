@@ -31,28 +31,8 @@ export default function WorkCategoryRow({ title, projects }) {
                 key={index} 
                 className="relative group w-full aspect-[4/3] p-2 md:p-3 bg-[#131313] cursor-pointer border border-neutral-800 rounded-sm flex flex-col justify-center shadow-[0_5px_20px_rgba(0,0,0,0.8)] hover:border-neutral-600 transition-colors duration-500"
               >
-                {/* Film Strip Holes Top */}
-                <div 
-                  className="absolute top-1 md:top-1.5 left-0 right-0 h-2 md:h-2.5 w-full opacity-100"
-                  style={{ 
-                    backgroundImage: "radial-gradient(circle, #000 2.5px, transparent 3px)", 
-                    backgroundSize: "14px 100%",
-                    backgroundPosition: "center"
-                  }}
-                />
-                
-                {/* Film Strip Holes Bottom */}
-                <div 
-                  className="absolute bottom-1 md:bottom-1.5 left-0 right-0 h-2 md:h-2.5 w-full opacity-100"
-                  style={{ 
-                    backgroundImage: "radial-gradient(circle, #000 2.5px, transparent 3px)", 
-                    backgroundSize: "14px 100%",
-                    backgroundPosition: "center"
-                  }}
-                />
-
                 {/* Inner Frame */}
-                <div className="relative w-full h-full rounded-sm overflow-hidden bg-black border border-[#222] mt-2 mb-2 group-hover:border-neutral-700 transition-colors duration-500">
+                <div className="relative w-full h-full rounded-sm overflow-hidden bg-black border border-[#222] group-hover:border-neutral-700 transition-colors duration-500">
                   <Image
                     src={project.image}
                     alt={project.title}

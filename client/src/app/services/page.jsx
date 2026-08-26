@@ -2,8 +2,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ServicesHeroSection from "@/components/ServicesHeroSection";
 import ServicesGridSection from "@/components/ServicesGridSection";
-import ExploreWorkSection from "@/components/ExploreWorkSection";
-import ServicesCtaSection from "@/components/ServicesCtaSection";
 
 export const metadata = {
   title: "Services | AVF - Akash Verma Film Products",
@@ -18,8 +16,6 @@ export default function ServicesPage() {
       <main>
         <ServicesHeroSection />
         <ServicesGridSection />
-        <ExploreWorkSection />
-        <ServicesCtaSection />
       </main>
 
       <Footer />

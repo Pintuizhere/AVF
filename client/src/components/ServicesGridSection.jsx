@@ -108,14 +108,9 @@ export default function ServicesGridSection() {
                     {service.title}
                   </h3>
                   
-                  <p className="text-xs text-neutral-400 leading-relaxed font-medium mb-8 whitespace-pre-line flex-1">
+                  <p className="text-xs text-neutral-400 leading-relaxed font-medium whitespace-pre-line flex-1">
                     {service.description}
                   </p>
-                  
-                  <a href={`/services#${service.id}`} className="flex items-center gap-2 text-[10px] font-bold text-gold uppercase tracking-[0.2em] hover:text-white transition-colors mt-auto">
-                    View Details
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
                 </div>
               </div>
             );
