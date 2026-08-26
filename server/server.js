@@ -25,6 +25,11 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/leads", require("./routes/leadRoutes"));
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/featured", require("./routes/featuredRoutes"));
+app.use("/api/shorts", require("./routes/shortRoutes"));
+app.use("/api/services", require("./routes/serviceRoutes"));
+app.use("/api/bts", require("./routes/btsRoutes"));
+app.use("/api/testimonials", require("./routes/testimonialRoutes"));
+app.use("/api/stats", require("./routes/statRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));
 // app.use("/api/projects", require("./routes/projectRoutes"));
 

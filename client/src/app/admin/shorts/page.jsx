@@ -1,69 +1,113 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Save, Trash2, X, Play, Image as ImageIcon, Video, Link as LinkIcon, UploadCloud } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Save, Trash2, X, Play, Image as ImageIcon, Video, Link as LinkIcon, UploadCloud, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 export default function AdminShortsPage() {
-  const [shorts, setShorts] = useState([
-    {
-      id: 1,
-      title: "Monitor Nonstop",
-      category: "Productivity",
-      type: "video",
-      src: "https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=600&auto=format&fit=crop",
-      url: "https://youtube.com/shorts/123",
-    },
-    {
-      id: 2,
-      title: "Guarantees",
-      category: "Business",
-      type: "image",
-      src: "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=600&auto=format&fit=crop",
-      url: "",
-    },
-    {
-      id: 3,
-      title: "On Demand",
-      category: "Tech",
-      type: "video",
-      src: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop",
-      url: "",
-    },
-    {
-      id: 4,
-      title: "Tech Review",
-      category: "Gadgets",
-      type: "video",
-      src: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=600&auto=format&fit=crop",
-      url: "",
-    }
-  ]);
-
+  const [shorts, setShorts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newItem, setNewItem] = useState({ title: "", category: "", type: "video", src: "", url: "" });
+  const [newItem, setNewItem] = useState({ title: "", category: "", type: "video", url: "" });
+  const [newMediaFile, setNewMediaFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef(null);
 
-  const handleUpdate = (id, field, value) => {
-    setShorts(prev => prev.map(item => item.id === id ? { ...item, [field]: value } : item));
+  useEffect(() => {
+    fetchShorts();
+  }, []);
+
+  const fetchShorts = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/shorts");
+      const data = await res.json();
+      setShorts(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeShort = (id) => {
-    setShorts(prev => prev.filter(item => item.id !== id));
+  const handleUpdateLocal = (id, field, value) => {
+    setShorts(prev => prev.map(item => item._id === id ? { ...item, [field]: value } : item));
   };
 
-  const handleAddNewItem = () => {
-    if (!newItem.title) return;
-    const itemToAdd = {
-      id: Date.now(),
-      title: newItem.title,
-      category: newItem.category || "Shorts",
-      type: newItem.type,
-      src: newItem.src || "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=600&auto=format&fit=crop",
-      url: newItem.url
-    };
-    setShorts(prev => [itemToAdd, ...prev]);
-    setIsAdding(false);
-    setNewItem({ title: "", category: "", type: "video", src: "", url: "" });
+  const saveUpdateToBackend = async (id, field, value) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      await fetch(`http://localhost:5000/api/shorts/${id}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ [field]: value }),
+      });
+    } catch (err) {
+      console.error("Failed to update field:", field);
+    }
+  };
+
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmId) return;
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`http://localhost:5000/api/shorts/${deleteConfirmId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) fetchShorts();
+    } catch (err) {
+      console.error("Failed to delete", err);
+    } finally {
+      setDeleteConfirmId(null);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewMediaFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAddNewItem = async () => {
+    if (!newItem.title || !newMediaFile) {
+      alert("Title and Thumbnail are required.");
+      return;
+    }
+
+    setSubmitting(true);
+    const formData = new FormData();
+    Object.keys(newItem).forEach(key => formData.append(key, newItem[key]));
+    formData.append("media", newMediaFile);
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/shorts", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
+      });
+      if (res.ok) {
+        setIsAdding(false);
+        setNewItem({ title: "", category: "", type: "video", url: "" });
+        setNewMediaFile(null);
+        setPreviewUrl(null);
+        fetchShorts();
+      } else {
+        alert("Upload failed.");
+      }
+    } catch (err) {
+      console.error("Failed to create", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -73,7 +117,7 @@ export default function AdminShortsPage() {
       <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border border-[#1a1a1a] rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl mt-2">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold text-white">Manage Shorts (Reels)</h1>
-          <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Live WYSIWYG Editor. Click directly on text to edit.</p>
+          <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Live WYSIWYG Editor. Click directly on text to edit (auto-saves on blur).</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           {!isAdding && (
@@ -84,9 +128,6 @@ export default function AdminShortsPage() {
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" /> Add Short
             </button>
           )}
-          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-gold hover:bg-gold/90 text-black text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-md transition-colors shadow-[0_0_15px_rgba(252,166,3,0.3)]">
-            <Save className="w-3 h-3 sm:w-4 sm:h-4 stroke-[2]" /> Save Changes
-          </button>
         </div>
       </div>
 
@@ -146,10 +187,14 @@ export default function AdminShortsPage() {
               <div className="flex flex-col gap-6 mt-2">
                 <div className="flex flex-col gap-2">
                   <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Upload File (Thumbnail/Video)</label>
-                  <div className="w-full h-24 border-2 border-dashed border-[#222] hover:border-gold/50 rounded-lg flex flex-col items-center justify-center bg-[#111] transition-colors cursor-pointer group relative overflow-hidden">
-                    {newItem.src ? (
+                  <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,video/*" />
+                  <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full h-24 border-2 border-dashed border-[#222] hover:border-gold/50 rounded-lg flex flex-col items-center justify-center bg-[#111] transition-colors cursor-pointer group relative overflow-hidden"
+                  >
+                    {previewUrl ? (
                       <>
-                        <img src={newItem.src} alt="Preview" className="w-full h-full object-cover opacity-50" />
+                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover opacity-50" />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="text-xs font-bold text-white bg-black/60 px-3 py-1 rounded">Change Media</span>
                         </div>
@@ -188,8 +233,8 @@ export default function AdminShortsPage() {
               <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Live Preview</span>
               <div className="relative w-full max-w-[240px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl border border-white/10">
                 <div className="absolute inset-0 z-0 bg-neutral-900">
-                  {newItem.src ? (
-                    <img src={newItem.src} alt="Preview" className="w-full h-full object-cover" />
+                  {previewUrl ? (
+                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-neutral-700">
                       <ImageIcon className="w-8 h-8 mb-2" />
@@ -221,10 +266,11 @@ export default function AdminShortsPage() {
           <div className="mt-8 flex justify-end">
             <button 
               onClick={handleAddNewItem}
-              disabled={!newItem.title}
+              disabled={submitting || !newItem.title}
               className="flex items-center gap-2 px-6 py-3 bg-gold hover:bg-gold/90 disabled:opacity-50 disabled:cursor-not-allowed text-black text-xs font-bold uppercase tracking-widest rounded-md transition-colors"
             >
-              <Plus className="w-4 h-4 stroke-[2]" /> Add to Shorts
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 stroke-[2]" />} 
+              {submitting ? "Uploading..." : "Add to Shorts"}
             </button>
           </div>
 
@@ -243,73 +289,107 @@ export default function AdminShortsPage() {
           <p className="text-[10px] sm:text-xs font-bold text-neutral-500 uppercase tracking-widest mt-1">Live Frontend Preview. Click text to edit.</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 relative z-10">
-          {shorts.map((reel) => (
-            <div 
-              key={reel.id} 
-              className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden group/card border border-white/10 hover:border-gold/50 transition-all duration-500 shadow-xl"
-            >
-              {/* Delete Overlay */}
-              <button 
-                onClick={() => removeShort(reel.id)}
-                className="absolute top-4 right-4 z-40 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded flex items-center justify-center text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
+        {loading ? (
+          <div className="text-neutral-500 py-10 relative z-10">Loading shorts...</div>
+        ) : shorts.length === 0 ? (
+          <div className="text-neutral-500 py-10 relative z-10">No shorts found.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 relative z-10">
+            {shorts.map((reel) => (
+              <div 
+                key={reel._id} 
+                className="relative w-full aspect-[9/16] rounded-2xl overflow-hidden group/card border border-white/10 hover:border-gold/50 transition-all duration-500 shadow-xl"
               >
-                <Trash2 className="w-4 h-4" />
-              </button>
-              
-              {/* Media Tags */}
-              <div className="absolute top-14 right-4 z-30 flex flex-col gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
-                <span className="px-2 py-1 bg-black/60 backdrop-blur-md border border-white/20 text-[9px] font-bold text-white uppercase rounded-md shadow-sm w-fit flex items-center gap-1 ml-auto">
-                  {reel.type === 'video' ? <Video className="w-3 h-3" /> : <ImageIcon className="w-3 h-3" />} 
-                  {reel.type}
-                </span>
-                {reel.url && (
-                  <span className="px-2 py-1 bg-blue-600/90 backdrop-blur-md border border-blue-400/50 text-[9px] font-bold text-white uppercase rounded-md flex items-center gap-1 shadow-sm w-fit ml-auto">
-                    <LinkIcon className="w-3 h-3" /> Link
+                {/* Delete Overlay */}
+                <button 
+                  onClick={() => setDeleteConfirmId(reel._id)}
+                  className="absolute top-4 right-4 z-40 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded flex items-center justify-center text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                
+                {/* Media Tags */}
+                <div className="absolute top-14 right-4 z-30 flex flex-col gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                  <span className="px-2 py-1 bg-black/60 backdrop-blur-md border border-white/20 text-[9px] font-bold text-white uppercase rounded-md shadow-sm w-fit flex items-center gap-1 ml-auto">
+                    {reel.type === 'video' ? <Video className="w-3 h-3" /> : <ImageIcon className="w-3 h-3" />} 
+                    {reel.type}
                   </span>
-                )}
-              </div>
+                  {reel.url && (
+                    <span className="px-2 py-1 bg-blue-600/90 backdrop-blur-md border border-blue-400/50 text-[9px] font-bold text-white uppercase rounded-md flex items-center gap-1 shadow-sm w-fit ml-auto">
+                      <LinkIcon className="w-3 h-3" /> Link
+                    </span>
+                  )}
+                </div>
 
-              {/* Background Image with Zoom Effect */}
-              <div className="absolute inset-0 z-0 bg-neutral-900">
-                <img 
-                  src={reel.src} 
-                  alt={reel.title} 
-                  className="w-full h-full object-cover transform group-hover/card:scale-110 transition-transform duration-700 ease-in-out opacity-60 md:opacity-100"
-                />
-              </div>
+                {/* Background Image with Zoom Effect */}
+                <div className="absolute inset-0 z-0 bg-neutral-900">
+                  <img 
+                    src={reel.src} 
+                    alt={reel.title} 
+                    className="w-full h-full object-cover transform group-hover/card:scale-110 transition-transform duration-700 ease-in-out opacity-60 md:opacity-100"
+                  />
+                </div>
 
-              {/* Gradient Overlays for better text legibility */}
-              <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-transparent to-black/90 pointer-events-none"></div>
+                {/* Gradient Overlays for better text legibility */}
+                <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-transparent to-black/90 pointer-events-none"></div>
 
-              {/* Image Center Button */}
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center mb-4 transition-all group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black">
-                  {reel.type === 'video' ? <Play className="w-6 h-6 ml-1 fill-current" /> : <ImageIcon className="w-6 h-6" />}
+                {/* Image Center Button */}
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center mb-4 transition-all group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black">
+                    {reel.type === 'video' ? <Play className="w-6 h-6 ml-1 fill-current" /> : <ImageIcon className="w-6 h-6" />}
+                  </div>
+                </div>
+
+                {/* Bottom Content Info Editable */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 z-30 flex flex-col gap-1">
+                  <input
+                    type="text"
+                    value={reel.category || ""}
+                    onChange={(e) => handleUpdateLocal(reel._id, 'category', e.target.value)}
+                    onBlur={(e) => saveUpdateToBackend(reel._id, 'category', e.target.value)}
+                    className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold bg-transparent border-b border-transparent hover:border-gold/50 focus:border-gold w-fit focus:outline-none drop-shadow-md placeholder:text-gold/50"
+                    placeholder="Category"
+                  />
+                  <input
+                    type="text"
+                    value={reel.title || ""}
+                    onChange={(e) => handleUpdateLocal(reel._id, 'title', e.target.value)}
+                    onBlur={(e) => saveUpdateToBackend(reel._id, 'title', e.target.value)}
+                    className="text-2xl font-bold tracking-tight text-white leading-tight bg-transparent border-b border-transparent hover:border-white/30 focus:border-white w-full focus:outline-none drop-shadow-lg placeholder:text-white/50"
+                    placeholder="Short Title"
+                  />
                 </div>
               </div>
-
-              {/* Bottom Content Info Editable */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 z-30 flex flex-col gap-1">
-                <input
-                  type="text"
-                  value={reel.category}
-                  onChange={(e) => handleUpdate(reel.id, 'category', e.target.value)}
-                  className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold bg-transparent border-b border-transparent hover:border-gold/50 focus:border-gold w-fit focus:outline-none drop-shadow-md placeholder:text-gold/50"
-                  placeholder="Category"
-                />
-                <input
-                  type="text"
-                  value={reel.title}
-                  onChange={(e) => handleUpdate(reel.id, 'title', e.target.value)}
-                  className="text-2xl font-bold tracking-tight text-white leading-tight bg-transparent border-b border-transparent hover:border-white/30 focus:border-white w-full focus:outline-none drop-shadow-lg placeholder:text-white/50"
-                  placeholder="Short Title"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
+
+      {/* Custom Confirm Modal for Deleting */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="bg-[#0a0a0a] border border-[#222] rounded-xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bebas uppercase tracking-widest text-red-500 mb-2">Delete Short</h3>
+            <p className="text-neutral-400 text-sm mb-8 leading-relaxed">
+              Are you sure you want to delete this short/reel? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setDeleteConfirmId(null)}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-transparent border border-[#333] hover:border-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-red-600 hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

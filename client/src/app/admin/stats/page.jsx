@@ -1,309 +1,253 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Save, Film, Target, Users, Clock, Globe, Clapperboard } from "lucide-react";
+import { Loader2, Save, Film, Target, Users, Clock, Clapperboard, Globe } from "lucide-react";
 
 export default function AdminStatsPage() {
-  const [homeStats, setHomeStats] = useState({
-    stat1_num: "150", stat1_label: "Projects",
-    stat2_num: "10", stat2_label: "Years Experience",
-    stat3_num: "50", stat3_label: "Creative Team",
-    stat4_num: "5000", stat4_label: "Hours of Footage",
+  const [activeTab, setActiveTab] = useState("home");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [statsData, setStatsData] = useState({
+    home: null,
+    about: null
   });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
-  const [aboutStats, setAboutStats] = useState({
-    stat1_num: "7", stat1_label: "Years Of Experience",
-    stat2_num: "250", stat2_label: "Projects Completed",
-    stat3_num: "150", stat3_label: "Happy Clients",
-    stat4_num: "10", stat4_label: "Industries Served",
-  });
-
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Sync with localStorage on mount
-  useEffect(() => {
-    const storedHome = localStorage.getItem("avf_home_stats");
-    if (storedHome) setHomeStats(JSON.parse(storedHome));
-
-    const storedAbout = localStorage.getItem("avf_about_stats");
-    if (storedAbout) setAboutStats(JSON.parse(storedAbout));
-  }, []);
-
-  const handleSave = () => {
-    setIsSaving(true);
-    localStorage.setItem("avf_home_stats", JSON.stringify(homeStats));
-    localStorage.setItem("avf_about_stats", JSON.stringify(aboutStats));
-    
-    // Dispatch an event so the frontend components know to update instantly
-    window.dispatchEvent(new Event('storage'));
-
-    setTimeout(() => setIsSaving(false), 500);
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: "", type: "success" }), 3000);
   };
 
+  useEffect(() => {
+    fetchStats("home");
+    fetchStats("about");
+  }, []);
+
+  const fetchStats = async (pageName) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/stats?page=${pageName}`);
+      const data = await res.json();
+      setStatsData(prev => ({ ...prev, [pageName]: data.stats }));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (pageName, field, value) => {
+    setStatsData(prev => ({
+      ...prev,
+      [pageName]: {
+        ...prev[pageName],
+        [field]: value
+      }
+    }));
+  };
+
+  const handleSave = async (pageName) => {
+    setSaving(true);
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`http://localhost:5000/api/stats/${pageName}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ stats: statsData[pageName] }),
+      });
+      if (res.ok) {
+        showToast("Stats saved successfully!");
+      } else {
+        showToast("Failed to save stats.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading || !statsData.home || !statsData.about) {
+    return <div className="p-8 text-neutral-500">Loading stats...</div>;
+  }
+
+  const currentStats = statsData[activeTab];
+
   return (
-    <div className="flex flex-col gap-10 pb-12">
+    <div className="flex flex-col gap-6 pb-12">
       
-      {/* Floating Action Bar */}
-      <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border border-[#1a1a1a] rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold text-white">Manage Statistics</h1>
-          <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Update the numbers and labels across the website.</p>
+      {/* Header */}
+      <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border border-[#1a1a1a] rounded-xl p-4 flex flex-col shadow-xl mt-2">
+        <h1 className="text-xl font-bold text-white">Manage Key Statistics</h1>
+        <p className="text-xs text-neutral-400 mt-1">Update the four key metrics displayed on the Home page and About page.</p>
+        
+        {/* Tabs */}
+        <div className="flex gap-4 mt-6">
+          <button 
+            onClick={() => setActiveTab("home")}
+            className={`pb-2 text-sm font-bold tracking-widest uppercase border-b-2 transition-colors ${activeTab === "home" ? "border-gold text-gold" : "border-transparent text-neutral-500 hover:text-white"}`}
+          >
+            Home Page Stats
+          </button>
+          <button 
+            onClick={() => setActiveTab("about")}
+            className={`pb-2 text-sm font-bold tracking-widest uppercase border-b-2 transition-colors ${activeTab === "about" ? "border-gold text-gold" : "border-transparent text-neutral-500 hover:text-white"}`}
+          >
+            About Page Stats
+          </button>
         </div>
-        <button 
-          onClick={handleSave}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-gold hover:bg-gold/90 text-black text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-md transition-colors shadow-[0_0_15px_rgba(252,166,3,0.3)]"
-        >
-          <Save className="w-4 h-4 stroke-[2]" /> {isSaving ? "Saved!" : "Save All Changes"}
-        </button>
       </div>
 
-      {/* HOMEPAGE STATS SECTION */}
-      <section className="bg-neutral-900 border border-white/10 rounded-xl overflow-hidden">
-        <div className="bg-[#111] p-6 border-b border-white/5 flex items-center justify-between">
-          <h2 className="text-lg font-bebas uppercase tracking-widest text-white">Homepage Statistics</h2>
-          <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold uppercase text-neutral-400 tracking-wider">Animated Strip</span>
-        </div>
+      {/* Editor Content */}
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-8">
         
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Item 1 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Film className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Target Number</label>
-            <input 
-              type="text" 
-              value={homeStats.stat1_num}
-              onChange={(e) => setHomeStats({...homeStats, stat1_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <input 
-              type="text" 
-              value={homeStats.stat1_label}
-              onChange={(e) => setHomeStats({...homeStats, stat1_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold"
-            />
-          </div>
-
-          {/* Item 2 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Target className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Target Number</label>
-            <input 
-              type="text" 
-              value={homeStats.stat2_num}
-              onChange={(e) => setHomeStats({...homeStats, stat2_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <input 
-              type="text" 
-              value={homeStats.stat2_label}
-              onChange={(e) => setHomeStats({...homeStats, stat2_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold"
-            />
-          </div>
-
-          {/* Item 3 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Users className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Target Number</label>
-            <input 
-              type="text" 
-              value={homeStats.stat3_num}
-              onChange={(e) => setHomeStats({...homeStats, stat3_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <input 
-              type="text" 
-              value={homeStats.stat3_label}
-              onChange={(e) => setHomeStats({...homeStats, stat3_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold"
-            />
-          </div>
-
-          {/* Item 4 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Clock className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Target Number</label>
-            <input 
-              type="text" 
-              value={homeStats.stat4_num}
-              onChange={(e) => setHomeStats({...homeStats, stat4_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <input 
-              type="text" 
-              value={homeStats.stat4_label}
-              onChange={(e) => setHomeStats({...homeStats, stat4_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold"
-            />
-          </div>
-        </div>
-
-        {/* Live Preview (Homepage Style) */}
-        <div className="p-6 border-t border-white/5 bg-black overflow-x-auto">
-          <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4">Live Homepage Preview</p>
-          <div className="w-full bg-[#e9e6dc] text-black border-y-[4px] border-dotted border-[#111] py-8 rounded shadow-lg min-w-[800px]">
-             <div className="grid grid-cols-4 gap-4 divide-x divide-black/20">
-                <div className="flex items-center justify-center gap-4 px-4">
-                  <Film className="w-10 h-10 text-black stroke-[1.5]" />
-                  <div className="flex flex-col">
-                    <h4 className="text-3xl font-black leading-none tracking-tight">{homeStats.stat1_num}+</h4>
-                    <p className="text-[10px] font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{homeStats.stat1_label}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+          
+          {[1, 2, 3, 4].map(num => (
+            <div key={num} className="bg-neutral-900/50 p-6 rounded-lg border border-white/5 relative">
+              <span className="absolute -top-3 -left-3 w-8 h-8 bg-neutral-800 border border-neutral-700 rounded-full flex items-center justify-center text-xs font-bold text-neutral-400">
+                {num}
+              </span>
+              
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Number Value</label>
+                  <div className="relative">
+                    <input 
+                      type="number" 
+                      value={currentStats[`stat${num}_num`] || 0}
+                      onChange={(e) => handleInputChange(activeTab, `stat${num}_num`, Number(e.target.value))}
+                      className="w-full bg-[#111] border border-[#222] text-white text-xl font-black rounded-md px-4 py-3 focus:outline-none focus:border-gold/50 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-4 px-4">
-                  <Target className="w-10 h-10 text-black stroke-[1.5]" />
-                  <div className="flex flex-col">
-                    <h4 className="text-3xl font-black leading-none tracking-tight">{homeStats.stat2_num}+</h4>
-                    <p className="text-[10px] font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{homeStats.stat2_label}</p>
-                  </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Label Text</label>
+                  <input 
+                    type="text" 
+                    value={currentStats[`stat${num}_label`] || ''}
+                    onChange={(e) => handleInputChange(activeTab, `stat${num}_label`, e.target.value)}
+                    className="w-full bg-[#111] border border-[#222] text-neutral-300 text-sm uppercase tracking-widest rounded-md px-4 py-3 focus:outline-none focus:border-gold/50 transition-colors"
+                  />
                 </div>
-                <div className="flex items-center justify-center gap-4 px-4">
-                  <Users className="w-10 h-10 text-black stroke-[1.5]" />
-                  <div className="flex flex-col">
-                    <h4 className="text-3xl font-black leading-none tracking-tight">{homeStats.stat3_num}+</h4>
-                    <p className="text-[10px] font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{homeStats.stat3_label}</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-4 px-4">
-                  <Clock className="w-10 h-10 text-black stroke-[1.5]" />
-                  <div className="flex flex-col">
-                    <h4 className="text-3xl font-black leading-none tracking-tight">{homeStats.stat4_num}+</h4>
-                    <p className="text-[10px] font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{homeStats.stat4_label}</p>
-                  </div>
-                </div>
-             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ABOUT PAGE STATS SECTION */}
-      <section className="bg-neutral-900 border border-white/10 rounded-xl overflow-hidden">
-        <div className="bg-[#111] p-6 border-b border-white/5 flex items-center justify-between">
-          <h2 className="text-lg font-bebas uppercase tracking-widest text-gold">About Page Statistics</h2>
-          <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold uppercase text-neutral-400 tracking-wider">Cream Grid Panel</span>
-        </div>
-        
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Item 1 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Clapperboard className="w-4 h-4 text-gold" />
+              </div>
             </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Number String</label>
-            <input 
-              type="text" 
-              value={aboutStats.stat1_num}
-              onChange={(e) => setAboutStats({...aboutStats, stat1_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <textarea 
-              value={aboutStats.stat1_label}
-              onChange={(e) => setAboutStats({...aboutStats, stat1_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold resize-none h-16"
-            />
-          </div>
+          ))}
 
-          {/* Item 2 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Film className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Number String</label>
-            <input 
-              type="text" 
-              value={aboutStats.stat2_num}
-              onChange={(e) => setAboutStats({...aboutStats, stat2_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <textarea 
-              value={aboutStats.stat2_label}
-              onChange={(e) => setAboutStats({...aboutStats, stat2_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold resize-none h-16"
-            />
-          </div>
-
-          {/* Item 3 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Users className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Number String</label>
-            <input 
-              type="text" 
-              value={aboutStats.stat3_num}
-              onChange={(e) => setAboutStats({...aboutStats, stat3_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <textarea 
-              value={aboutStats.stat3_label}
-              onChange={(e) => setAboutStats({...aboutStats, stat3_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold resize-none h-16"
-            />
-          </div>
-
-          {/* Item 4 */}
-          <div className="flex flex-col gap-3 p-4 bg-black rounded-lg border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center mb-2">
-               <Globe className="w-4 h-4 text-gold" />
-            </div>
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Number String</label>
-            <input 
-              type="text" 
-              value={aboutStats.stat4_num}
-              onChange={(e) => setAboutStats({...aboutStats, stat4_num: e.target.value})}
-              className="bg-[#111] border border-[#222] text-white text-xl font-bold rounded-md px-3 py-2 focus:outline-none focus:border-gold/50"
-            />
-            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mt-2">Label Text</label>
-            <textarea 
-              value={aboutStats.stat4_label}
-              onChange={(e) => setAboutStats({...aboutStats, stat4_label: e.target.value})}
-              className="bg-[#111] border border-[#222] text-neutral-400 text-xs rounded-md px-3 py-2 focus:outline-none focus:border-gold/50 uppercase tracking-widest font-bold resize-none h-16"
-            />
-          </div>
         </div>
 
-        {/* Live Preview (About Page Style) */}
-        <div className="p-6 border-t border-white/5 bg-[#f5f0e6] overflow-x-auto relative">
-          <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4 absolute top-4 left-4">Live About Page Preview</p>
-          <div className="w-full max-w-4xl mx-auto mt-8 border border-neutral-300/60 bg-white/50 backdrop-blur-sm rounded-sm grid grid-cols-4 shadow-xl">
-             <div className="flex flex-col items-center justify-center p-6 border-r border-neutral-300/60">
+        <div className="mt-10 flex justify-end">
+          <button 
+            onClick={() => handleSave(activeTab)}
+            disabled={saving}
+            className="flex items-center gap-2 px-8 py-3 bg-gold hover:bg-gold/90 disabled:opacity-50 text-black text-xs font-bold uppercase tracking-widest rounded-md transition-colors"
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 stroke-[2]" />} 
+            {saving ? "Saving..." : `Save ${activeTab === 'home' ? 'Home' : 'About'} Stats`}
+          </button>
+        </div>
+      </div>
+
+      {/* Live Preview */}
+      <section className="bg-[#111] py-8 px-6 rounded-xl border border-white/5 relative mt-4">
+        <div className="mb-10 border-l-[3px] border-gold pl-3 relative z-10">
+          <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter text-white">
+            Live Preview
+          </h2>
+          <p className="text-[10px] sm:text-xs font-bold text-neutral-500 uppercase tracking-widest mt-1">
+            How it will look on the {activeTab} page
+          </p>
+        </div>
+
+        {activeTab === "home" && (
+          <div className="w-full bg-[#e9e6dc] text-black border-y-[6px] border-dotted border-[#111] py-10 md:py-14 px-6 rounded-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-black/20">
+              
+              <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-4 sm:pt-0">
+                <Film className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
+                <div className="flex flex-col">
+                  <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+                    {currentStats.stat1_num}+
+                  </h4>
+                  <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{currentStats.stat1_label}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-8 sm:pt-0">
+                <Target className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
+                <div className="flex flex-col">
+                  <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+                    {currentStats.stat2_num}+
+                  </h4>
+                  <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{currentStats.stat2_label}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-8 sm:pt-0">
+                <Users className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
+                <div className="flex flex-col">
+                  <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+                    {currentStats.stat3_num}+
+                  </h4>
+                  <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{currentStats.stat3_label}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-8 sm:pt-0">
+                <Clock className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
+                <div className="flex flex-col">
+                  <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+                    {currentStats.stat4_num}+
+                  </h4>
+                  <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{currentStats.stat4_label}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {activeTab === "about" && (
+          <div className="w-full bg-[#f5f0e6] text-black border border-neutral-300/60 rounded-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 w-full">
+              <div className="flex flex-col items-center justify-center p-6 border-r border-b md:border-b-0 border-neutral-300/60">
                 <Clapperboard className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-                <span className="text-2xl font-black text-black">{aboutStats.stat1_num}+</span>
-                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{aboutStats.stat1_label.replace(' ', '\n')}</span>
-             </div>
-             <div className="flex flex-col items-center justify-center p-6 border-r border-neutral-300/60">
+                <span className="text-2xl font-black text-black">{currentStats.stat1_num}+</span>
+                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{currentStats.stat1_label.replace(' ', '\n')}</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-6 border-b md:border-b-0 md:border-r border-neutral-300/60">
                 <Film className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-                <span className="text-2xl font-black text-black">{aboutStats.stat2_num}+</span>
-                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{aboutStats.stat2_label.replace(' ', '\n')}</span>
-             </div>
-             <div className="flex flex-col items-center justify-center p-6 border-r border-neutral-300/60">
+                <span className="text-2xl font-black text-black">{currentStats.stat2_num}+</span>
+                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{currentStats.stat2_label.replace(' ', '\n')}</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-6 border-r border-neutral-300/60">
                 <Users className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-                <span className="text-2xl font-black text-black">{aboutStats.stat3_num}+</span>
-                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{aboutStats.stat3_label.replace(' ', '\n')}</span>
-             </div>
-             <div className="flex flex-col items-center justify-center p-6">
+                <span className="text-2xl font-black text-black">{currentStats.stat3_num}+</span>
+                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{currentStats.stat3_label.replace(' ', '\n')}</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-6">
                 <Globe className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-                <span className="text-2xl font-black text-black">{aboutStats.stat4_num}+</span>
-                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{aboutStats.stat4_label.replace(' ', '\n')}</span>
-             </div>
+                <span className="text-2xl font-black text-black">{currentStats.stat4_num}+</span>
+                <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{currentStats.stat4_label.replace(' ', '\n')}</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className="fixed bottom-6 right-6 z-[100] animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className={`px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border ${toast.type === 'error' ? 'bg-red-950/90 border-red-500/50 text-red-200' : 'bg-green-950/90 border-green-500/50 text-green-200'} backdrop-blur-md`}>
+            {toast.type === 'success' && <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />}
+            {toast.type === 'error' && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
+            <span className="font-bold text-sm tracking-wide">{toast.message}</span>
           </div>
         </div>
-      </section>
+      )}
 
     </div>
   );

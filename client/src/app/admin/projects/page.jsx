@@ -25,17 +25,21 @@ export default function AdminProjectsPage() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this project?")) return;
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmId) return;
     try {
       const adminToken = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/projects/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/projects/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${adminToken}` },
       });
       if (res.ok) fetchProjects();
     } catch (error) {
       console.error("Failed to delete:", error);
+    } finally {
+      setDeleteConfirmId(null);
     }
   };
 
@@ -119,7 +123,7 @@ export default function AdminProjectsPage() {
                   <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-[#111] hover:bg-[#222] border border-[#222] rounded text-xs text-neutral-300 transition-colors">
                     <Edit2 className="w-3.5 h-3.5" /> Edit
                   </button>
-                  <button onClick={() => handleDelete(project._id)} className="w-9 h-9 flex items-center justify-center bg-[#111] hover:bg-red-500/10 border border-[#222] hover:border-red-500/30 rounded text-neutral-400 hover:text-red-500 transition-colors">
+                  <button onClick={() => setDeleteConfirmId(project._id)} className="w-9 h-9 flex items-center justify-center bg-[#111] hover:bg-red-500/10 border border-[#222] hover:border-red-500/30 rounded text-neutral-400 hover:text-red-500 transition-colors">
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                   <Link href={`/our-work/${project.slug || project._id}`} target="_blank" className="w-9 h-9 flex items-center justify-center bg-[#111] hover:bg-blue-500/10 border border-[#222] hover:border-blue-500/30 rounded text-neutral-400 hover:text-blue-500 transition-colors">
@@ -130,6 +134,32 @@ export default function AdminProjectsPage() {
 
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Custom Confirm Modal for Deleting */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="bg-[#0a0a0a] border border-[#222] rounded-xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bebas uppercase tracking-widest text-red-500 mb-2">Delete Project</h3>
+            <p className="text-neutral-400 text-sm mb-8 leading-relaxed">
+              Are you sure you want to delete this project? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setDeleteConfirmId(null)}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-transparent border border-[#333] hover:border-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-red-600 hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

@@ -1,21 +1,57 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, Video, CalendarDays, Clapperboard, Package, Coffee, Camera, Film, CarFront } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, Video, CalendarDays, Clapperboard, Package, Coffee, Camera, Film, CarFront, Calendar, MonitorPlay, Smartphone, Car } from "lucide-react";
 
-const services = [
-  { icon: Video, title: "Documentaries", desc: "Real stories. Real impact.", color: "from-amber-900/80 to-black" },
-  { icon: CalendarDays, title: "Events", desc: "Cinematic coverage of every moment.", color: "from-blue-900/80 to-black" },
-  { icon: Clapperboard, title: "Commercials", desc: "Brands come alive on screen.", color: "from-emerald-900/80 to-black" },
-  { icon: Package, title: "Products", desc: "Showcasing products at their best.", color: "from-purple-900/80 to-black" },
-  { icon: Coffee, title: "Food", desc: "Tasty looks great on camera.", color: "from-orange-900/80 to-black" },
-  { icon: Camera, title: "Model Photography", desc: "Professional shots that stand out.", color: "from-rose-900/80 to-black" },
-  { icon: CarFront, title: "Automotive", desc: "High-octane visuals in motion.", color: "from-red-900/80 to-black" },
-  { icon: Film, title: "Reels", desc: "Short format. Big impact.", color: "from-cyan-900/80 to-black" }
+const iconMap = {
+  Clapperboard,
+  Calendar,
+  CalendarDays,
+  MonitorPlay,
+  Package,
+  Coffee,
+  Camera,
+  Smartphone,
+  Car,
+  CarFront,
+  Video,
+  Film
+};
+
+const bgColors = [
+  "from-amber-900/80 to-black",
+  "from-blue-900/80 to-black",
+  "from-emerald-900/80 to-black",
+  "from-purple-900/80 to-black",
+  "from-orange-900/80 to-black",
+  "from-rose-900/80 to-black",
+  "from-red-900/80 to-black",
+  "from-cyan-900/80 to-black"
 ];
 
 export default function ServicesSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [servicesData, setServicesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/services");
+      const data = await res.json();
+      setServicesData(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return null; // or a skeleton
+  if (servicesData.length === 0) return null;
 
   return (
     <section id="services" className="relative bg-black pt-24 pb-32 text-white border-y border-white/5 overflow-hidden">
@@ -43,12 +79,13 @@ export default function ServicesSection() {
           
           {/* Left: Services List */}
           <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-2 relative">
-            {services.map((svc, i) => {
-              const Icon = svc.icon;
+            {servicesData.map((svc, i) => {
+              const Icon = iconMap[svc.iconName] || Clapperboard;
               const isActive = activeIndex === i;
+              const color = bgColors[i % bgColors.length];
               
               return (
-                <div key={i} className="flex flex-col">
+                <div key={svc._id || i} className="flex flex-col">
                   {/* Service List Item */}
                   <div 
                     onClick={() => setActiveIndex(i)}
@@ -64,7 +101,7 @@ export default function ServicesSection() {
                       </h3>
                       {isActive && (
                         <p className="text-sm md:text-base leading-relaxed text-neutral-400 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                          {svc.desc}
+                          {svc.description}
                         </p>
                       )}
                     </div>
@@ -73,9 +110,16 @@ export default function ServicesSection() {
                   {/* Mobile Only: Inline Visual Card (Accordion Style) */}
                   <div className={`lg:hidden overflow-hidden transition-all duration-700 ease-in-out ${isActive ? 'max-h-[500px] mt-4 mb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <div className="relative h-[350px] w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
-                      <div className={`w-full h-full bg-gradient-to-br ${svc.color} relative`}>
+                      <div className={`w-full h-full bg-gradient-to-br ${color} relative`}>
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]" />
                         
+                        {/* Background Image if uploaded */}
+                        {svc.image && (
+                          <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay">
+                            <img src={svc.image} alt={svc.title} className="w-full h-full object-cover grayscale" />
+                          </div>
+                        )}
+
                         <div className="absolute top-6 left-6 right-6 flex justify-between items-center opacity-60 z-30">
                           <div className="flex gap-2 items-center">
                             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,1)]" />
@@ -92,7 +136,7 @@ export default function ServicesSection() {
                             {svc.title}
                           </h4>
                           <p className="text-gold font-script text-2xl mt-3 -rotate-2 drop-shadow-lg text-center px-4">
-                            {svc.desc}
+                            {svc.description}
                           </p>
                         </div>
                       </div>
@@ -109,36 +153,48 @@ export default function ServicesSection() {
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 z-20 pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/10 to-transparent opacity-50 z-20 pointer-events-none" />
 
-            {services.map((svc, i) => (
-              <div 
-                key={i}
-                className={`absolute inset-0 transition-all duration-1000 ease-in-out ${activeIndex === i ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0'}`}
-              >
-                <div className={`w-full h-full bg-gradient-to-br ${svc.color} relative`}>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]" />
-                  
-                  <div className="absolute top-8 left-8 right-8 flex justify-between items-center opacity-60 z-30">
-                    <div className="flex gap-3 items-center">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,1)]" />
-                      <span className="text-xs font-mono tracking-widest uppercase font-bold text-white shadow-black drop-shadow-md">REC</span>
+            {servicesData.map((svc, i) => {
+              const Icon = iconMap[svc.iconName] || Clapperboard;
+              const color = bgColors[i % bgColors.length];
+
+              return (
+                <div 
+                  key={svc._id || i}
+                  className={`absolute inset-0 transition-all duration-1000 ease-in-out ${activeIndex === i ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0'}`}
+                >
+                  <div className={`w-full h-full bg-gradient-to-br ${color} relative`}>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]" />
+                    
+                    {/* Background Image if uploaded */}
+                    {svc.image && (
+                      <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay">
+                        <img src={svc.image} alt={svc.title} className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-1000" />
+                      </div>
+                    )}
+
+                    <div className="absolute top-8 left-8 right-8 flex justify-between items-center opacity-60 z-30">
+                      <div className="flex gap-3 items-center">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,1)]" />
+                        <span className="text-xs font-mono tracking-widest uppercase font-bold text-white shadow-black drop-shadow-md">REC</span>
+                      </div>
+                      <span className="text-xs font-mono tracking-widest text-white/70">{String(i + 1).padStart(2, '0')}:00</span>
                     </div>
-                    <span className="text-xs font-mono tracking-widest text-white/70">{String(i + 1).padStart(2, '0')}:00</span>
-                  </div>
-                  
-                  <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
-                    <div className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center mb-8 bg-black/20 backdrop-blur-md shadow-2xl group-hover:scale-110 group-hover:border-gold/30 transition-all duration-700">
-                      <svc.icon className="w-12 h-12 text-gold stroke-[1.5]" />
+                    
+                    <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
+                      <div className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center mb-8 bg-black/20 backdrop-blur-md shadow-2xl group-hover:scale-110 group-hover:border-gold/30 transition-all duration-700">
+                        <Icon className="w-12 h-12 text-gold stroke-[1.5]" />
+                      </div>
+                      <h4 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white px-8 text-center drop-shadow-2xl">
+                        {svc.title}
+                      </h4>
+                      <p className="text-gold font-script text-3xl mt-4 -rotate-2 drop-shadow-lg">
+                        {svc.description}
+                      </p>
                     </div>
-                    <h4 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white px-8 text-center drop-shadow-2xl">
-                      {svc.title}
-                    </h4>
-                    <p className="text-gold font-script text-3xl mt-4 -rotate-2 drop-shadow-lg">
-                      {svc.desc}
-                    </p>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>

@@ -12,16 +12,18 @@ export default function AboutStorySection() {
   });
 
   useEffect(() => {
-    const loadStats = () => {
-      const storedAbout = localStorage.getItem("avf_about_stats");
-      if (storedAbout) {
-        setStats(JSON.parse(storedAbout));
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/stats?page=about");
+        const data = await res.json();
+        if (data && data.stats) {
+          setStats(data.stats);
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
-    
-    loadStats();
-    window.addEventListener("storage", loadStats);
-    return () => window.removeEventListener("storage", loadStats);
+    fetchStats();
   }, []);
 
   return (

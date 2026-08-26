@@ -30,6 +30,8 @@ export default function AdminUsersPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
   // Mock Users Data
   const [users, setUsers] = useState([
     {
@@ -123,9 +125,10 @@ export default function AdminUsersPage() {
     setEditingUser(null);
   };
 
-  const handleDeleteUser = (id) => {
-    if(window.confirm("Are you sure you want to delete this user?")) {
-      setUsers(users.filter(u => u.id !== id));
+  const confirmDeleteUser = () => {
+    if (deleteConfirmId) {
+      setUsers(users.filter(u => u.id !== deleteConfirmId));
+      setDeleteConfirmId(null);
     }
   };
 
@@ -233,7 +236,7 @@ export default function AdminUsersPage() {
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() => setDeleteConfirmId(user.id)}
                           className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors" title="Delete User"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -442,6 +445,33 @@ export default function AdminUsersPage() {
           </div>
         </div>
       )}
+
+      {/* Custom Confirm Modal for Deleting */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="bg-[#0a0a0a] border border-[#222] rounded-xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bebas uppercase tracking-widest text-red-500 mb-2">Delete User</h3>
+            <p className="text-neutral-400 text-sm mb-8 leading-relaxed">
+              Are you sure you want to delete this user? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setDeleteConfirmId(null)}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-transparent border border-[#333] hover:border-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDeleteUser}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-red-600 hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

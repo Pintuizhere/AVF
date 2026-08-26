@@ -49,17 +49,21 @@ export default function AdminFeaturedPage() {
     }
   };
 
-  const removeFeatured = async (id) => {
-    if (!window.confirm("Delete this featured item?")) return;
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmId) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/featured/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/featured/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) fetchFeatured();
     } catch (err) {
       console.error("Failed to delete", err);
+    } finally {
+      setDeleteConfirmId(null);
     }
   };
 
@@ -263,7 +267,7 @@ export default function AdminFeaturedPage() {
               >
                 {/* Delete Overlay */}
                 <button 
-                  onClick={() => removeFeatured(item._id)}
+                  onClick={() => setDeleteConfirmId(item._id)}
                   className="absolute top-3 right-3 z-30 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded flex items-center justify-center text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -329,6 +333,32 @@ export default function AdminFeaturedPage() {
           </div>
         )}
       </section>
+
+      {/* Custom Confirm Modal for Deleting */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="bg-[#0a0a0a] border border-[#222] rounded-xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bebas uppercase tracking-widest text-red-500 mb-2">Delete Featured Item</h3>
+            <p className="text-neutral-400 text-sm mb-8 leading-relaxed">
+              Are you sure you want to delete this featured item? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setDeleteConfirmId(null)}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-transparent border border-[#333] hover:border-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="px-5 py-2.5 rounded text-xs font-bold tracking-widest uppercase text-white bg-red-600 hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

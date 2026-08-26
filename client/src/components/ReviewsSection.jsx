@@ -1,24 +1,27 @@
-import { ArrowRight, Star } from "lucide-react";
+"use client";
 
-const reviews = [
-  {
-    text: "AVF captured the essence of our brand beautifully. Highly professional and creative team!",
-    author: "Rohit Sharma",
-    role: "CEO, Elevate Brands",
-  },
-  {
-    text: "Their storytelling is next level. Every frame speaks emotion.",
-    author: "Neha Kapoor",
-    role: "Event Curator",
-  },
-  {
-    text: "On-time delivery, amazing output and a great experience overall.",
-    author: "Arjun Verma",
-    role: "Marketing Head, UrbanStrides",
-  },
-];
+import { ArrowRight, Star } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function ReviewsSection() {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/testimonials");
+      const data = await res.json();
+      setReviews(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <section className="bg-[#0d0d0d] text-white py-32 px-6">
       <div className="container mx-auto max-w-7xl">
@@ -32,37 +35,51 @@ export default function ReviewsSection() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((review, i) => (
-            <div key={i} className="bg-neutral-900/50 border border-white/10 p-8 rounded-sm relative group hover:bg-neutral-900 transition-colors">
-              <span className="absolute top-4 left-4 text-gold/20 font-serif text-6xl leading-none">"</span>
-              
-              <div className="relative z-10 flex flex-col h-full">
-                <p className="text-neutral-300 text-sm leading-relaxed mb-8 flex-1 italic">
-                  {review.text}
-                </p>
+        {loading ? (
+          <div className="text-center text-neutral-500 py-20 font-bold uppercase tracking-widest">
+            Loading Reviews...
+          </div>
+        ) : reviews.length === 0 ? (
+          <div className="text-center text-neutral-500 py-20 font-bold uppercase tracking-widest">
+            No Reviews Found.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {reviews.map((review) => (
+              <div key={review._id} className="bg-neutral-900/50 border border-white/10 p-8 rounded-sm relative group hover:bg-neutral-900 transition-colors flex flex-col h-full">
+                <span className="absolute top-4 left-4 text-gold/20 font-serif text-6xl leading-none">"</span>
                 
-                <div>
-                  <div className="flex gap-1 text-gold mb-4">
-                    {[...Array(5)].map((_, j) => (
-                      <Star key={j} className="w-3 h-3 fill-current" />
-                    ))}
-                  </div>
+                <div className="relative z-10 flex flex-col h-full">
+                  <p className="text-neutral-300 text-sm leading-relaxed mb-8 flex-1 italic break-words">
+                    {review.text}
+                  </p>
                   
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-neutral-800 border border-white/20 flex items-center justify-center overflow-hidden">
-                       <span className="text-xs font-bold text-neutral-500 uppercase">{review.author[0]}</span>
+                  <div>
+                    <div className="flex gap-1 text-gold mb-4">
+                      {[...Array(5)].map((_, j) => (
+                        <Star key={j} className={`w-3 h-3 ${j < (review.rating || 5) ? 'fill-current text-gold' : 'text-neutral-700'}`} />
+                      ))}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-xs uppercase tracking-wider">{review.author}</h4>
-                      <p className="text-neutral-500 text-[10px] tracking-widest uppercase">{review.role}</p>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-neutral-800 border border-white/20 flex items-center justify-center overflow-hidden">
+                         {review.avatarUrl ? (
+                           <img src={review.avatarUrl} alt={review.author} className="w-full h-full object-cover" />
+                         ) : (
+                           <span className="text-xs font-bold text-neutral-500 uppercase">{review.author ? review.author[0] : 'A'}</span>
+                         )}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-xs uppercase tracking-wider text-white">{review.author}</h4>
+                        <p className="text-neutral-500 text-[10px] tracking-widest uppercase">{review.role}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

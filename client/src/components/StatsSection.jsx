@@ -51,22 +51,18 @@ export default function StatsSection() {
   });
 
   useEffect(() => {
-    const loadStats = () => {
-      const storedHome = localStorage.getItem("avf_home_stats");
-      if (storedHome) {
-        const parsed = JSON.parse(storedHome);
-        setStats({
-          stat1_num: parseInt(parsed.stat1_num) || 150, stat1_label: parsed.stat1_label || "Projects",
-          stat2_num: parseInt(parsed.stat2_num) || 10, stat2_label: parsed.stat2_label || "Years Experience",
-          stat3_num: parseInt(parsed.stat3_num) || 50, stat3_label: parsed.stat3_label || "Creative Team",
-          stat4_num: parseInt(parsed.stat4_num) || 5000, stat4_label: parsed.stat4_label || "Hours of Footage",
-        });
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/stats?page=home");
+        const data = await res.json();
+        if (data && data.stats) {
+          setStats(data.stats);
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
-    
-    loadStats();
-    window.addEventListener("storage", loadStats);
-    return () => window.removeEventListener("storage", loadStats);
+    fetchStats();
   }, []);
 
   return (

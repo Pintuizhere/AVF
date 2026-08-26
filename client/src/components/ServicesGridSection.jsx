@@ -1,73 +1,45 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowRight, Clapperboard, Calendar, MonitorPlay, Package, Coffee, Camera, Smartphone, Car } from "lucide-react";
+import { ArrowRight, Clapperboard, Calendar, MonitorPlay, Package, Coffee, Camera, Smartphone, Car, Video, CalendarDays, Film, CarFront } from "lucide-react";
+
+const iconMap = {
+  Clapperboard,
+  Calendar,
+  CalendarDays,
+  MonitorPlay,
+  Package,
+  Coffee,
+  Camera,
+  Smartphone,
+  Car,
+  CarFront,
+  Video,
+  Film
+};
 
 export default function ServicesGridSection() {
-  const services = [
-    {
-      id: "documentaries",
-      title: "Documentaries",
-      description: "Real stories.\nReal people.\nReal impact.",
-      image: "/images/service-doc.jpg",
-      icon: Clapperboard,
-      colSpan: 1
-    },
-    {
-      id: "events",
-      title: "Events",
-      description: "Cinematic coverage\nof every moment\nthat matters.",
-      image: "/images/bts-photo.jpg", // Using placeholder
-      icon: Calendar,
-      colSpan: 1
-    },
-    {
-      id: "commercials",
-      title: "Commercials",
-      description: "Brands come alive\non screen.",
-      image: "/images/hero-bg.jpg", // Using placeholder
-      icon: MonitorPlay,
-      colSpan: 1
-    },
-    {
-      id: "products",
-      title: "Products",
-      description: "Showcasing products\nat their best.",
-      image: "/images/service-product.jpg",
-      icon: Package,
-      colSpan: 1
-    },
-    {
-      id: "food",
-      title: "Food",
-      description: "Tasty looks\ngreat on camera.",
-      image: "/images/service-food.jpg",
-      icon: Coffee,
-      colSpan: 1
-    },
-    {
-      id: "model",
-      title: "Model Photography",
-      description: "Professional shots\nthat stand out.",
-      image: "/images/director.jpg", // Using placeholder
-      icon: Camera,
-      colSpan: 1
-    },
-    {
-      id: "reels",
-      title: "Reels",
-      description: "Short format.\nBig impact.",
-      image: "/images/about-hero-bg.jpg", // Using placeholder
-      icon: Smartphone,
-      colSpan: 1
-    },
-    {
-      id: "automotive",
-      title: "Automotive",
-      description: "Powerful cars.\nBold details.\nCaptured in motion.",
-      image: "/images/hero-bg.jpg", // Using placeholder
-      icon: Car,
-      colSpan: 1
+  const [servicesData, setServicesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/services");
+      const data = await res.json();
+      setServicesData(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  if (loading) return null; // or a skeleton
 
   return (
     <section className="relative bg-[#f5f0e6] text-black py-24 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
@@ -82,32 +54,32 @@ export default function ServicesGridSection() {
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => {
-            // To achieve the layout in the design (4 on top, 3 centered on bottom)
-            // We can just use standard grid, but the last 3 items need to be centered in a 4-col grid.
-            // A simple way is to use col-span logic if it's the last row, but CSS grid is tricky for centering odd items.
-            // In Tailwind, lg:col-span-1 works for 4, but the last 3 will just left-align. 
-            // We'll wrap the grid in a flex-wrap container instead for perfect centering, or just let them left align.
-            // Actually, let's use a flex container for the last 3 items, or just standard grid. The design shows 4 on top, 3 on bottom centered.
+          {servicesData.map((service, index) => {
+            const Icon = iconMap[service.iconName] || Clapperboard;
+
             return (
               <div 
-                key={service.id} 
+                key={service._id || index} 
                 className="bg-[#0a0a0a] text-white rounded-sm overflow-hidden flex flex-col group relative shadow-xl border border-neutral-800 hover:border-gold transition-colors duration-500"
               >
                 {/* Top Half Image */}
                 <div className="h-[240px] relative w-full overflow-hidden">
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    className="object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0"
-                  />
+                  {service.image ? (
+                    <Image
+                      src={service.image}
+                      alt={service.title}
+                      fill
+                      className="object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-neutral-900 group-hover:bg-neutral-800 transition-colors" />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a] z-10" />
                 </div>
 
                 {/* Overlapping Icon */}
                 <div className="absolute top-[210px] left-1/2 -translate-x-1/2 w-14 h-14 rounded-full border border-gold bg-black flex items-center justify-center z-20 shadow-[0_0_15px_rgba(252,166,3,0.2)] group-hover:shadow-[0_0_20px_rgba(252,166,3,0.5)] transition-shadow">
-                  <service.icon className="w-6 h-6 text-gold stroke-[1.5]" />
+                  <Icon className="w-6 h-6 text-gold stroke-[1.5]" />
                 </div>
 
                 {/* Bottom Half Content */}
