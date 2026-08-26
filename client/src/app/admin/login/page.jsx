@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
       {/* Desktop Header */}
       <header className="hidden md:flex absolute top-0 left-0 w-full z-30 items-center justify-between px-8 md:px-16 pt-8">
         <Link href="/">
-          <img src="/logo.png" alt="AVF Logo" className="h-10 w-auto object-contain" />
+          <img src="/images/logo.png" alt="AVF Logo" className="h-10 w-auto object-contain" />
         </Link>
         <span className="font-script text-gold text-2xl -rotate-2 drop-shadow-md">
           Lights. Camera. AVF.
@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
         
         {/* Mobile Logo */}
         <Link href="/" className="md:hidden mb-10 mt-2 z-30 flex justify-center">
-          <img src="/logo.png" alt="AVF Logo" className="h-12 w-auto object-contain drop-shadow-lg" />
+          <img src="/images/logo.png" alt="AVF Logo" className="h-12 w-auto object-contain drop-shadow-lg" />
         </Link>
 
         {/* Card Container */}
@@ -147,7 +147,7 @@ export default function AdminLoginPage() {
 
           {/* Copyright Text */}
           <p className="text-center text-[10px] text-neutral-500 mt-8 mb-2">
-            © 2026 <span className="text-gold">AVF</span> Akash Verma Film Products. All Rights Reserved.
+            © 2026 <span className="text-gold">AVF</span> Akash Verma Film Productions. All Rights Reserved.
           </p>
 
           {/* White torn edge effect at the bottom of the card */}

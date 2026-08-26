@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronRight, Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const FacebookIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -106,12 +107,19 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <h4 className="text-lg font-bold uppercase tracking-wider text-white">Quick Links</h4>
             <ul className="flex flex-col gap-4">
-              {['Home', 'About Us', 'Projects', 'Amenities', 'Contact Us'].map((link, idx) => (
+              {[
+                { name: 'Home', path: '/' },
+                { name: 'About Us', path: '/about' },
+                { name: 'Services', path: '/services' },
+                { name: 'Our Work', path: '/our-work' },
+                { name: 'Behind The Scenes', path: '/bts' },
+                { name: 'Contact Us', path: '/contact' }
+              ].map((link, idx) => (
                 <li key={idx}>
-                  <a href="#" className="text-sm text-neutral-400 hover:text-gold transition-colors flex items-center gap-2 group">
+                  <Link href={link.path} className="text-sm text-neutral-400 hover:text-gold transition-colors flex items-center gap-2 group">
                     <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-gold transition-colors" />
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -121,12 +129,19 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <h4 className="text-lg font-bold uppercase tracking-wider text-white">Projects</h4>
             <ul className="flex flex-col gap-4">
-              {['Corporate Films', 'Documentaries', 'Commercial Ads', 'Music Videos', 'All Projects'].map((link, idx) => (
+              {[
+                { name: 'Documentaries', path: '/our-work' },
+                { name: 'Events & Concerts', path: '/our-work' },
+                { name: 'Commercials', path: '/our-work' },
+                { name: 'Product Shoots', path: '/our-work' },
+                { name: 'Food Photography', path: '/our-work' },
+                { name: 'All Projects', path: '/our-work' }
+              ].map((link, idx) => (
                 <li key={idx}>
-                  <a href="#" className="text-sm text-neutral-400 hover:text-gold transition-colors flex items-center gap-2 group">
+                  <Link href={link.path} className="text-sm text-neutral-400 hover:text-gold transition-colors flex items-center gap-2 group">
                     <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-gold transition-colors" />
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
