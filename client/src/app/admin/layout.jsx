@@ -7,7 +7,7 @@ import Image from "next/image";
 import { 
   LayoutDashboard, Clapperboard, MonitorPlay, Camera, MessageSquareQuote, 
   Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu, LogOut, X,
-  Star, Smartphone, BarChart2, Briefcase
+  Star, Smartphone, BarChart2, Briefcase, PanelBottom
 } from "lucide-react";
 
 const navItems = [
@@ -22,6 +22,7 @@ const navItems = [
   { name: "Brands", href: "/admin/clients", icon: Briefcase },
   { name: "Leads / Inquiries", href: "/admin/leads", icon: Mail },
   { name: "Team", href: "/admin/team", icon: Users },
+  { name: "Footer", href: "/admin/footer", icon: PanelBottom },
   { name: "Settings", href: "/admin/settings", icon: Settings },
   { name: "Users", href: "/admin/users", icon: ShieldCheck },
 ];

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { ArrowRight, ChevronRight, Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,6 +32,39 @@ const LinkedinIcon = ({ className }) => (
 );
 
 export default function Footer() {
+  const [footerData, setFooterData] = useState({
+    aboutText: "AVF is committed to creating premium visual experiences and telling stories with trust, quality, and excellence.",
+    facebookUrl: "#",
+    instagramUrl: "#",
+    youtubeUrl: "#",
+    linkedinUrl: "#",
+    phoneNumbers: "+91 9334713774\n+91 9431584755",
+    emailAddress: "info@avf.com",
+    address: "AVF Pvt. Ltd.\nOpposite Film City,\nMumbai - 400001"
+  });
+
+  useEffect(() => {
+    const fetchFooter = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/footer");
+        if (res.ok) {
+          const data = await res.json();
+          if (data) setFooterData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch footer data:", error);
+      }
+    };
+    fetchFooter();
+  }, []);
+
+  const socialLinks = [
+    { icon: FacebookIcon, url: footerData.facebookUrl },
+    { icon: InstagramIcon, url: footerData.instagramUrl },
+    { icon: YoutubeIcon, url: footerData.youtubeUrl },
+    { icon: LinkedinIcon, url: footerData.linkedinUrl }
+  ];
+
   return (
     <footer id="contact" className="relative bg-black pt-24 pb-12 overflow-hidden border-t border-white/10 text-white">
       {/* Background cinematic elements */}
@@ -92,14 +128,17 @@ export default function Footer() {
               />
             </div>
             <p className="text-sm text-neutral-400 leading-relaxed">
-              AVF is committed to creating premium visual experiences and telling stories with trust, quality, and excellence.
+              {footerData.aboutText}
             </p>
             <div className="flex gap-3 mt-2">
-              {[FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon].map((Icon, idx) => (
-                <a key={idx} href="#" className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center hover:bg-gold hover:border-gold hover:text-black transition-all group">
-                  <Icon className="w-4 h-4 text-neutral-400 group-hover:text-black transition-colors" />
-                </a>
-              ))}
+              {socialLinks.map((social, idx) => {
+                const Icon = social.icon;
+                return (
+                  <a key={idx} href={social.url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center hover:bg-gold hover:border-gold hover:text-black transition-all group">
+                    <Icon className="w-4 h-4 text-neutral-400 group-hover:text-black transition-colors" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -153,22 +192,24 @@ export default function Footer() {
             <div className="flex flex-col gap-5">
               <div className="flex items-start gap-4">
                 <Phone className="w-5 h-5 text-gold shrink-0 mt-0.5" />
-                <a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">
-                  +91 9334713774 <br/> +91 9431584755
+                <a href={`tel:${footerData.phoneNumbers.split('\n')[0]}`} className="text-sm text-neutral-400 hover:text-white transition-colors">
+                  {footerData.phoneNumbers.split('\n').map((num, i) => (
+                    <span key={i}>{num}<br/></span>
+                  ))}
                 </a>
               </div>
               <div className="flex items-start gap-4">
                 <Mail className="w-5 h-5 text-gold shrink-0 mt-0.5" />
-                <a href="mailto:info@avf.com" className="text-sm text-neutral-400 hover:text-white transition-colors break-all">
-                  info@avf.com
+                <a href={`mailto:${footerData.emailAddress}`} className="text-sm text-neutral-400 hover:text-white transition-colors break-all">
+                  {footerData.emailAddress}
                 </a>
               </div>
               <div className="flex items-start gap-4">
                 <MapPin className="w-5 h-5 text-gold shrink-0 mt-0.5" />
                 <span className="text-sm text-neutral-400 leading-relaxed">
-                  AVF Pvt. Ltd.<br/>
-                  Opposite Film City,<br/>
-                  Mumbai - 400001
+                  {footerData.address.split('\n').map((line, i) => (
+                    <span key={i}>{line}<br/></span>
+                  ))}
                 </span>
               </div>
             </div>
