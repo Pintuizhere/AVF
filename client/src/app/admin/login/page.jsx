@@ -3,11 +3,48 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Lock, Mail, EyeOff, Eye, ArrowLeft, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Lock, Mail, EyeOff, Eye, ArrowLeft, ArrowRight, AlertCircle } from "lucide-react";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const router = useRouter();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("adminToken", data.token);
+        localStorage.setItem("adminInfo", JSON.stringify(data));
+        router.push("/admin/dashboard");
+      } else {
+        setError(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      setError("Failed to connect to server");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="relative min-h-screen w-full flex items-center justify-center overflow-hidden font-sans text-white">
@@ -58,7 +95,14 @@ export default function AdminLoginPage() {
             <p className="text-sm text-neutral-400">Sign in to your admin dashboard</p>
           </div>
 
-          <form className="relative z-10 flex flex-col gap-5">
+          {error && (
+            <div className="relative z-10 mb-6 p-3 bg-red-500/10 border border-red-500/50 rounded-lg flex items-center gap-3 text-red-500 text-sm">
+              <AlertCircle className="w-5 h-5 shrink-0" />
+              <p>{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="relative z-10 flex flex-col gap-5">
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-neutral-300">Email Address</label>
@@ -68,7 +112,10 @@ export default function AdminLoginPage() {
                 </div>
                 <input 
                   type="email" 
-                  placeholder="admin@avf.com" 
+                  placeholder="admin@avf.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="w-full bg-black/20 border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold/50 focus:bg-black/40 focus:ring-1 focus:ring-gold/50 transition-all"
                 />
               </div>
@@ -84,6 +131,9 @@ export default function AdminLoginPage() {
                 <input 
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   className="w-full bg-black/20 border border-white/10 rounded-xl pl-11 pr-12 py-3.5 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold/50 focus:bg-black/40 focus:ring-1 focus:ring-gold/50 transition-all"
                 />
                 <button 
@@ -122,11 +172,18 @@ export default function AdminLoginPage() {
 
             {/* Submit Button */}
             <button 
-              type="button"
-              className="group relative w-full bg-gold hover:bg-[#b08849] text-black rounded-xl py-3.5 font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(207,162,92,0.2)] hover:shadow-[0_0_25px_rgba(207,162,92,0.4)]"
+              type="submit"
+              disabled={isLoading}
+              className="group relative w-full bg-gold hover:bg-[#b08849] text-black rounded-xl py-3.5 font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_0_20px_rgba(207,162,92,0.2)] hover:shadow-[0_0_25px_rgba(207,162,92,0.4)] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Sign In
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {isLoading ? (
+                <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+              ) : (
+                <>
+                  Sign In
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
 
