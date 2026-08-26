@@ -30,6 +30,7 @@ app.use("/api/services", require("./routes/serviceRoutes"));
 app.use("/api/bts", require("./routes/btsRoutes"));
 app.use("/api/testimonials", require("./routes/testimonialRoutes"));
 app.use("/api/stats", require("./routes/statRoutes"));
+app.use("/api/clients", require("./routes/clientLogoRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));
 // app.use("/api/projects", require("./routes/projectRoutes"));
 

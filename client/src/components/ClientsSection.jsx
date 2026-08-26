@@ -1,19 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ClientsSection() {
-  // Using SimpleIcons API with default brand colors to avoid AdBlockers blocking clearbit
-  const brands = [
-    { name: "Google", src: "https://cdn.simpleicons.org/google" },
-    { name: "Netflix", src: "https://cdn.simpleicons.org/netflix" },
-    { name: "CocaCola", src: "https://cdn.simpleicons.org/coca-cola" },
-    { name: "Nike", src: "https://cdn.simpleicons.org/nike" },
-    { name: "Samsung", src: "https://cdn.simpleicons.org/samsung" },
-    { name: "Amazon", src: "https://cdn.simpleicons.org/amazon" },
-    { name: "Puma", src: "https://cdn.simpleicons.org/puma" },
-    { name: "TEDx", src: "https://cdn.simpleicons.org/ted" },
-  ];
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/clients?t=" + Date.now());
+        const data = await res.json();
+        setBrands(data);
+      } catch (err) {
+        console.error("Failed to load client logos", err);
+      }
+    };
+    fetchBrands();
+  }, []);
+
+  if (brands.length === 0) return null;
 
   return (
     <section className="bg-[#e9e6dc] text-black py-10 border-y-[6px] border-dotted border-[#111] overflow-hidden">
@@ -32,18 +37,19 @@ export default function ClientsSection() {
           {[1, 2].map((setIndex) => (
             <div 
               key={setIndex}
-              className="flex items-center justify-around gap-12 md:gap-20 px-6 md:px-10 w-max"
+              className="flex items-center justify-around gap-6 md:gap-10 px-4 md:px-6 w-max"
             >
               {brands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
                   className="flex-none group/logo"
                 >
-                  <div className="w-16 sm:w-20 md:w-24 h-8 sm:h-10 md:h-12 relative flex items-center justify-center opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 ease-out cursor-pointer">
+                  <div className="w-16 sm:w-20 md:w-24 h-8 sm:h-10 md:h-12 relative flex items-center justify-center opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
                     <img 
-                      src={brand.src} 
+                      src={brand.logoUrl} 
                       alt={brand.name} 
-                      className="max-w-full max-h-full object-contain mix-blend-multiply"
+                      className="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-300"
+                      style={{ transform: `scale(${brand.zoom || 1.0})` }}
                       loading="lazy"
                       suppressHydrationWarning={true}
                       onError={(e) => {
