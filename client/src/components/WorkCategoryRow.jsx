@@ -23,11 +23,11 @@ export default function WorkCategoryRow({ title, projects }) {
       <div className="container mx-auto px-6 md:px-12 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {currentProjects.map((project, index) => {
-            // Generate a simple slug from the title if it doesn't exist
-            const slug = project.slug || project.title.toLowerCase().replace(/\s+/g, '-');
+            // Use the slug for SEO friendly URLs
+            const identifier = project.slug || project._id;
             return (
               <Link 
-                href={`/our-work/${slug}`}
+                href={`/our-work/${identifier}`}
                 key={index} 
                 className="relative group w-full aspect-[4/3] p-2 md:p-3 bg-[#131313] cursor-pointer border border-neutral-800 rounded-sm flex flex-col justify-center shadow-[0_5px_20px_rgba(0,0,0,0.8)] hover:border-neutral-600 transition-colors duration-500"
               >

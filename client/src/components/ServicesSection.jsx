@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Video, CalendarDays, Clapperboard, Package, Coffee, Camera, Film } from "lucide-react";
+import { ArrowRight, Video, CalendarDays, Clapperboard, Package, Coffee, Camera, Film, CarFront } from "lucide-react";
 
 const services = [
   { icon: Video, title: "Documentaries", desc: "Real stories. Real impact.", color: "from-amber-900/80 to-black" },
@@ -10,6 +10,7 @@ const services = [
   { icon: Package, title: "Products", desc: "Showcasing products at their best.", color: "from-purple-900/80 to-black" },
   { icon: Coffee, title: "Food", desc: "Tasty looks great on camera.", color: "from-orange-900/80 to-black" },
   { icon: Camera, title: "Model Photography", desc: "Professional shots that stand out.", color: "from-rose-900/80 to-black" },
+  { icon: CarFront, title: "Automotive", desc: "High-octane visuals in motion.", color: "from-red-900/80 to-black" },
   { icon: Film, title: "Reels", desc: "Short format. Big impact.", color: "from-cyan-900/80 to-black" }
 ];
 

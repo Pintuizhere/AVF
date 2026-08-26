@@ -22,6 +22,9 @@ app.get("/", (req, res) => {
 
 // Define Routes here later
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/leads", require("./routes/leadRoutes"));
+app.use("/api/projects", require("./routes/projectRoutes"));
+app.use("/api/featured", require("./routes/featuredRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));
 // app.use("/api/projects", require("./routes/projectRoutes"));
 

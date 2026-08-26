@@ -1,56 +1,83 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, Phone, Clock, Calendar, CheckCircle, Circle, Trash2, Filter, Search, Tag } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, Phone, Clock, Calendar, CheckCircle, Circle, Trash2, Filter, Search, Tag, Loader2, AlertCircle } from "lucide-react";
 
 export default function AdminLeadsPage() {
-  const [leads, setLeads] = useState([
-    {
-      id: "LD-001",
-      name: "Rahul Verma",
-      email: "rahul.v@example.com",
-      phone: "+91 98765 43210",
-      projectType: "documentary",
-      message: "Hi AVF team, we are an NGO looking to shoot a 15-minute documentary highlighting our recent water conservation project in Rajasthan. We need a cinematic approach.",
-      date: "2024-05-18T10:30:00",
-      status: "new"
-    },
-    {
-      id: "LD-002",
-      name: "Sneha Kapoor",
-      email: "sneha.events@studio.in",
-      phone: "+91 87654 32109",
-      projectType: "event",
-      message: "Looking for premium coverage for a corporate summit next month in Delhi. 2 days event.",
-      date: "2024-05-17T14:45:00",
-      status: "contacted"
-    },
-    {
-      id: "LD-003",
-      name: "Aditya Singh",
-      email: "aditya@auto-pulse.com",
-      phone: "+91 76543 21098",
-      projectType: "commercial",
-      message: "Need a high-octane commercial for our new motorcycle launch. Lots of tracking shots needed.",
-      date: "2024-05-15T09:15:00",
-      status: "new"
-    }
-  ]);
-
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const toggleStatus = (id) => {
-    setLeads(prev => prev.map(lead => 
-      lead.id === id 
-        ? { ...lead, status: lead.status === 'new' ? 'contacted' : 'new' } 
-        : lead
-    ));
+  const fetchLeads = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/leads", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setLeads(data);
+      } else {
+        setError(data.message || "Failed to fetch leads");
+      }
+    } catch (err) {
+      setError("Server connection failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeLead = (id) => {
-    setLeads(prev => prev.filter(lead => lead.id !== id));
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const toggleStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === 'New' ? 'Contacted' : 'New';
+    
+    // Optimistic update
+    setLeads(prev => prev.map(lead => lead._id === id ? { ...lead, status: newStatus } : lead));
+    
+    try {
+      const token = localStorage.getItem("adminToken");
+      await fetch(`http://localhost:5000/api/leads/${id}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (err) {
+      // Revert if error
+      setLeads(prev => prev.map(lead => lead._id === id ? { ...lead, status: currentStatus } : lead));
+    }
   };
+
+  const removeLead = async (id) => {
+    if (!confirm("Are you sure you want to delete this lead?")) return;
+    
+    // Optimistic update
+    const previousLeads = [...leads];
+    setLeads(prev => prev.filter(lead => lead._id !== id));
+    
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`http://localhost:5000/api/leads/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (!res.ok) {
+        setLeads(previousLeads);
+      }
+    } catch (err) {
+      setLeads(previousLeads);
+    }
+  };
+
+
 
   const getProjectTypeColor = (type) => {
     switch(type) {
@@ -62,7 +89,7 @@ export default function AdminLeadsPage() {
   };
 
   const filteredLeads = leads.filter(lead => {
-    const matchesFilter = filter === 'all' || lead.status === filter;
+    const matchesFilter = filter === 'all' || lead.status.toLowerCase() === filter.toLowerCase();
     const matchesSearch = lead.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           lead.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           lead.projectType.toLowerCase().includes(searchQuery.toLowerCase());
@@ -78,7 +105,7 @@ export default function AdminLeadsPage() {
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
             Leads & Inquiries
             <span className="bg-gold text-black text-[10px] font-bold px-2 py-0.5 rounded-full">
-              {leads.filter(l => l.status === 'new').length} New
+              {leads.filter(l => l.status === 'New').length} New
             </span>
           </h1>
           <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Manage submissions from your website's contact form.</p>
@@ -113,20 +140,33 @@ export default function AdminLeadsPage() {
         </div>
       </div>
 
+      {/* Error State */}
+      {error && (
+        <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-lg flex items-center gap-3 text-red-500 text-sm mb-4">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <p>{error}</p>
+        </div>
+      )}
+
       {/* Leads Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
-        {filteredLeads.length === 0 ? (
+        {loading ? (
+          <div className="col-span-full py-20 flex flex-col items-center justify-center text-neutral-500">
+            <Loader2 className="w-10 h-10 mb-4 animate-spin text-gold" />
+            <p>Loading leads...</p>
+          </div>
+        ) : filteredLeads.length === 0 ? (
           <div className="col-span-full py-12 flex flex-col items-center justify-center text-neutral-500 border border-dashed border-[#222] rounded-xl">
             <Mail className="w-12 h-12 mb-4 opacity-50" />
             <p>No leads found matching your criteria.</p>
           </div>
         ) : (
           filteredLeads.map((lead) => (
-            <div key={lead.id} className={`bg-[#0a0a0a] border ${lead.status === 'new' ? 'border-gold/30 shadow-[0_0_15px_rgba(252,166,3,0.05)]' : 'border-[#1a1a1a]'} rounded-xl overflow-hidden flex flex-col group relative`}>
+            <div key={lead._id} className={`bg-[#0a0a0a] border ${lead.status === 'New' ? 'border-gold/30 shadow-[0_0_15px_rgba(252,166,3,0.05)]' : 'border-[#1a1a1a]'} rounded-xl overflow-hidden flex flex-col group relative`}>
               
               {/* Delete Overlay */}
               <button 
-                onClick={() => removeLead(lead.id)}
+                onClick={() => removeLead(lead._id)}
                 className="absolute top-4 right-4 z-30 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
                 title="Delete Lead"
               >
@@ -140,10 +180,10 @@ export default function AdminLeadsPage() {
                     <h3 className="text-lg font-bold text-white mb-1 pr-8">{lead.name}</h3>
                     <div className="flex items-center gap-2 text-xs text-neutral-400">
                       <Calendar className="w-3 h-3" />
-                      {new Date(lead.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {new Date(lead.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       <span className="mx-1">•</span>
                       <Clock className="w-3 h-3" />
-                      {new Date(lead.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(lead.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                 </div>
@@ -175,14 +215,14 @@ export default function AdminLeadsPage() {
               {/* Card Footer (Status Toggle) */}
               <div className="p-4 border-t border-[#1a1a1a] bg-[#0a0a0a]">
                 <button 
-                  onClick={() => toggleStatus(lead.id)}
+                  onClick={() => toggleStatus(lead._id, lead.status)}
                   className={`w-full flex items-center justify-center gap-2 py-2.5 rounded text-xs font-bold uppercase tracking-widest transition-colors ${
-                    lead.status === 'new' 
+                    lead.status === 'New' 
                       ? 'bg-gold hover:bg-gold/90 text-black' 
                       : 'bg-[#111] hover:bg-[#222] border border-[#222] text-neutral-400'
                   }`}
                 >
-                  {lead.status === 'new' ? (
+                  {lead.status === 'New' ? (
                     <>
                       <Circle className="w-4 h-4" /> Mark as Contacted
                     </>

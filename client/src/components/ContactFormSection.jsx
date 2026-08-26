@@ -1,6 +1,48 @@
-import { Phone, Mail, MapPin, Clock, Camera, MonitorPlay, Globe, Clapperboard, Send, Lock } from "lucide-react";
+"use client";
+
+import { Phone, Mail, MapPin, Clock, Camera, MonitorPlay, Globe, Clapperboard, Send, Lock, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 
 export default function ContactFormSection() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    projectType: "",
+    message: ""
+  });
+  const [status, setStatus] = useState({ loading: false, success: false, error: "" });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ loading: true, success: false, error: "" });
+
+    try {
+      const res = await fetch("http://localhost:5000/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus({ loading: false, success: true, error: "" });
+        setFormData({ name: "", email: "", phone: "", projectType: "", message: "" });
+        setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 5000);
+      } else {
+        setStatus({ loading: false, success: false, error: data.message || "Failed to submit" });
+      }
+    } catch (error) {
+      setStatus({ loading: false, success: false, error: "Server connection failed" });
+    }
+  };
   return (
     <section className="relative w-full bg-[#eae3d5] pt-20 pb-24 z-20">
       <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none mix-blend-multiply" />
@@ -88,28 +130,57 @@ export default function ContactFormSection() {
                  </h3>
                </div>
 
-               <form className="relative z-10 flex flex-col gap-6">
+               <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-6">
+                 {status.success && (
+                   <div className="p-4 bg-green-500/10 border border-green-500/50 rounded-md flex items-center gap-3 text-green-500 text-sm">
+                     <CheckCircle2 className="w-5 h-5 shrink-0" />
+                     <p>Message sent successfully! We will get back to you soon.</p>
+                   </div>
+                 )}
+                 {status.error && (
+                   <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-md text-red-500 text-sm">
+                     <p>{status.error}</p>
+                   </div>
+                 )}
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   <input 
-                     type="text" 
-                     placeholder="Your Name" 
-                     className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold transition-colors"
-                   />
-                   <input 
-                     type="email" 
-                     placeholder="Your Email" 
-                     className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold transition-colors"
-                   />
+                    <input 
+                      type="text" 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      placeholder="Your Name" 
+                      className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold transition-colors"
+                    />
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      placeholder="Your Email" 
+                      className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold transition-colors"
+                    />
                  </div>
                  
                  <input 
                    type="text" 
+                   name="phone"
+                   value={formData.phone}
+                   onChange={handleChange}
+                   required
                    placeholder="Phone Number" 
                    className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold transition-colors"
                  />
 
                  <div className="relative">
-                   <select defaultValue="" className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-neutral-400 focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer">
+                   <select 
+                     name="projectType"
+                     value={formData.projectType}
+                     onChange={handleChange}
+                     required
+                     className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-neutral-400 focus:outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
+                   >
                      <option value="" disabled>Project Type</option>
                      <option value="documentary">Documentary</option>
                      <option value="commercial">Commercial</option>
@@ -124,6 +195,10 @@ export default function ContactFormSection() {
                  </div>
 
                  <textarea 
+                   name="message"
+                   value={formData.message}
+                   onChange={handleChange}
+                   required
                    placeholder="Tell us about your project..." 
                    rows={4}
                    className="w-full bg-[#0a0a0a] border border-neutral-800 rounded-sm px-4 py-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-gold transition-colors resize-none"
@@ -131,11 +206,12 @@ export default function ContactFormSection() {
 
                  <div className="mt-2">
                    <button 
-                     type="button"
-                     className="bg-gold hover:bg-white text-black px-8 py-4 font-bold text-[10px] uppercase tracking-widest flex items-center gap-4 transition-colors rounded-sm shadow-md"
+                     type="submit"
+                     disabled={status.loading}
+                     className="bg-gold hover:bg-white text-black px-8 py-4 font-bold text-[10px] uppercase tracking-widest flex items-center gap-4 transition-colors rounded-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                    >
-                     SEND MESSAGE
-                     <Send className="w-4 h-4" />
+                     {status.loading ? "SENDING..." : "SEND MESSAGE"}
+                     {!status.loading && <Send className="w-4 h-4" />}
                    </button>
                  </div>
 

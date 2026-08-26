@@ -1,61 +1,108 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Save, Trash2, X, Play, Image as ImageIcon, Video, Link as LinkIcon, UploadCloud } from "lucide-react";
-import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Save, Trash2, X, Play, Image as ImageIcon, Video, Link as LinkIcon, UploadCloud, Loader2 } from "lucide-react";
 
 export default function AdminFeaturedPage() {
-  const [featuredItems, setFeaturedItems] = useState([
-    {
-      id: 1,
-      title: "Angrezi Sapne",
-      category: "Official Trailer",
-      type: "video",
-      src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200&auto=format&fit=crop",
-      url: "https://youtube.com",
-    },
-    {
-      id: 2,
-      title: "Love Lane",
-      category: "Season 2 Official Trailer",
-      type: "image",
-      src: "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1200&auto=format&fit=crop",
-      url: "",
-    },
-    {
-      id: 3,
-      title: "Murdered",
-      category: "Gulshan Kumar",
-      type: "video",
-      src: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1200&auto=format&fit=crop",
-      url: "",
-    }
-  ]);
-
+  const [featuredItems, setFeaturedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newItem, setNewItem] = useState({ title: "", category: "", type: "image", src: "", url: "" });
+  const [newItem, setNewItem] = useState({ title: "", category: "", type: "image", url: "" });
+  const [newMediaFile, setNewMediaFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef(null);
 
-  const handleUpdate = (id, field, value) => {
-    setFeaturedItems(prev => prev.map(item => item.id === id ? { ...item, [field]: value } : item));
+  useEffect(() => {
+    fetchFeatured();
+  }, []);
+
+  const fetchFeatured = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/featured");
+      const data = await res.json();
+      setFeaturedItems(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeFeatured = (id) => {
-    setFeaturedItems(prev => prev.filter(item => item.id !== id));
+  const handleUpdateLocal = (id, field, value) => {
+    setFeaturedItems(prev => prev.map(item => item._id === id ? { ...item, [field]: value } : item));
   };
 
-  const handleAddNewItem = () => {
-    if (!newItem.title) return;
-    const itemToAdd = {
-      id: Date.now(),
-      title: newItem.title,
-      category: newItem.category || "Featured",
-      type: newItem.type,
-      src: newItem.src || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200&auto=format&fit=crop",
-      url: newItem.url
-    };
-    setFeaturedItems(prev => [itemToAdd, ...prev]);
-    setIsAdding(false);
-    setNewItem({ title: "", category: "", type: "image", src: "", url: "" });
+  const saveUpdateToBackend = async (id, field, value) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      await fetch(`http://localhost:5000/api/featured/${id}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ [field]: value }),
+      });
+    } catch (err) {
+      console.error("Failed to update field:", field);
+    }
+  };
+
+  const removeFeatured = async (id) => {
+    if (!window.confirm("Delete this featured item?")) return;
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`http://localhost:5000/api/featured/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) fetchFeatured();
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewMediaFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAddNewItem = async () => {
+    if (!newItem.title || !newMediaFile) {
+      alert("Title and Thumbnail are required.");
+      return;
+    }
+
+    setSubmitting(true);
+    const formData = new FormData();
+    Object.keys(newItem).forEach(key => formData.append(key, newItem[key]));
+    formData.append("media", newMediaFile);
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/featured", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
+      });
+      if (res.ok) {
+        setIsAdding(false);
+        setNewItem({ title: "", category: "", type: "image", url: "" });
+        setNewMediaFile(null);
+        setPreviewUrl(null);
+        fetchFeatured();
+      } else {
+        alert("Upload failed.");
+      }
+    } catch (err) {
+      console.error("Failed to create", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -65,7 +112,7 @@ export default function AdminFeaturedPage() {
       <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border border-[#1a1a1a] rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl mt-2">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold text-white">Manage Featured Work</h1>
-          <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Live WYSIWYG Editor. Click directly on text to edit.</p>
+          <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Live WYSIWYG Editor. Click directly on text to edit (auto-saves on blur).</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           {!isAdding && (
@@ -76,9 +123,6 @@ export default function AdminFeaturedPage() {
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" /> Add Featured Item
             </button>
           )}
-          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-gold hover:bg-gold/90 text-black text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-md transition-colors shadow-[0_0_15px_rgba(252,166,3,0.3)]">
-            <Save className="w-3 h-3 sm:w-4 sm:h-4 stroke-[2]" /> Save Changes
-          </button>
         </div>
       </div>
 
@@ -139,10 +183,14 @@ export default function AdminFeaturedPage() {
               
               <div className="flex flex-col gap-2">
                 <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Upload File (Thumbnail)</label>
-                <div className="w-full h-32 border-2 border-dashed border-[#222] hover:border-gold/50 rounded-lg flex flex-col items-center justify-center bg-[#111] transition-colors cursor-pointer group relative overflow-hidden">
-                  {newItem.src ? (
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,video/*" />
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-32 border-2 border-dashed border-[#222] hover:border-gold/50 rounded-lg flex flex-col items-center justify-center bg-[#111] transition-colors cursor-pointer group relative overflow-hidden"
+                >
+                  {previewUrl ? (
                     <>
-                      <img src={newItem.src} alt="Preview" className="w-full h-full object-cover opacity-50" />
+                      <img src={previewUrl} alt="Preview" className="w-full h-full object-cover opacity-50" />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-xs font-bold text-white bg-black/60 px-3 py-1 rounded">Change</span>
                       </div>
@@ -181,10 +229,11 @@ export default function AdminFeaturedPage() {
           <div className="mt-8 flex justify-end max-w-4xl">
             <button 
               onClick={handleAddNewItem}
-              disabled={!newItem.title}
+              disabled={submitting || !newItem.title}
               className="flex items-center gap-2 px-6 py-3 bg-gold hover:bg-gold/90 disabled:opacity-50 disabled:cursor-not-allowed text-black text-xs font-bold uppercase tracking-widest rounded-md transition-colors"
             >
-              <Plus className="w-4 h-4 stroke-[2]" /> Add to Featured
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 stroke-[2]" />} 
+              {submitting ? "Uploading..." : "Add to Featured"}
             </button>
           </div>
 
@@ -201,76 +250,84 @@ export default function AdminFeaturedPage() {
           <p className="text-[10px] sm:text-xs font-bold text-neutral-500 uppercase tracking-widest mt-1">Live Frontend Preview. Click text to edit.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {featuredItems.map((item) => (
-            <div 
-              key={item.id} 
-              className="relative w-full aspect-[16/9] rounded-xl overflow-hidden group/card border border-neutral-800/50 hover:border-gold/30 transition-all duration-500 shadow-xl"
-            >
-              {/* Delete Overlay */}
-              <button 
-                onClick={() => removeFeatured(item.id)}
-                className="absolute top-3 right-3 z-30 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded flex items-center justify-center text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
+        {loading ? (
+          <div className="text-neutral-500 py-10">Loading featured projects...</div>
+        ) : featuredItems.length === 0 ? (
+          <div className="text-neutral-500 py-10">No featured items found.</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {featuredItems.map((item) => (
+              <div 
+                key={item._id} 
+                className="relative w-full aspect-[16/9] rounded-xl overflow-hidden group/card border border-neutral-800/50 hover:border-gold/30 transition-all duration-500 shadow-xl"
               >
-                <Trash2 className="w-4 h-4" />
-              </button>
+                {/* Delete Overlay */}
+                <button 
+                  onClick={() => removeFeatured(item._id)}
+                  className="absolute top-3 right-3 z-30 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded flex items-center justify-center text-white opacity-0 group-hover/card:opacity-100 transition-opacity"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
 
-              {/* Media Tags */}
-              <div className="absolute top-3 left-3 z-30 flex flex-col gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
-                <span className="px-2 py-1 bg-black/60 backdrop-blur-md border border-white/20 text-[9px] font-bold text-white uppercase rounded-md shadow-sm w-fit flex items-center gap-1">
-                  {item.type === 'video' ? <Video className="w-3 h-3" /> : <ImageIcon className="w-3 h-3" />} 
-                  {item.type}
-                </span>
-                {item.url && (
-                  <span className="px-2 py-1 bg-blue-600/90 backdrop-blur-md border border-blue-400/50 text-[9px] font-bold text-white uppercase rounded-md flex items-center gap-1 shadow-sm w-fit">
-                    <LinkIcon className="w-3 h-3" /> Link
+                {/* Media Tags */}
+                <div className="absolute top-3 left-3 z-30 flex flex-col gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                  <span className="px-2 py-1 bg-black/60 backdrop-blur-md border border-white/20 text-[9px] font-bold text-white uppercase rounded-md shadow-sm w-fit flex items-center gap-1">
+                    {item.type === 'video' ? <Video className="w-3 h-3" /> : <ImageIcon className="w-3 h-3" />} 
+                    {item.type}
                   </span>
+                  {item.url && (
+                    <span className="px-2 py-1 bg-blue-600/90 backdrop-blur-md border border-blue-400/50 text-[9px] font-bold text-white uppercase rounded-md flex items-center gap-1 shadow-sm w-fit">
+                      <LinkIcon className="w-3 h-3" /> Link
+                    </span>
+                  )}
+                </div>
+
+                {/* Background Media */}
+                <div className="absolute inset-0 z-0 bg-neutral-900">
+                  <img 
+                    src={item.src} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
+                  />
+                </div>
+                
+                {/* Vignette effect */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20 pointer-events-none z-0" />
+
+                {/* Play Button Overlay */}
+                {item.type === 'video' && (
+                  <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                    <div className="w-14 h-14 rounded-full border border-white/20 bg-white/10 flex items-center justify-center shadow-2xl backdrop-blur-sm group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black transition-all">
+                      <Play className="w-5 h-5 ml-1 fill-current" />
+                    </div>
+                  </div>
                 )}
-              </div>
 
-              {/* Background Media */}
-              <div className="absolute inset-0 z-0 bg-neutral-900">
-                <img 
-                  src={item.src} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
-                />
-              </div>
-              
-              {/* Vignette effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20 pointer-events-none z-0" />
-
-              {/* Play Button Overlay */}
-              {item.type === 'video' && (
-                <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-                  <div className="w-14 h-14 rounded-full border border-white/20 bg-white/10 flex items-center justify-center shadow-2xl backdrop-blur-sm group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black transition-all">
-                    <Play className="w-5 h-5 ml-1 fill-current" />
+                {/* Content text */}
+                <div className="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                  <div className="flex flex-col gap-1 w-full max-w-[80%] relative z-30">
+                    <input
+                      type="text"
+                      value={item.category || ""}
+                      onChange={(e) => handleUpdateLocal(item._id, 'category', e.target.value)}
+                      onBlur={(e) => saveUpdateToBackend(item._id, 'category', e.target.value)}
+                      className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold bg-transparent border-b border-transparent hover:border-gold/50 focus:border-gold w-fit focus:outline-none shadow-black drop-shadow-md placeholder:text-gold/50"
+                      placeholder="Category"
+                    />
+                    <input
+                      type="text"
+                      value={item.title || ""}
+                      onChange={(e) => handleUpdateLocal(item._id, 'title', e.target.value)}
+                      onBlur={(e) => saveUpdateToBackend(item._id, 'title', e.target.value)}
+                      className="text-2xl md:text-3xl font-bold tracking-tight text-white bg-transparent border-b border-transparent hover:border-white/30 focus:border-white w-full focus:outline-none drop-shadow-lg placeholder:text-white/50"
+                      placeholder="Project Title"
+                    />
                   </div>
                 </div>
-              )}
-
-              {/* Content text */}
-              <div className="absolute inset-0 z-10 flex flex-col justify-end p-6">
-                <div className="flex flex-col gap-1 w-full max-w-[80%] relative z-30">
-                  <input
-                    type="text"
-                    value={item.category}
-                    onChange={(e) => handleUpdate(item.id, 'category', e.target.value)}
-                    className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold bg-transparent border-b border-transparent hover:border-gold/50 focus:border-gold w-fit focus:outline-none shadow-black drop-shadow-md placeholder:text-gold/50"
-                    placeholder="Category"
-                  />
-                  <input
-                    type="text"
-                    value={item.title}
-                    onChange={(e) => handleUpdate(item.id, 'title', e.target.value)}
-                    className="text-2xl md:text-3xl font-bold tracking-tight text-white bg-transparent border-b border-transparent hover:border-white/30 focus:border-white w-full focus:outline-none drop-shadow-lg placeholder:text-white/50"
-                    placeholder="Project Title"
-                  />
-                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
     </div>

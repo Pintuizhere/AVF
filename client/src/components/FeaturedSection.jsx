@@ -1,43 +1,29 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
-
-const featuredItems = [
-  {
-    id: 1,
-    title: "Angrezi Sapne",
-    category: "Official Trailer",
-    color: "from-blue-900/80 to-neutral-900",
-  },
-  {
-    id: 2,
-    title: "Love Lane",
-    category: "Season 2 Official Trailer",
-    color: "from-yellow-900/80 to-neutral-900",
-  },
-  {
-    id: 3,
-    title: "Murdered",
-    category: "Gulshan Kumar",
-    color: "from-red-900/80 to-neutral-900",
-  },
-  {
-    id: 4,
-    title: "The Crypto",
-    category: "Documentary",
-    color: "from-green-900/80 to-neutral-900",
-  },
-  {
-    id: 5,
-    title: "City Lights",
-    category: "Short Film",
-    color: "from-purple-900/80 to-neutral-900",
-  }
-];
+import Link from "next/link";
 
 export default function FeaturedSection() {
   const scrollContainerRef = useRef(null);
+  const [featuredItems, setFeaturedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeatured();
+  }, []);
+
+  const fetchFeatured = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/featured");
+      const data = await res.json();
+      setFeaturedItems(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
@@ -46,6 +32,9 @@ export default function FeaturedSection() {
       scrollContainerRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
     }
   };
+
+  if (loading) return null; // Or a subtle skeleton
+  if (featuredItems.length === 0) return null;
 
   return (
     <section className="bg-black py-16 text-white relative border-b border-white/5">
@@ -76,25 +65,33 @@ export default function FeaturedSection() {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {featuredItems.map((item) => (
-            <div 
-              key={item.id} 
-              className="relative flex-none w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] aspect-[16/9] rounded-xl overflow-hidden group/card snap-start cursor-pointer border border-neutral-800/50 hover:border-gold/30 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold/5"
+            <Link 
+              href={item.url ? item.url : "#"} 
+              target={item.url ? "_blank" : "_self"}
+              key={item._id} 
+              className="relative flex-none w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] aspect-[16/9] rounded-xl overflow-hidden group/card snap-start cursor-pointer border border-neutral-800/50 hover:border-gold/30 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold/5 block"
             >
-              {/* Abstract Background for Placeholder */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-90 group-hover/card:scale-105 transition-transform duration-700 ease-out`} />
-              
-              {/* Vignette effect */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none z-0" />
-
-              {/* Play Button Overlay */}
-              <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-                <div className="w-16 h-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black transition-all duration-300 shadow-2xl scale-90 group-hover/card:scale-100">
-                  <Play className="w-6 h-6 ml-1 fill-current" />
-                </div>
+              <div className="absolute inset-0 z-0 bg-neutral-900">
+                <img 
+                  src={item.src} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
+                />
               </div>
+              
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none z-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none z-0" />
 
-              {/* Content text */}
-              <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 bg-gradient-to-t from-black via-black/50 to-transparent">
+              {/* Play Button Overlay for video type */}
+              {item.type === 'video' && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
+                  <div className="w-16 h-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black transition-all duration-300 shadow-2xl scale-90 group-hover/card:scale-100">
+                    <Play className="w-6 h-6 ml-1 fill-current" />
+                  </div>
+                </div>
+              )}
+
+              <div className="absolute inset-0 z-10 flex flex-col justify-end p-6">
                 <div className="transform translate-y-2 group-hover/card:translate-y-0 transition-transform duration-300">
                   <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold mb-2 block shadow-black drop-shadow-md">
                     {item.category}
@@ -104,7 +101,7 @@ export default function FeaturedSection() {
                   </h3>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
