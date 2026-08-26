@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { Film, Target, Users, Clock } from "lucide-react";
 
 function AnimatedCounter({ end, duration = 2000 }) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const ref = useRef(null);
   
   useEffect(() => {
@@ -22,7 +22,7 @@ function AnimatedCounter({ end, duration = 2000 }) {
             // Smooth ease-out curve
             const easeOutExpo = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
             
-            setCount(Math.floor(easeOutExpo * end));
+            setCount(Math.floor(1 + easeOutExpo * (end - 1)));
             
             if (progress < 1) {
               requestAnimationFrame(animate);

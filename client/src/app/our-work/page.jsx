@@ -128,17 +128,12 @@ export default function OurWorkPage() {
       <WorkCategoryNav />
 
       {/* Main Content Areas */}
-      <div className="flex flex-col">
-        {workData.map((category) => (
-          <section id={category.id} key={category.id}>
-            <WorkCategoryRow
-              icon={<category.icon className="w-6 h-6 stroke-[1.5]" />}
-              title={category.title}
-              description={category.description}
-              projects={category.projects}
-            />
-          </section>
-        ))}
+      <div className="flex flex-col" id="all-work">
+        <WorkCategoryRow 
+          projects={workData.flatMap(cat => 
+            cat.projects.map(p => ({ ...p, categoryTitle: cat.title }))
+          )} 
+        />
       </div>
 
       <Footer />

@@ -2,123 +2,127 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Play, ChevronRight, ChevronLeft } from "lucide-react";
-import { useRef } from "react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
-export default function WorkCategoryRow({ 
-  icon, 
-  title, 
-  description, 
-  projects 
-}) {
-  const scrollContainerRef = useRef(null);
+export default function WorkCategoryRow({ title, projects }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+  
+  const totalPages = Math.ceil((projects?.length || 0) / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentProjects = projects?.slice(startIndex, startIndex + itemsPerPage) || [];
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-    }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 300, behavior: "smooth" });
   };
 
   return (
     <div className="border-b border-neutral-900 bg-black">
-      <div className="container mx-auto px-6 md:px-12 py-12 flex flex-col lg:flex-row gap-8 lg:gap-12">
-        
-        {/* Left Side: Category Info */}
-        <div className="w-full lg:w-1/4 flex flex-col items-start gap-4 shrink-0">
-          <div className="p-3 border border-neutral-800 rounded-md bg-neutral-950 text-gold mb-2">
-            {icon}
-          </div>
-          
-          <h3 className="text-2xl font-bebas tracking-wider uppercase text-white">
-            {title}
-          </h3>
-          
-          <p className="text-xs text-neutral-400 leading-relaxed font-medium pr-4">
-            {description}
-          </p>
-          
-          <Link 
-            href={`/our-work#${title.toLowerCase()}`}
-            className="mt-4 text-gold text-[10px] font-bold tracking-widest uppercase flex items-center gap-2 group hover:text-white transition-colors"
-          >
-            VIEW MORE
-            <span className="transition-transform group-hover:translate-x-1">→</span>
-          </Link>
-        </div>
-
-        {/* Right Side: Projects Scroll */}
-        <div className="w-full lg:w-3/4 relative flex items-center">
-          
-          {/* Scroll Left Button */}
-          <button 
-            onClick={scrollLeft}
-            className="absolute left-0 z-10 -ml-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/80 border border-neutral-800 text-neutral-400 hover:text-white hover:border-gold hover:bg-black transition-all"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          {/* Scroll Container */}
-          <div 
-            ref={scrollContainerRef}
-            className="flex w-full overflow-x-auto gap-6 scrollbar-hide py-4 px-6 snap-x snap-mandatory"
-          >
-            
-            {projects.map((project, index) => (
-              <div 
+      <div className="container mx-auto px-6 md:px-12 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {currentProjects.map((project, index) => {
+            // Generate a simple slug from the title if it doesn't exist
+            const slug = project.slug || project.title.toLowerCase().replace(/\s+/g, '-');
+            return (
+              <Link 
+                href={`/our-work/${slug}`}
                 key={index} 
-                className="relative group w-[240px] md:w-[280px] shrink-0 aspect-[16/10] rounded-sm overflow-hidden bg-neutral-900 cursor-pointer snap-start border border-neutral-800"
+                className="relative group w-full aspect-[4/3] p-2 md:p-3 bg-[#131313] cursor-pointer border border-neutral-800 rounded-sm flex flex-col justify-center shadow-[0_5px_20px_rgba(0,0,0,0.8)] hover:border-neutral-600 transition-colors duration-500"
               >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                {/* Film Strip Holes Top */}
+                <div 
+                  className="absolute top-1 md:top-1.5 left-0 right-0 h-2 md:h-2.5 w-full opacity-100"
+                  style={{ 
+                    backgroundImage: "radial-gradient(circle, #000 2.5px, transparent 3px)", 
+                    backgroundSize: "14px 100%",
+                    backgroundPosition: "center"
+                  }}
                 />
                 
-                {/* Gradient Overlay for Text */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
-                
-                {/* Title & Play Icon */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center gap-3">
-                  {/* Small Play Button */}
-                  <div className="w-5 h-5 rounded-full border border-gold flex items-center justify-center shrink-0">
-                    <Play className="w-2 h-2 text-gold fill-current ml-[1px]" />
-                  </div>
-                  <h4 className="text-xs font-bold text-neutral-200 tracking-wide truncate group-hover:text-gold transition-colors">
-                    {project.title}
-                  </h4>
-                </div>
-              </div>
-            ))}
-            
-            {/* View More Circle at end of list */}
-            <div className="relative group w-[120px] shrink-0 flex flex-col items-center justify-center gap-4 cursor-pointer snap-start">
-              <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center text-neutral-400 group-hover:border-gold group-hover:text-gold transition-colors">
-                <ChevronRight className="w-5 h-5 stroke-[1.5]" />
-              </div>
-              <span className="text-[10px] font-bold text-gold tracking-widest uppercase group-hover:text-white transition-colors">
-                VIEW MORE →
-              </span>
-            </div>
-          </div>
+                {/* Film Strip Holes Bottom */}
+                <div 
+                  className="absolute bottom-1 md:bottom-1.5 left-0 right-0 h-2 md:h-2.5 w-full opacity-100"
+                  style={{ 
+                    backgroundImage: "radial-gradient(circle, #000 2.5px, transparent 3px)", 
+                    backgroundSize: "14px 100%",
+                    backgroundPosition: "center"
+                  }}
+                />
 
-          {/* Scroll Right Button */}
-          <button 
-            onClick={scrollRight}
-            className="absolute right-0 z-10 -mr-4 w-8 h-8 flex items-center justify-center rounded-full bg-gold text-black hover:bg-white transition-all shadow-[0_0_15px_rgba(252,166,3,0.3)]"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-          
+                {/* Inner Frame */}
+                <div className="relative w-full h-full rounded-sm overflow-hidden bg-black border border-[#222] mt-2 mb-2 group-hover:border-neutral-700 transition-colors duration-500">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-70 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
+                  />
+                  
+                  {/* Gradient Overlay for Text */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
+                  
+                  {/* Text Content & Icon */}
+                  <div className="absolute bottom-0 left-0 w-full p-4 md:p-5 flex items-end justify-between translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    
+                    {/* Left Side: Category and Title */}
+                    <div className="flex flex-col gap-1 md:gap-1.5 pr-4">
+                      <span className="text-gold text-[8px] md:text-[9px] font-bold tracking-[0.2em] uppercase">
+                        {project.categoryTitle || title || 'PROJECT'} / 2024
+                      </span>
+                      <h3 className="text-[26px] md:text-[32px] font-bebas tracking-wide text-white uppercase leading-[0.9] group-hover:text-gold transition-colors duration-500">
+                        {project.title}
+                      </h3>
+                    </div>
+
+                    {/* Right Side: Arrow Icon */}
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white flex items-center justify-center shrink-0 group-hover:bg-gold transition-colors duration-500 shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+                      <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-black stroke-[2.5]" />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
+        
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="mt-16 flex justify-center items-center gap-2">
+            <button 
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-neutral-800 text-neutral-400 hover:text-white hover:border-gold disabled:opacity-50 disabled:hover:border-neutral-800 disabled:hover:text-neutral-400 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            
+            <div className="flex items-center gap-2 px-2 md:px-4">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-bold transition-all duration-300 ${
+                    currentPage === i + 1 
+                      ? "bg-gold text-black shadow-[0_0_15px_rgba(252,166,3,0.3)] border border-gold" 
+                      : "border border-neutral-800 text-neutral-400 hover:border-gold hover:text-white"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+
+            <button 
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-neutral-800 text-neutral-400 hover:text-white hover:border-gold disabled:opacity-50 disabled:hover:border-neutral-800 disabled:hover:text-neutral-400 transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
