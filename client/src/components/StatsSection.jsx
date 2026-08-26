@@ -43,6 +43,32 @@ function AnimatedCounter({ end, duration = 2000 }) {
 }
 
 export default function StatsSection() {
+  const [stats, setStats] = useState({
+    stat1_num: 150, stat1_label: "Projects",
+    stat2_num: 10, stat2_label: "Years Experience",
+    stat3_num: 50, stat3_label: "Creative Team",
+    stat4_num: 5000, stat4_label: "Hours of Footage",
+  });
+
+  useEffect(() => {
+    const loadStats = () => {
+      const storedHome = localStorage.getItem("avf_home_stats");
+      if (storedHome) {
+        const parsed = JSON.parse(storedHome);
+        setStats({
+          stat1_num: parseInt(parsed.stat1_num) || 150, stat1_label: parsed.stat1_label || "Projects",
+          stat2_num: parseInt(parsed.stat2_num) || 10, stat2_label: parsed.stat2_label || "Years Experience",
+          stat3_num: parseInt(parsed.stat3_num) || 50, stat3_label: parsed.stat3_label || "Creative Team",
+          stat4_num: parseInt(parsed.stat4_num) || 5000, stat4_label: parsed.stat4_label || "Hours of Footage",
+        });
+      }
+    };
+    
+    loadStats();
+    window.addEventListener("storage", loadStats);
+    return () => window.removeEventListener("storage", loadStats);
+  }, []);
+
   return (
     <div className="w-full bg-[#e9e6dc] text-black mt-8 relative z-10 border-y-[6px] border-dotted border-[#111]">
       <div className="container mx-auto px-6 py-10 md:py-14">
@@ -52,9 +78,9 @@ export default function StatsSection() {
             <Film className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
               <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
-                <AnimatedCounter end={150} duration={2500} />+
+                <AnimatedCounter end={stats.stat1_num} duration={2500} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">Projects</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat1_label}</p>
             </div>
           </div>
 
@@ -62,9 +88,9 @@ export default function StatsSection() {
             <Target className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
               <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
-                <AnimatedCounter end={10} duration={1500} />+
+                <AnimatedCounter end={stats.stat2_num} duration={1500} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">Years Experience</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat2_label}</p>
             </div>
           </div>
 
@@ -72,9 +98,9 @@ export default function StatsSection() {
             <Users className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
               <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
-                <AnimatedCounter end={50} duration={2000} />+
+                <AnimatedCounter end={stats.stat3_num} duration={2000} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">Creative Team</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat3_label}</p>
             </div>
           </div>
 
@@ -82,9 +108,9 @@ export default function StatsSection() {
             <Clock className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
               <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
-                <AnimatedCounter end={5000} duration={3000} />+
+                <AnimatedCounter end={stats.stat4_num} duration={3000} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">Hours of Footage</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat4_label}</p>
             </div>
           </div>
 

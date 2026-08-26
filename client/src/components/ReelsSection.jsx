@@ -130,12 +130,6 @@ export default function ReelsSection() {
               <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-transparent to-black/90"></div>
               <div className="absolute inset-0 z-10 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
 
-              {/* Top Meta Info (Views) */}
-              <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 transform -translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                <span className="text-xs font-semibold tracking-wider">{reel.views} Views</span>
-              </div>
-
               {/* Center Play Button */}
               <div className="absolute inset-0 z-20 flex items-center justify-center">
                 <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center transform scale-90 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 hover:bg-gold hover:border-gold hover:text-black">

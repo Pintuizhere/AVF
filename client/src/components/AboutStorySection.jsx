@@ -1,6 +1,29 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Image as ImageIcon, Clapperboard, Film, Users, Globe } from "lucide-react";
 
 export default function AboutStorySection() {
+  const [stats, setStats] = useState({
+    stat1_num: "7", stat1_label: "Years Of Experience",
+    stat2_num: "250", stat2_label: "Projects Completed",
+    stat3_num: "150", stat3_label: "Happy Clients",
+    stat4_num: "10", stat4_label: "Industries Served",
+  });
+
+  useEffect(() => {
+    const loadStats = () => {
+      const storedAbout = localStorage.getItem("avf_about_stats");
+      if (storedAbout) {
+        setStats(JSON.parse(storedAbout));
+      }
+    };
+    
+    loadStats();
+    window.addEventListener("storage", loadStats);
+    return () => window.removeEventListener("storage", loadStats);
+  }, []);
+
   return (
     <section id="story" className="relative bg-[#f5f0e6] text-black py-20 lg:py-32 px-4 md:px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden w-full">
       
@@ -55,26 +78,26 @@ export default function AboutStorySection() {
             {/* Stat 1 */}
             <div className="flex flex-col items-center justify-center p-6 border-r border-b md:border-b-0 border-neutral-300/60 hover:bg-white/50 transition-colors">
               <Clapperboard className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-              <span className="text-2xl font-black text-black">7+</span>
-              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1">Years Of<br/>Experience</span>
+              <span className="text-2xl font-black text-black">{stats.stat1_num}+</span>
+              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{stats.stat1_label.replace(' ', '\n')}</span>
             </div>
             {/* Stat 2 */}
             <div className="flex flex-col items-center justify-center p-6 border-b md:border-b-0 md:border-r border-neutral-300/60 hover:bg-white/50 transition-colors">
               <Film className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-              <span className="text-2xl font-black text-black">250+</span>
-              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1">Projects<br/>Completed</span>
+              <span className="text-2xl font-black text-black">{stats.stat2_num}+</span>
+              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{stats.stat2_label.replace(' ', '\n')}</span>
             </div>
             {/* Stat 3 */}
             <div className="flex flex-col items-center justify-center p-6 border-r border-neutral-300/60 hover:bg-white/50 transition-colors">
               <Users className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-              <span className="text-2xl font-black text-black">150+</span>
-              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1">Happy<br/>Clients</span>
+              <span className="text-2xl font-black text-black">{stats.stat3_num}+</span>
+              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{stats.stat3_label.replace(' ', '\n')}</span>
             </div>
             {/* Stat 4 */}
             <div className="flex flex-col items-center justify-center p-6 hover:bg-white/50 transition-colors">
               <Globe className="w-8 h-8 text-gold mb-3 stroke-[1.5]" />
-              <span className="text-2xl font-black text-black">10+</span>
-              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1">Industries<br/>Served</span>
+              <span className="text-2xl font-black text-black">{stats.stat4_num}+</span>
+              <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center mt-1 whitespace-pre-wrap leading-tight">{stats.stat4_label.replace(' ', '\n')}</span>
             </div>
           </div>
         </div>

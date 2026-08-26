@@ -6,17 +6,20 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { 
   LayoutDashboard, Clapperboard, MonitorPlay, Camera, MessageSquareQuote, 
-  Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu, LogOut, X
+  Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu, LogOut, X,
+  Star, Smartphone, BarChart2
 } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Projects", href: "/admin/projects", icon: Clapperboard },
+  { name: "Featured Work", href: "/admin/featured", icon: Star },
+  { name: "Shorts", href: "/admin/shorts", icon: Smartphone },
   { name: "Services", href: "/admin/services", icon: MonitorPlay },
   { name: "BTS Gallery", href: "/admin/bts", icon: Camera },
   { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquareQuote },
+  { name: "Stats", href: "/admin/stats", icon: BarChart2 },
   { name: "Leads / Inquiries", href: "/admin/leads", icon: Mail },
-  { name: "Subscribers", href: "/admin/subscribers", icon: Users },
   { name: "Team", href: "/admin/team", icon: Users },
   { name: "Pages", href: "/admin/pages", icon: FileText },
   { name: "Settings", href: "/admin/settings", icon: Settings },
