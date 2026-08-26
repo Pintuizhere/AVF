@@ -1,6 +1,7 @@
 import { Outfit, Geist_Mono, Bebas_Neue, Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
       className={`${outfit.variable} ${constanley.variable} ${geistMono.variable} ${bebasNeue.variable} ${montserrat.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#0a0a0a] text-white">
+        <ScrollToTop />
         {children}
       </body>
     </html>
