@@ -32,6 +32,10 @@ const footerSchema = new mongoose.Schema({
   address: {
     type: String,
     default: "AVF Pvt. Ltd.\nOpposite Film City,\nMumbai - 400001"
+  },
+  workingHours: {
+    type: String,
+    default: "Mon - Sat: 10:00 AM - 7:00 PM"
   }
 }, { timestamps: true });
 

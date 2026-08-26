@@ -27,7 +27,8 @@ exports.updateFooter = async (req, res) => {
       linkedinUrl, 
       phoneNumbers, 
       emailAddress, 
-      address 
+      address,
+      workingHours
     } = req.body;
 
     let footer = await Footer.findOne();
@@ -44,6 +45,7 @@ exports.updateFooter = async (req, res) => {
     if (phoneNumbers !== undefined) footer.phoneNumbers = phoneNumbers;
     if (emailAddress !== undefined) footer.emailAddress = emailAddress;
     if (address !== undefined) footer.address = address;
+    if (workingHours !== undefined) footer.workingHours = workingHours;
 
     await footer.save();
     res.json(footer);

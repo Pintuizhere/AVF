@@ -18,7 +18,8 @@ export default function AdminFooter() {
     linkedinUrl: "",
     phoneNumbers: "",
     emailAddress: "",
-    address: ""
+    address: "",
+    workingHours: ""
   });
 
   useEffect(() => {
@@ -43,7 +44,8 @@ export default function AdminFooter() {
           linkedinUrl: data.linkedinUrl || "",
           phoneNumbers: data.phoneNumbers || "",
           emailAddress: data.emailAddress || "",
-          address: data.address || ""
+          address: data.address || "",
+          workingHours: data.workingHours || ""
         });
       }
     } catch (error) {
@@ -174,6 +176,20 @@ export default function AdminFooter() {
                 onChange={handleChange}
                 rows="3"
                 placeholder="AVF Pvt. Ltd.&#10;Opposite Film City,&#10;Mumbai - 400001"
+                className="w-full bg-[#111] border border-[#222] text-white text-sm rounded-md px-4 py-3 focus:outline-none focus:border-gold/50 transition-colors"
+              />
+            </div>
+            
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                <Info className="w-4 h-4 text-neutral-500" /> Working Hours
+              </label>
+              <input 
+                type="text" 
+                name="workingHours"
+                value={formData.workingHours}
+                onChange={handleChange}
+                placeholder="Mon - Sat: 10:00 AM - 7:00 PM"
                 className="w-full bg-[#111] border border-[#222] text-white text-sm rounded-md px-4 py-3 focus:outline-none focus:border-gold/50 transition-colors"
               />
             </div>
