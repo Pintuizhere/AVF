@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight, Clapperboard, Calendar, MonitorPlay, Package, Coffee, Camera, Smartphone } from "lucide-react";
+import { ArrowRight, Clapperboard, Calendar, MonitorPlay, Package, Coffee, Camera, Smartphone, Car } from "lucide-react";
 
 export default function ServicesGridSection() {
   const services = [
@@ -57,6 +57,14 @@ export default function ServicesGridSection() {
       description: "Short format.\nBig impact.",
       image: "/images/about-hero-bg.jpg", // Using placeholder
       icon: Smartphone,
+      colSpan: 1
+    },
+    {
+      id: "automotive",
+      title: "Automotive",
+      description: "Powerful cars.\nBold details.\nCaptured in motion.",
+      image: "/images/hero-bg.jpg", // Using placeholder
+      icon: Car,
       colSpan: 1
     }
   ];

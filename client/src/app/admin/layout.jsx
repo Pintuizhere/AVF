@@ -1,11 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { 
   LayoutDashboard, Clapperboard, MonitorPlay, Camera, MessageSquareQuote, 
-  Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu 
+  Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu, LogOut, X
 } from "lucide-react";
 
 const navItems = [
@@ -24,21 +25,47 @@ const navItems = [
 
 export default function AdminDashboardLayout({ children }) {
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Close sidebar on route change for mobile
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
+  const isLoginPage = pathname === "/admin/login";
+
+  if (isLoginPage) {
+    return <div className="min-h-screen bg-[#050505] text-white font-sans">{children}</div>;
+  }
 
   return (
-    <div className="flex h-screen w-full bg-[#050505] text-white overflow-hidden font-sans">
+    <div className="flex h-screen w-full bg-[#050505] text-white overflow-hidden font-sans relative">
       
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-[#0a0a0a] border-r border-[#1a1a1a] flex flex-col h-full shrink-0">
-        {/* Branding */}
-        <div className="h-24 flex items-center px-6 border-b border-[#1a1a1a]">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="font-bebas text-gold text-4xl leading-none">AVF</span>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold tracking-widest uppercase leading-tight">Akash Verma</span>
-              <span className="text-[9px] text-neutral-400 tracking-widest uppercase leading-tight">Film Products</span>
-            </div>
+      <aside 
+        className={`fixed md:static inset-y-0 left-0 z-[100] w-64 bg-[#0a0a0a] border-r border-[#1a1a1a] flex flex-col h-full transform transition-transform duration-300 ease-in-out shrink-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
+      >
+        {/* Branding & Mobile Close */}
+        <div className="h-20 flex items-center justify-between px-6 border-b border-[#1a1a1a]">
+          <Link href="/" className="flex items-center">
+            <img src="/images/logo.png" alt="AVF Production Logo" className="h-[60px] w-auto object-contain" />
           </Link>
+          <button 
+            className="md:hidden text-neutral-400 hover:text-white transition-colors"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Navigation */}
@@ -78,43 +105,38 @@ export default function AdminDashboardLayout({ children }) {
           })}
         </div>
 
-        {/* Promo Card Bottom */}
-        <div className="p-4 mt-auto">
-          <div className="relative w-full rounded-xl overflow-hidden border border-[#222] p-4 flex flex-col justify-end bg-black">
-             <Image 
-               src="/images/services-bg.jpg" 
-               alt="Camera promo"
-               fill
-               className="object-cover opacity-30 grayscale"
-             />
-             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-             <div className="relative z-10 flex flex-col gap-2">
-                <span className="font-script text-gold text-lg -rotate-2">Lights. Camera. AVF.</span>
-                <p className="text-[10px] text-neutral-400 leading-relaxed">
-                  We don&apos;t just create videos,<br/>we tell stories.
-                </p>
-             </div>
-          </div>
+        {/* Bottom Section: Sign Out */}
+        <div className="p-4 mt-auto flex flex-col gap-4">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-md text-neutral-400 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all group">
+            <LogOut className="w-5 h-5 stroke-[1.5]" />
+            <span className="text-sm font-medium">Sign Out</span>
+          </button>
         </div>
       </aside>
 
       {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden w-full">
         
         {/* Topbar */}
-        <header className="h-20 bg-[#0a0a0a] border-b border-[#1a1a1a] flex items-center justify-between px-8 shrink-0">
-          <div className="flex items-center gap-6">
-            <button className="text-neutral-400 hover:text-white transition-colors">
-              <Menu className="w-6 h-6 stroke-[1.5]" />
+        <header className="h-20 bg-[#0a0a0a] border-b border-[#1a1a1a] flex items-center justify-between px-4 md:px-8 shrink-0">
+          
+          <div className="flex items-center gap-4 md:gap-6">
+            {/* Mobile Hamburger Menu */}
+            <button 
+              className="md:hidden text-neutral-400 hover:text-white transition-colors"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
             </button>
+            
             <div className="flex flex-col">
-              <h2 className="text-xl font-bold text-white leading-tight">Dashboard</h2>
-              <p className="text-xs text-neutral-400 mt-0.5">Welcome back, Admin!</p>
+              <h2 className="text-lg md:text-xl font-bold text-white leading-tight truncate">Dashboard</h2>
+              <p className="hidden sm:block text-xs text-neutral-400 mt-0.5">Welcome back, Admin!</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2 text-neutral-400">
+          <div className="flex items-center gap-4 md:gap-8">
+            <div className="hidden sm:flex items-center gap-2 text-neutral-400">
               <Calendar className="w-4 h-4 stroke-[1.5]" />
               <span className="text-xs font-medium">May 18, 2024</span>
             </div>
@@ -126,21 +148,21 @@ export default function AdminDashboardLayout({ children }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 cursor-pointer group pl-4 border-l border-[#222]">
-              <div className="w-9 h-9 rounded-full bg-[#cfa25c] flex items-center justify-center text-black font-bold text-sm shadow-md">
+            <div className="flex items-center gap-2 md:gap-3 cursor-pointer group pl-4 border-l border-[#222]">
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#cfa25c] flex items-center justify-center text-black font-bold text-sm shadow-md">
                 A
               </div>
               <div className="hidden md:flex flex-col">
                 <span className="text-sm font-bold text-white leading-tight">Admin</span>
                 <span className="text-[10px] text-neutral-400">Super Admin</span>
               </div>
-              <ChevronDown className="w-4 h-4 stroke-[2] text-neutral-500 group-hover:text-white ml-2 transition-colors" />
+              <ChevronDown className="hidden md:block w-4 h-4 stroke-[2] text-neutral-500 group-hover:text-white ml-2 transition-colors" />
             </div>
           </div>
         </header>
 
         {/* Scrollable Page Content */}
-        <main className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-[#050505]">
+        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-6 bg-[#050505]">
           {children}
         </main>
         

@@ -3,8 +3,46 @@
 import Image from "next/image";
 import { 
   Clapperboard, Users, Eye, Mail, ArrowUpRight, ArrowDownRight, 
-  ChevronDown, UserCircle2, CheckCircle2, Clock, CalendarClock, PauseCircle
+  ChevronDown, UserCircle2, CheckCircle2, Clock, CalendarClock, PauseCircle, ArrowRight
 } from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
+
+const analyticsData = [
+  { date: 'Apr 18', views: 1800 },
+  { date: 'Apr 20', views: 4000 },
+  { date: 'Apr 22', views: 6000 },
+  { date: 'Apr 24', views: 5000 },
+  { date: 'Apr 26', views: 5200 },
+  { date: 'Apr 30', views: 3900 },
+  { date: 'May 02', views: 5200 },
+  { date: 'May 04', views: 7000 },
+  { date: 'May 06', views: 5000 },
+  { date: 'May 08', views: 4800 },
+  { date: 'May 12', views: 7500 },
+  { date: 'May 14', views: 6500 },
+  { date: 'May 16', views: 5000 },
+  { date: 'May 18', views: 7845 },
+];
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#111] border border-[#222] rounded-md p-3 shadow-xl flex flex-col items-end min-w-[100px]">
+        <span className="text-lg font-bold text-white">{payload[0].value.toLocaleString()}</span>
+        <span className="text-[11px] text-neutral-400 mt-1">{label}, 2024</span>
+      </div>
+    );
+  }
+  return null;
+};
 
 export default function AdminDashboardPage() {
   
@@ -90,66 +128,41 @@ export default function AdminDashboardPage() {
             </button>
           </div>
           
-          <div className="flex-1 relative w-full min-h-[250px] mt-4">
-             {/* Y-axis Labels */}
-             <div className="absolute left-0 top-0 bottom-6 flex flex-col justify-between text-[10px] text-neutral-500 font-medium z-10">
-               <span>10K</span>
-               <span>8K</span>
-               <span>6K</span>
-               <span>4K</span>
-               <span>2K</span>
-               <span>0</span>
-             </div>
-             
-             {/* Chart Grid Lines */}
-             <div className="absolute left-6 right-0 top-1 bottom-6 flex flex-col justify-between z-0">
-               {[...Array(6)].map((_, i) => (
-                 <div key={i} className="w-full h-[1px] bg-[#1a1a1a]" />
-               ))}
-             </div>
-
-             {/* SVG Line Chart */}
-             <div className="absolute left-6 right-0 top-1 bottom-6 z-20">
-               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full overflow-visible">
-                 <defs>
-                   <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                     <stop offset="0%" stopColor="rgba(252,166,3,0.2)" />
-                     <stop offset="100%" stopColor="rgba(252,166,3,0)" />
-                   </linearGradient>
-                 </defs>
-                 <path 
-                   d="M 0,80 L 5,60 L 15,40 L 25,50 L 30,48 L 40,60 L 50,45 L 55,30 L 60,50 L 65,52 L 75,25 L 85,38 L 95,50 L 100,30 L 105,40" 
-                   fill="url(#chartGradient)" 
-                   stroke="none"
-                 />
-                 <path 
-                   d="M 0,80 L 5,60 L 15,40 L 25,50 L 30,48 L 40,60 L 50,45 L 55,30 L 60,50 L 65,52 L 75,25 L 85,38 L 95,50 L 100,30 L 105,40" 
-                   fill="none" 
-                   stroke="#FCA603" 
-                   strokeWidth="1.5" 
-                   strokeLinecap="round" 
-                   strokeLinejoin="round"
-                   className="drop-shadow-[0_0_8px_rgba(252,166,3,0.6)]"
-                 />
-                 <circle cx="100" cy="30" r="3" fill="#FCA603" className="drop-shadow-[0_0_5px_rgba(252,166,3,1)]" />
-               </svg>
-
-               {/* Hover Tooltip Mockup */}
-               <div className="absolute right-0 top-4 -translate-y-full bg-[#111] border border-[#222] rounded-md p-2 shadow-xl flex flex-col items-end">
-                 <span className="text-sm font-bold text-white">7,845</span>
-                 <span className="text-[9px] text-neutral-400">May 18, 2024</span>
-               </div>
-             </div>
-
-             {/* X-axis Labels */}
-             <div className="absolute left-6 right-0 bottom-0 flex justify-between text-[10px] text-neutral-500 font-medium">
-               <span>Apr 18</span>
-               <span>Apr 24</span>
-               <span>Apr 30</span>
-               <span>May 06</span>
-               <span>May 12</span>
-               <span>May 18</span>
-             </div>
+          <div className="flex-1 relative w-full min-h-[300px] mt-4" style={{ WebkitFilter: 'drop-shadow(0px 0px 10px rgba(252, 166, 3, 0.2))' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={analyticsData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#FCA603" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#FCA603" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1a1a1a" />
+                <XAxis 
+                  dataKey="date" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#737373', fontSize: 10 }}
+                  dy={10}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#737373', fontSize: 10 }} 
+                  tickFormatter={(val) => `${val >= 1000 ? (val / 1000) + 'K' : val}`}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#FCA603', strokeWidth: 1, strokeDasharray: '3 3' }} />
+                <Area 
+                  type="monotone" 
+                  dataKey="views" 
+                  stroke="#FCA603" 
+                  strokeWidth={3} 
+                  fillOpacity={1} 
+                  fill="url(#colorViews)" 
+                  activeDot={{ r: 6, fill: "#FCA603", stroke: "#0a0a0a", strokeWidth: 2 }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -307,19 +320,11 @@ export default function AdminDashboardPage() {
 
       <footer className="mt-8 text-center">
         <p className="text-[10px] text-neutral-500">
-          © 2024 <span className="text-gold">AVF</span> Akash Verma Film Products. All Rights Reserved.
+          © {new Date().getFullYear()} <span className="text-gold font-medium">AVF</span> Production. All Rights Reserved.
         </p>
       </footer>
     </div>
   );
 }
 
-// ArrowRight needed for button
-function ArrowRight(props) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
-  );
-}
+
