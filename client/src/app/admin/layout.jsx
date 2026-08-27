@@ -34,6 +34,8 @@ export default function AdminDashboardLayout({ children }) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [adminInfo, setAdminInfo] = useState(null);
+  const [inquiries, setInquiries] = useState([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   // Close sidebar on route change for mobile
   useEffect(() => {
@@ -71,6 +73,34 @@ export default function AdminDashboardLayout({ children }) {
   }, []);
 
   const isLoginPage = pathname === "/admin/login";
+
+  useEffect(() => {
+    if (isLoginPage) return;
+
+    const fetchLeads = async () => {
+      try {
+        const adminToken = localStorage.getItem("adminToken");
+        if (!adminToken) return;
+        const res = await fetch("http://localhost:5000/api/leads", {
+          headers: { Authorization: `Bearer ${adminToken}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setInquiries(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch leads", err);
+      }
+    };
+    
+    fetchLeads();
+    
+    const intervalId = setInterval(fetchLeads, 30000);
+    return () => clearInterval(intervalId);
+  }, [isLoginPage]);
+
+  const newInquiries = inquiries.filter(lead => lead.status === 'new' || !lead.status).slice(0, 5);
+  const unreadCount = inquiries.filter(lead => lead.status === 'new' || !lead.status).length;
 
   if (isLoginPage) {
     return <div className="min-h-screen bg-[#050505] text-white font-sans">{children}</div>;
@@ -186,11 +216,75 @@ export default function AdminDashboardLayout({ children }) {
               <span className="text-xs font-medium">May 18, 2024</span>
             </div>
             
-            <div className="relative cursor-pointer group">
-              <Bell className="w-5 h-5 stroke-[1.5] text-neutral-400 group-hover:text-white transition-colors" />
-              <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-gold rounded-full border-2 border-[#0a0a0a] flex items-center justify-center text-[8px] font-bold text-black">
-                3
-              </div>
+            <div className="relative group z-40">
+              <button 
+                className="relative cursor-pointer"
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              >
+                <Bell className={`w-5 h-5 stroke-[1.5] transition-colors ${isNotificationsOpen ? 'text-white' : 'text-neutral-400 hover:text-white'}`} />
+                {unreadCount > 0 && (
+                  <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-gold rounded-full border-2 border-[#0a0a0a] flex items-center justify-center text-[8px] font-bold text-black animate-in zoom-in">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </div>
+                )}
+              </button>
+
+              {/* Notifications Dropdown */}
+              {isNotificationsOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsNotificationsOpen(false)}
+                  />
+                  <div className="fixed sm:absolute right-4 left-4 sm:left-auto sm:right-0 top-20 sm:top-full sm:mt-4 sm:w-80 md:w-96 bg-[#0a0a0a] border border-[#222] rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                    <div className="p-4 border-b border-[#222] flex items-center justify-between bg-[#111]">
+                      <h3 className="font-bold text-white text-sm">Notifications</h3>
+                      {unreadCount > 0 && (
+                        <span className="text-[10px] uppercase tracking-widest text-gold font-bold bg-gold/10 px-2 py-1 rounded">
+                          {unreadCount} New
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="max-h-[350px] overflow-y-auto custom-scrollbar flex flex-col">
+                      {newInquiries.length === 0 ? (
+                        <div className="p-8 text-center text-neutral-500 text-sm">
+                          No new notifications
+                        </div>
+                      ) : (
+                        newInquiries.map((inquiry, idx) => (
+                          <Link 
+                            key={inquiry._id || idx}
+                            href="/admin/leads"
+                            onClick={() => setIsNotificationsOpen(false)}
+                            className="p-4 border-b border-[#1a1a1a] hover:bg-[#111] transition-colors flex flex-col gap-1 relative overflow-hidden group"
+                          >
+                            <div className="flex justify-between items-start gap-2">
+                              <span className="font-bold text-white text-sm truncate">{inquiry.name}</span>
+                              <span className="text-[10px] text-neutral-500 shrink-0">
+                                {new Date(inquiry.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gold uppercase font-bold tracking-wider">{inquiry.projectType || 'Inquiry'}</span>
+                            <p className="text-xs text-neutral-400 line-clamp-1 mt-1">{inquiry.message}</p>
+                            
+                            {/* New indicator dot */}
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gold opacity-50 group-hover:opacity-100 transition-opacity" />
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                    
+                    <Link 
+                      href="/admin/leads"
+                      onClick={() => setIsNotificationsOpen(false)}
+                      className="block p-3 text-center text-xs text-neutral-400 hover:text-white hover:bg-[#111] transition-colors border-t border-[#222]"
+                    >
+                      View All Inquiries
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="flex items-center gap-2 md:gap-3 cursor-pointer group pl-4 border-l border-[#222]">
