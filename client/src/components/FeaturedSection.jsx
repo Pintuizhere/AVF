@@ -38,7 +38,7 @@ export default function FeaturedSection() {
 
   return (
     <section className="bg-black py-16 text-white relative border-b border-white/5">
-      <div className="container mx-auto px-6 mb-8 flex justify-between items-end">
+      <div className="container mx-auto px-6 max-w-7xl mb-8 flex justify-between items-end">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter">Featured</h2>
         <div className="flex gap-3">
           <button 
@@ -58,7 +58,7 @@ export default function FeaturedSection() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative group">
+      <div className="container mx-auto px-6 max-w-7xl relative group">
         <div 
           ref={scrollContainerRef}
           className="flex gap-6 overflow-x-auto pb-10 pt-4 snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 scroll-pl-6 md:scroll-pl-0"

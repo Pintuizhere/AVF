@@ -42,7 +42,7 @@ export default function ReelsSection() {
       {/* Background glow effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-      <div className="container mx-auto px-6 mb-8 md:mb-10 relative z-10 flex flex-row justify-between items-end gap-4">
+      <div className="container mx-auto px-6 max-w-7xl mb-8 md:mb-10 relative z-10 flex flex-row justify-between items-end gap-4">
         <div>
           <span className="text-gold text-sm font-bold tracking-widest uppercase mb-1 md:mb-2 block">Featured Work</span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">Shorts</h2>
@@ -73,7 +73,7 @@ export default function ReelsSection() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
         {/* Scroll Container */}
         <div 
           ref={scrollContainerRef}

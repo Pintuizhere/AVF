@@ -79,7 +79,7 @@ export default function Footer() {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-black/80 to-transparent z-0 pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none mix-blend-overlay" />
       
-      <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
         
         {/* Left: Lens element */}
         <div className="hidden md:flex w-72 h-72 items-center justify-center -ml-16 relative z-10">
@@ -114,7 +114,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 mt-24 pt-16 border-t border-white/10">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 mt-24 pt-16 border-t border-white/10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
           {/* Column 1: Brand Info */}

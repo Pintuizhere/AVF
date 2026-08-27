@@ -35,7 +35,7 @@ export default function HeroSection() {
       </div>
 
 
-      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="container mx-auto px-6 max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         
         {/* Left Content */}
         <div className="flex flex-col items-start gap-8">
@@ -44,7 +44,7 @@ export default function HeroSection() {
               We Don&apos;t Just<br />
               Create Videos,
             </h1>
-            <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 font-bold opacity-0 animate-fade-up [animation-delay:400ms]">
+            <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 origin-left font-bold opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
               We Tell Stories.
             </h2>
           </div>
