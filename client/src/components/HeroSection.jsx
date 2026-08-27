@@ -48,7 +48,7 @@ export default function HeroSection() {
   }
 
   return (
-    <section id="home" className="relative min-h-screen pt-24 pb-12 flex items-center justify-center overflow-hidden bg-black">
+    <section id="home" className="relative h-[100dvh] w-full pt-20 pb-8 flex items-center justify-center overflow-hidden bg-black">
       {/* Background Media */}
       <div className="absolute inset-0 z-0">
         {heroData.bgMediaType === 'video' ? (
@@ -91,26 +91,26 @@ export default function HeroSection() {
       </div>
 
 
-      <div className="container mx-auto px-6 max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="container mx-auto px-6 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10 mt-8 md:mt-12">
         
         {/* Left Content */}
-        <div className="flex flex-col items-start gap-8">
+        <div className="flex flex-col items-start gap-6">
           <div className="flex flex-col">
-            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] text-white opacity-0 animate-fade-up [animation-delay:200ms] whitespace-pre-line">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold uppercase tracking-tighter leading-tight text-white opacity-0 animate-fade-up [animation-delay:200ms] whitespace-pre-line">
               {heroData.headingLine1}
             </h1>
-            <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 origin-left font-bold opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-script text-gold mt-1 md:mt-2 lg:mt-3 -rotate-2 origin-left font-bold opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
               {heroData.headingLine2}
             </h2>
           </div>
 
           <p 
-            className="text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4 opacity-0 animate-fade-up [animation-delay:600ms]"
+            className="text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4 opacity-0 animate-fade-up [animation-delay:600ms]"
             dangerouslySetInnerHTML={{ __html: heroData.subtitle }}
           />
 
-          <div className="flex items-center gap-8 mt-4 opacity-0 animate-fade-up [animation-delay:800ms]">
-            <button className="bg-gold text-black px-8 py-4 text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
+          <div className="flex items-center gap-6 mt-2 opacity-0 animate-fade-up [animation-delay:800ms]">
+            <button className="bg-gold text-black px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
               View Our Work
               <Play className="w-4 h-4" />
             </button>
@@ -119,21 +119,21 @@ export default function HeroSection() {
                 <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
                   <Play className="w-4 h-4" />
                 </div>
-                <span className="font-script text-3xl font-bold">Play Reel</span>
+                <span className="font-script text-2xl md:text-3xl font-bold">Play Reel</span>
               </a>
             ) : (
               <button className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
                 <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
                   <Play className="w-4 h-4" />
                 </div>
-                <span className="font-script text-3xl font-bold">Play Reel</span>
+                <span className="font-script text-2xl md:text-3xl font-bold">Play Reel</span>
               </button>
             )}
           </div>
         </div>
 
         {/* Right Content - Empty to let background show */}
-        <div className="hidden lg:block relative h-[400px] w-full"></div>
+        <div className="hidden lg:block relative min-h-[250px] w-full"></div>
       </div>
 
       {/* Bottom info */}

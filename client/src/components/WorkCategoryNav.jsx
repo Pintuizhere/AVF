@@ -18,7 +18,7 @@ export default function WorkCategoryNav({ customCategories = [] }) {
     <div className="w-full bg-[#f5f0e6] z-30 relative pt-1 pb-1">
       <div className="w-full border-y-[6px] border-dotted border-[#111] py-8">
         <div className="container mx-auto px-6 max-w-[1400px]">
-          <div className="flex items-center justify-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide whitespace-nowrap pb-2 pt-2 -mx-6 px-6 md:mx-0 md:px-0">
+          <div className="flex items-center justify-start xl:justify-center gap-8 md:gap-12 overflow-x-auto scrollbar-hide whitespace-nowrap pb-2 pt-2 -mx-6 px-6 xl:mx-0 xl:px-0">
             {categories.map((cat) => (
               <Link 
                 key={cat.id} 

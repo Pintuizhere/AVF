@@ -37,7 +37,7 @@ export default function ExploreWorkSection() {
 
   return (
     <section className="relative bg-[#050505] text-white pt-24 pb-32 px-6 overflow-hidden">
-      <div className="container mx-auto max-w-[1400px] flex flex-col items-center z-10 relative">
+      <div className="container mx-auto max-w-5xl flex flex-col items-center z-10 relative">
         
         {/* Header */}
         <div className="flex flex-col items-center mb-16 text-center">

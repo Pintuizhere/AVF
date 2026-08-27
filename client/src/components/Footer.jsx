@@ -79,10 +79,10 @@ export default function Footer() {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-black/80 to-transparent z-0 pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none mix-blend-overlay" />
       
-      <div className="container mx-auto px-6 max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="container mx-auto px-6 max-w-5xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
         
         {/* Left: Lens element */}
-        <div className="hidden md:flex w-72 h-72 items-center justify-center -ml-16 relative z-10">
+        <div className="hidden md:flex w-72 h-72 items-center justify-center relative z-10">
            <Image
              src="/images/camera_lens_PNG7.png"
              alt="Camera Lens"
@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
 
         {/* Right: Image */}
-        <div className="relative w-72 h-72 hidden md:flex items-center justify-center -mr-8">
+        <div className="relative w-72 h-72 hidden md:flex items-center justify-center">
            <Image
              src="/images/retakeflip.png"
              alt="Retake Flipboard"
@@ -115,7 +115,7 @@ export default function Footer() {
       </div>
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10 mt-24 pt-16 border-t border-white/10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 max-w-5xl mx-auto mb-16">
           
           {/* Column 1: Brand Info */}
           <div className="flex flex-col gap-6">
@@ -218,11 +218,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright Bar */}
-        <div className="border-t border-white/10 pt-8 pb-4 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-500 tracking-wider">
+        <div className="border-t border-white/10 pt-8 pb-4 flex justify-center items-center text-xs text-neutral-500 tracking-wider">
           <p>&copy; {new Date().getFullYear()} AVF Production. All Rights Reserved.</p>
-          <p className="mt-3 md:mt-0">
-            Developed by <span className="text-[#3b82f6] font-medium hover:text-blue-400 transition-colors cursor-pointer">anymediaworks</span>
-          </p>
         </div>
       </div>
     </footer>

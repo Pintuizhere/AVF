@@ -67,7 +67,7 @@ export default function StatsSection() {
 
   return (
     <div className="w-full bg-[#e9e6dc] text-black mt-8 relative z-10 border-y-[6px] border-dotted border-[#111]">
-      <div className="container mx-auto px-6 py-10 md:py-14">
+      <div className="container mx-auto px-6 py-10 md:py-14 max-w-5xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-black/20">
           
           <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-4 sm:pt-0">

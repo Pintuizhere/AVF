@@ -22,7 +22,7 @@ export default function ClientsSection() {
 
   return (
     <section className="bg-[#e9e6dc] text-black py-10 border-y-[6px] border-dotted border-[#111] overflow-hidden">
-      <div className="container mx-auto max-w-7xl px-6">
+      <div className="container mx-auto max-w-5xl px-6">
         <div className="flex justify-center mb-10">
           <h3 className="font-bold text-sm sm:text-base tracking-[0.2em] uppercase bg-[#fbbf24] px-4 py-2 text-black shadow-sm">
             Trusted By Amazing Brands

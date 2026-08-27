@@ -24,7 +24,7 @@ export default function ReviewsSection() {
   };
   return (
     <section className="bg-[#0d0d0d] text-white py-32 px-6">
-      <div className="container mx-auto max-w-7xl">
+      <div className="container mx-auto max-w-5xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">
             What Our Clients Say

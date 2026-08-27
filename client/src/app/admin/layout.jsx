@@ -7,7 +7,7 @@ import Image from "next/image";
 import { 
   LayoutDashboard, Clapperboard, MonitorPlay, Camera, MessageSquareQuote, 
   Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu, LogOut, X,
-  Star, Smartphone, BarChart2, Briefcase, PanelBottom, PanelTop
+  Star, Smartphone, BarChart2, Briefcase, PanelBottom, PanelTop, Link2
 } from "lucide-react";
 
 const navItems = [
@@ -24,6 +24,7 @@ const navItems = [
   { name: "Stats", href: "/admin/stats", icon: BarChart2 },
   { name: "Brands", href: "/admin/clients", icon: Briefcase },
   { name: "Leads / Inquiries", href: "/admin/leads", icon: Mail },
+  { name: "Social Links", href: "/admin/social-links", icon: Link2 },
   { name: "Team", href: "/admin/team", icon: Users },
   { name: "Footer", href: "/admin/footer", icon: PanelBottom },
   { name: "Settings", href: "/admin/settings", icon: Settings },
@@ -77,10 +78,14 @@ export default function AdminDashboardLayout({ children }) {
   useEffect(() => {
     if (isLoginPage) return;
 
+    const adminToken = localStorage.getItem("adminToken");
+    if (!adminToken) {
+      window.location.replace("/admin/login");
+      return;
+    }
+
     const fetchLeads = async () => {
       try {
-        const adminToken = localStorage.getItem("adminToken");
-        if (!adminToken) return;
         const res = await fetch("http://localhost:5000/api/leads", {
           headers: { Authorization: `Bearer ${adminToken}` }
         });
@@ -179,7 +184,7 @@ export default function AdminDashboardLayout({ children }) {
             onClick={() => {
               localStorage.removeItem("adminToken");
               localStorage.removeItem("adminInfo");
-              window.location.href = "/admin/login";
+              window.location.replace("/admin/login");
             }}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-md text-neutral-400 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all group"
           >

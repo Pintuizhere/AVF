@@ -18,7 +18,7 @@ export default function ProcessSection() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/5 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
 
-      <div className="container mx-auto max-w-7xl relative z-10">
+      <div className="container mx-auto max-w-5xl relative z-10">
         
         <div className="text-left mb-16 md:mb-24">
           <span className="font-script text-gold text-4xl md:text-5xl font-bold inline-block -rotate-2 mb-2 drop-shadow-sm ml-2">Our Process</span>

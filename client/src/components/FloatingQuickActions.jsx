@@ -2,12 +2,43 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Camera, X } from "lucide-react";
-import { FaWhatsapp, FaInstagram, FaYoutube, FaFacebook } from "react-icons/fa";
+import { Camera, X, Link2 } from "lucide-react";
+import { FaWhatsapp, FaInstagram, FaYoutube, FaFacebook, FaTwitter, FaLinkedin, FaTiktok, FaEnvelope } from "react-icons/fa";
+
+const getIconForPlatform = (platform) => {
+  switch (platform) {
+    case 'WhatsApp': return <FaWhatsapp className="w-5 h-5 text-[#25D366]" />;
+    case 'Instagram': return <FaInstagram className="w-5 h-5 text-[#E1306C]" />;
+    case 'YouTube': return <FaYoutube className="w-5 h-5 text-[#FF0000]" />;
+    case 'Facebook': return <FaFacebook className="w-5 h-5 text-[#1877F2]" />;
+    case 'X/Twitter': return <FaTwitter className="w-5 h-5 text-white" />;
+    case 'LinkedIn': return <FaLinkedin className="w-5 h-5 text-[#0A66C2]" />;
+    case 'TikTok': return <FaTiktok className="w-5 h-5 text-white" />;
+    case 'Email': return <FaEnvelope className="w-5 h-5 text-gold" />;
+    default: return <Link2 className="w-5 h-5 text-white" />;
+  }
+};
 
 export default function FloatingQuickActions() {
   const [isVisible, setIsVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [socialLinks, setSocialLinks] = useState([]);
+
+  useEffect(() => {
+    // Fetch dynamic social links
+    const fetchLinks = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/social-links");
+        if (res.ok) {
+          const data = await res.json();
+          setSocialLinks(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch social links", err);
+      }
+    };
+    fetchLinks();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,13 +55,8 @@ export default function FloatingQuickActions() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Social Media Links with Actual Brand Colors
-  const menuItems = [
-    { name: "WhatsApp", icon: <FaWhatsapp className="w-5 h-5 text-[#25D366]" />, href: "#" },
-    { name: "Instagram", icon: <FaInstagram className="w-5 h-5 text-[#E1306C]" />, href: "#" },
-    { name: "YouTube", icon: <FaYoutube className="w-5 h-5 text-[#FF0000]" />, href: "#" },
-    { name: "Facebook", icon: <FaFacebook className="w-5 h-5 text-[#1877F2]" />, href: "#" },
-  ];
+  // Only render if there are links available
+  if (socialLinks.length === 0) return null;
 
   return (
     <div 
@@ -46,17 +72,17 @@ export default function FloatingQuickActions() {
             isOpen ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-90 translate-y-4 pointer-events-none"
           }`}
         >
-          {menuItems.map((item, i) => (
+          {socialLinks.map((item) => (
             <Link 
-              href={item.href} 
-              key={i}
+              href={item.url} 
+              key={item._id}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-300 hover:text-black hover:bg-gold rounded-xl transition-all duration-300 group"
               onClick={() => setIsOpen(false)}
             >
-              <span className="text-gold group-hover:text-black transition-colors">{item.icon}</span>
-              <span className="font-montserrat font-semibold tracking-wider">{item.name}</span>
+              <span className="text-gold group-hover:text-black transition-colors">{getIconForPlatform(item.platform)}</span>
+              <span className="font-montserrat font-semibold tracking-wider">{item.platform}</span>
             </Link>
           ))}
           
