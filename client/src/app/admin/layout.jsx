@@ -30,11 +30,42 @@ const navItems = [
 export default function AdminDashboardLayout({ children }) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [adminInfo, setAdminInfo] = useState(null);
 
   // Close sidebar on route change for mobile
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const info = localStorage.getItem("adminInfo");
+    if (info) {
+      try {
+        setAdminInfo(JSON.parse(info));
+      } catch (e) {
+        console.error("Error parsing adminInfo", e);
+      }
+    }
+    
+    // Listen for storage changes in case settings updates it
+    const handleStorageChange = () => {
+      const updatedInfo = localStorage.getItem("adminInfo");
+      if (updatedInfo) {
+        try {
+          setAdminInfo(JSON.parse(updatedInfo));
+        } catch (e) {}
+      }
+    };
+    
+    window.addEventListener("storage", handleStorageChange);
+    // Also listen for a custom event since we update in same tab
+    window.addEventListener("adminInfoUpdated", handleStorageChange);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("adminInfoUpdated", handleStorageChange);
+    };
+  }, []);
 
   const isLoginPage = pathname === "/admin/login";
 
@@ -111,7 +142,14 @@ export default function AdminDashboardLayout({ children }) {
 
         {/* Bottom Section: Sign Out */}
         <div className="p-4 mt-auto flex flex-col gap-4">
-          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-md text-neutral-400 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all group">
+          <button 
+            onClick={() => {
+              localStorage.removeItem("adminToken");
+              localStorage.removeItem("adminInfo");
+              window.location.href = "/admin/login";
+            }}
+            className="flex items-center gap-3 px-4 py-3 w-full rounded-md text-neutral-400 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all group"
+          >
             <LogOut className="w-5 h-5 stroke-[1.5]" />
             <span className="text-sm font-medium">Sign Out</span>
           </button>
@@ -153,12 +191,16 @@ export default function AdminDashboardLayout({ children }) {
             </div>
 
             <div className="flex items-center gap-2 md:gap-3 cursor-pointer group pl-4 border-l border-[#222]">
-              <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#cfa25c] flex items-center justify-center text-black font-bold text-sm shadow-md">
-                A
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#cfa25c] flex items-center justify-center text-black font-bold text-sm shadow-md overflow-hidden relative">
+                {adminInfo?.profilePicture ? (
+                  <img src={adminInfo.profilePicture} alt={adminInfo.name} className="w-full h-full object-cover" />
+                ) : (
+                  adminInfo?.name ? adminInfo.name.charAt(0).toUpperCase() : "A"
+                )}
               </div>
               <div className="hidden md:flex flex-col">
-                <span className="text-sm font-bold text-white leading-tight">Admin</span>
-                <span className="text-[10px] text-neutral-400">Super Admin</span>
+                <span className="text-sm font-bold text-white leading-tight">{adminInfo?.name || "Admin"}</span>
+                <span className="text-[10px] text-neutral-400">{adminInfo?.role || "Super Admin"}</span>
               </div>
               <ChevronDown className="hidden md:block w-4 h-4 stroke-[2] text-neutral-500 group-hover:text-white ml-2 transition-colors" />
             </div>

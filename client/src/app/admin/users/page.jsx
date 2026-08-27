@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   ShieldCheck, 
   Search, 
@@ -12,7 +12,10 @@ import {
   Filter,
   CheckCircle2,
   XCircle,
-  X
+  X,
+  Power,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
 export default function AdminUsersPage() {
@@ -20,6 +23,7 @@ export default function AdminUsersPage() {
   const [roleFilter, setRoleFilter] = useState("All");
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -31,46 +35,46 @@ export default function AdminUsersPage() {
   const [editingUser, setEditingUser] = useState(null);
 
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  
+  const [dropdownOpen, setDropdownOpen] = useState(null);
 
-  // Mock Users Data
-  const [users, setUsers] = useState([
-    {
-      id: "1",
-      name: "Admin User",
-      email: "admin@avfproductions.com",
-      role: "Super Admin",
-      status: "Active",
-      joined: "Jan 12, 2024",
-      avatar: "A"
-    },
-    {
-      id: "2",
-      name: "John Doe",
-      email: "john@avfproductions.com",
-      role: "Editor",
-      status: "Active",
-      joined: "Feb 05, 2024",
-      avatar: "J"
-    },
-    {
-      id: "3",
-      name: "Sarah Smith",
-      email: "sarah@avfproductions.com",
-      role: "Viewer",
-      status: "Inactive",
-      joined: "Mar 18, 2024",
-      avatar: "S"
-    },
-    {
-      id: "4",
-      name: "Mike Johnson",
-      email: "mike@avfproductions.com",
-      role: "Editor",
-      status: "Active",
-      joined: "Apr 22, 2024",
-      avatar: "M"
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  
+  const currentAdmin = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('adminInfo') || '{}') : {};
+
+  useEffect(() => {
+    fetchUsers();
+    
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.dropdown-container')) {
+        setDropdownOpen(null);
+      }
+    };
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/users", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUsers(data);
+      } else {
+        const err = await res.json();
+        setError(err.message || "Failed to fetch users");
+      }
+    } catch (err) {
+      setError("Server error");
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const roles = ["All", "Super Admin", "Editor", "Viewer"];
 
@@ -97,40 +101,128 @@ export default function AdminUsersPage() {
       : <XCircle className="w-4 h-4 text-red-500" />;
   };
 
-  const handleAddUser = (e) => {
-    e.preventDefault();
-    if (!newUser.name || !newUser.email) return;
-
-    const userToAdd = {
-      id: Date.now().toString(),
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
-      status: "Active",
-      joined: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }),
-      avatar: newUser.name.charAt(0).toUpperCase()
-    };
-
-    setUsers([userToAdd, ...users]);
-    setNewUser({ name: "", email: "", password: "", role: "Viewer" });
-    setIsAddModalOpen(false);
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" });
   };
 
-  const handleEditUser = (e) => {
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    if (!newUser.name || !newUser.email || !newUser.password) return;
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(newUser)
+      });
+
+      if (res.ok) {
+        fetchUsers();
+        setNewUser({ name: "", email: "", password: "", role: "Viewer" });
+        setIsAddModalOpen(false);
+      } else {
+        const err = await res.json();
+        alert(err.message || "Failed to add user");
+      }
+    } catch (err) {
+      alert("Server error");
+    }
+  };
+
+  const handleEditUser = async (e) => {
     e.preventDefault();
     if (!editingUser.name || !editingUser.email) return;
     
-    setUsers(users.map(u => u.id === editingUser.id ? editingUser : u));
-    setIsEditModalOpen(false);
-    setEditingUser(null);
-  };
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`http://localhost:5000/api/users/${editingUser._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: editingUser.name,
+          email: editingUser.email,
+          role: editingUser.role,
+          status: editingUser.status
+        })
+      });
 
-  const confirmDeleteUser = () => {
-    if (deleteConfirmId) {
-      setUsers(users.filter(u => u.id !== deleteConfirmId));
-      setDeleteConfirmId(null);
+      if (res.ok) {
+        fetchUsers();
+        setIsEditModalOpen(false);
+        setEditingUser(null);
+      } else {
+        const err = await res.json();
+        alert(err.message || "Failed to edit user");
+      }
+    } catch (err) {
+      alert("Server error");
     }
   };
+  
+  const handleToggleStatus = async (user) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const newStatus = user.status === "Active" ? "Inactive" : "Active";
+      const res = await fetch(`http://localhost:5000/api/users/${user._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (res.ok) {
+        fetchUsers();
+        setDropdownOpen(null);
+      } else {
+        const err = await res.json();
+        alert(err.message || "Failed to change status");
+      }
+    } catch (err) {
+      alert("Server error");
+    }
+  };
+
+  const confirmDeleteUser = async () => {
+    if (deleteConfirmId) {
+      try {
+        const token = localStorage.getItem("adminToken");
+        const res = await fetch(`http://localhost:5000/api/users/${deleteConfirmId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+          fetchUsers();
+          setDeleteConfirmId(null);
+        } else {
+          const err = await res.json();
+          alert(err.message || "Failed to delete user");
+        }
+      } catch (err) {
+        alert("Server error");
+      }
+    }
+  };
+
+  if (error === "Not authorized as an admin") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
+        <ShieldCheck className="w-16 h-16 text-neutral-600 mb-4" />
+        <h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
+        <p className="text-neutral-400">Only Super Admins can manage users.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-12">
@@ -196,16 +288,24 @@ export default function AdminUsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1a1a1a]">
-              {filteredUsers.length > 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="py-12 text-center text-neutral-500">Loading users...</td>
+                </tr>
+              ) : filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-[#111]/50 transition-colors group">
+                  <tr key={user._id} className="hover:bg-[#111]/50 transition-colors group">
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-[#1a1a1a] border border-[#222] flex items-center justify-center text-gold font-bold shadow-md">
-                          {user.avatar}
+                        <div className="relative w-10 h-10 rounded-full bg-[#1a1a1a] border border-[#222] flex items-center justify-center text-gold font-bold shadow-md overflow-hidden">
+                          {user.profilePicture ? (
+                            <img src={user.profilePicture} alt={user.name} className="w-full h-full object-cover" />
+                          ) : (
+                            user.name ? user.name.charAt(0).toUpperCase() : "U"
+                          )}
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-white">{user.name}</span>
+                          <span className="text-sm font-bold text-white">{user.name} {currentAdmin.email === user.email && "(You)"}</span>
                           <span className="text-xs text-neutral-500">{user.email}</span>
                         </div>
                       </div>
@@ -225,10 +325,10 @@ export default function AdminUsersPage() {
                       </div>
                     </td>
                     <td className="py-4 px-6 text-sm text-neutral-400">
-                      {user.joined}
+                      {formatDate(user.createdAt)}
                     </td>
                     <td className="py-4 px-6 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-2 dropdown-container relative">
                         <button 
                           onClick={() => { setEditingUser(user); setIsEditModalOpen(true); }}
                           className="p-2 text-neutral-400 hover:text-white hover:bg-[#222] rounded transition-colors" title="Edit User"
@@ -236,14 +336,31 @@ export default function AdminUsersPage() {
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => setDeleteConfirmId(user.id)}
-                          className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors" title="Delete User"
+                          onClick={() => setDeleteConfirmId(user._id)}
+                          disabled={currentAdmin.email === user.email}
+                          className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Delete User"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
-                        <button className="p-2 text-neutral-400 hover:text-white hover:bg-[#222] rounded transition-colors">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setDropdownOpen(dropdownOpen === user._id ? null : user._id); }}
+                          className="p-2 text-neutral-400 hover:text-white hover:bg-[#222] rounded transition-colors"
+                        >
                           <MoreVertical className="w-4 h-4" />
                         </button>
+                        
+                        {dropdownOpen === user._id && (
+                          <div className="absolute top-full right-0 mt-1 w-40 bg-[#111] border border-[#222] rounded-md shadow-2xl z-50 py-1 flex flex-col animate-in fade-in zoom-in-95 duration-150">
+                            <button 
+                              onClick={() => handleToggleStatus(user)}
+                              disabled={currentAdmin.email === user.email}
+                              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-left hover:bg-[#222] transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-white"
+                            >
+                              <Power className="w-3.5 h-3.5" />
+                              {user.status === "Active" ? "Deactivate User" : "Activate User"}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -324,16 +441,25 @@ export default function AdminUsersPage() {
                   placeholder="jane@example.com"
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 relative">
                 <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Password</label>
-                <input 
-                  type="password" 
-                  required
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({...newUser, password: e.target.value})}
-                  className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-2.5 text-sm text-white focus:outline-none transition-colors"
-                  placeholder="••••••••"
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                    className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-2.5 text-sm text-white focus:outline-none transition-colors pr-10"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Role</label>
@@ -408,6 +534,7 @@ export default function AdminUsersPage() {
                   value={editingUser.status}
                   onChange={(e) => setEditingUser({...editingUser, status: e.target.value})}
                   className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-2.5 text-sm text-white focus:outline-none transition-colors appearance-none"
+                  disabled={currentAdmin.email === editingUser.email}
                 >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
@@ -419,6 +546,7 @@ export default function AdminUsersPage() {
                   value={editingUser.role}
                   onChange={(e) => setEditingUser({...editingUser, role: e.target.value})}
                   className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-2.5 text-sm text-white focus:outline-none transition-colors appearance-none"
+                  disabled={currentAdmin.email === editingUser.email}
                 >
                   <option value="Super Admin">Super Admin</option>
                   <option value="Editor">Editor</option>

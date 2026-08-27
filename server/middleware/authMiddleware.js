@@ -18,6 +18,14 @@ const protect = async (req, res, next) => {
       // Get user from the token
       req.user = await User.findById(decoded.id).select("-password");
 
+      if (!req.user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+
+      if (req.user.status === "Inactive") {
+        return res.status(403).json({ message: "Your account is deactivated. Please contact an admin." });
+      }
+
       next();
     } catch (error) {
       console.error("Auth Middleware Error:", error);
@@ -30,4 +38,12 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const admin = (req, res, next) => {
+  if (req.user && req.user.role === "Super Admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized as an admin" });
+  }
+};
+
+module.exports = { protect, admin };

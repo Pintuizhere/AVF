@@ -1,53 +1,194 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import { 
-  Save, User, Lock, Bell, Globe, Image as ImageIcon, 
-  Link as LinkIcon, Shield, Smartphone, UploadCloud,
-  CheckCircle2
+  Save, User, Lock, Bell, Shield, Smartphone, UploadCloud,
+  CheckCircle2, AlertCircle
 } from "lucide-react";
 
 export default function AdminSettingsPage() {
-  const [activeTab, setActiveTab] = useState("general");
+  const [activeTab, setActiveTab] = useState("profile");
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-  // Mock State
-  const [generalSettings, setGeneralSettings] = useState({
-    siteName: "AVF Productions",
-    siteDescription: "Premium Video Production Agency",
-    contactEmail: "hello@avfproductions.com",
-    contactPhone: "+1 (555) 123-4567",
-    address: "123 Cinematic Way, Studio City, CA 91604"
-  });
-
-  const [socialLinks, setSocialLinks] = useState({
-    instagram: "https://instagram.com/avfproductions",
-    youtube: "https://youtube.com/avfproductions",
-    vimeo: "https://vimeo.com/avfproductions",
-    linkedin: "https://linkedin.com/company/avfproductions"
-  });
+  const [error, setError] = useState("");
 
   const [profile, setProfile] = useState({
-    name: "Admin User",
-    email: "admin@avfproductions.com",
+    name: "",
+    email: "",
+    profilePicture: "",
+  });
+  
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [security, setSecurity] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
   });
 
-  const handleSave = () => {
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      if (!token) return;
+
+      const res = await fetch("http://localhost:5000/api/users/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProfile({
+          name: data.name || "",
+          email: data.email || "",
+          profilePicture: data.profilePicture || ""
+        });
+        
+        let adminInfo = JSON.parse(localStorage.getItem("adminInfo") || "{}");
+        adminInfo.profilePicture = data.profilePicture;
+        localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+        window.dispatchEvent(new Event("adminInfoUpdated"));
+      }
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      let currentProfilePic = profile.profilePicture;
+
+      // If a new file is selected, upload it first
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+        
+        const picRes = await fetch("http://localhost:5000/api/users/profile-picture", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        });
+        
+        if (picRes.ok) {
+          const picData = await picRes.json();
+          currentProfilePic = picData.profilePicture;
+        } else {
+          const errData = await picRes.json();
+          setError(errData.message || "Failed to upload picture");
+          setTimeout(() => setError(""), 3000);
+          return;
+        }
+      }
+
+      const res = await fetch("http://localhost:5000/api/users/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: profile.name,
+          email: profile.email
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        
+        setProfile({
+          name: data.name || "",
+          email: data.email || "",
+          profilePicture: currentProfilePic || ""
+        });
+        setSelectedFile(null);
+        
+        let adminInfo = JSON.parse(localStorage.getItem("adminInfo") || "{}");
+        adminInfo.name = data.name;
+        adminInfo.email = data.email;
+        adminInfo.profilePicture = currentProfilePic;
+        localStorage.setItem("adminInfo", JSON.stringify(adminInfo));
+        window.dispatchEvent(new Event("adminInfoUpdated"));
+        
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } else {
+        const errData = await res.json();
+        setError(errData.message || "Failed to update profile");
+        setTimeout(() => setError(""), 3000);
+      }
+    } catch (err) {
+      setError("Server error");
+      setTimeout(() => setError(""), 3000);
+    }
+  };
+
+  const handleSavePassword = async () => {
+    if (security.newPassword !== security.confirmPassword) {
+      setError("New passwords do not match");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/users/password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          currentPassword: security.currentPassword,
+          newPassword: security.newPassword
+        })
+      });
+
+      if (res.ok) {
+        setSecurity({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } else {
+        const errData = await res.json();
+        setError(errData.message || "Failed to update password");
+        setTimeout(() => setError(""), 3000);
+      }
+    } catch (err) {
+      setError("Server error");
+      setTimeout(() => setError(""), 3000);
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setSelectedFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleSave = async () => {
     setIsSaving(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSaving(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-    }, 1000);
+    setError("");
+    
+    if (activeTab === "profile") {
+      await handleSaveProfile();
+    } else if (activeTab === "security") {
+      await handleSavePassword();
+    }
+    
+    setIsSaving(false);
   };
 
   const tabs = [
-    { id: "general", label: "General", icon: Globe },
     { id: "profile", label: "Profile", icon: User },
-    { id: "social", label: "Social Links", icon: LinkIcon },
     { id: "security", label: "Security", icon: Shield },
   ];
 
@@ -58,7 +199,7 @@ export default function AdminSettingsPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-2">
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold text-white tracking-wide">Settings</h1>
-          <p className="text-sm text-neutral-400 mt-1">Manage your website configuration and profile.</p>
+          <p className="text-sm text-neutral-400 mt-1">Manage your profile and security.</p>
         </div>
         <button 
           onClick={handleSave}
@@ -75,6 +216,13 @@ export default function AdminSettingsPage() {
           {showSuccess ? "Saved!" : "Save Changes"}
         </button>
       </div>
+
+      {error && (
+        <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-md flex items-center gap-3 text-red-500 text-sm">
+          <AlertCircle className="w-5 h-5" />
+          <p>{error}</p>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row gap-6 mt-4">
         
@@ -105,68 +253,6 @@ export default function AdminSettingsPage() {
           {/* Subtle Background Glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 blur-[100px] rounded-full pointer-events-none" />
 
-          {activeTab === "general" && (
-            <div className="flex flex-col gap-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <div className="flex flex-col gap-1 border-b border-[#1a1a1a] pb-4">
-                <h2 className="text-lg font-bold text-white">General Information</h2>
-                <p className="text-xs text-neutral-400">Basic details about your website.</p>
-              </div>
-
-              <div className="grid gap-6">
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Site Name</label>
-                  <input 
-                    type="text" 
-                    value={generalSettings.siteName}
-                    onChange={(e) => setGeneralSettings({...generalSettings, siteName: e.target.value})}
-                    className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                  />
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Site Description</label>
-                  <textarea 
-                    value={generalSettings.siteDescription}
-                    onChange={(e) => setGeneralSettings({...generalSettings, siteDescription: e.target.value})}
-                    rows={3}
-                    className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors resize-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Contact Email</label>
-                    <input 
-                      type="email" 
-                      value={generalSettings.contactEmail}
-                      onChange={(e) => setGeneralSettings({...generalSettings, contactEmail: e.target.value})}
-                      className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Contact Phone</label>
-                    <input 
-                      type="text" 
-                      value={generalSettings.contactPhone}
-                      onChange={(e) => setGeneralSettings({...generalSettings, contactPhone: e.target.value})}
-                      className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Address</label>
-                  <input 
-                    type="text" 
-                    value={generalSettings.address}
-                    onChange={(e) => setGeneralSettings({...generalSettings, address: e.target.value})}
-                    className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
           {activeTab === "profile" && (
             <div className="flex flex-col gap-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <div className="flex flex-col gap-1 border-b border-[#1a1a1a] pb-4">
@@ -176,17 +262,25 @@ export default function AdminSettingsPage() {
 
               <div className="flex items-center gap-6">
                 <div className="relative w-24 h-24 rounded-full bg-[#111] border border-[#222] flex items-center justify-center overflow-hidden group">
-                  <span className="text-2xl font-bold text-neutral-500 group-hover:opacity-0 transition-opacity">A</span>
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm">
+                  {imagePreview || profile.profilePicture ? (
+                    <img src={imagePreview || profile.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl font-bold text-neutral-500 group-hover:opacity-0 transition-opacity">
+                      {profile.name ? profile.name.charAt(0).toUpperCase() : "A"}
+                    </span>
+                  )}
+                  <label className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm">
                     <UploadCloud className="w-6 h-6 text-gold" />
-                  </div>
+                    <input type="file" accept="image/jpeg, image/png, image/gif" className="hidden" onChange={handleFileSelect} />
+                  </label>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h3 className="text-sm font-bold text-white">Profile Picture</h3>
                   <p className="text-xs text-neutral-400">JPG, GIF or PNG. Max size of 2MB.</p>
-                  <button className="px-4 py-2 bg-[#111] hover:bg-[#1a1a1a] border border-[#222] text-xs text-white rounded transition-colors w-fit mt-1">
+                  <label className="px-4 py-2 bg-[#111] hover:bg-[#1a1a1a] border border-[#222] text-xs text-white rounded transition-colors w-fit mt-1 cursor-pointer">
                     Upload New
-                  </button>
+                    <input type="file" accept="image/jpeg, image/png, image/gif" className="hidden" onChange={handleFileSelect} />
+                  </label>
                 </div>
               </div>
 
@@ -213,35 +307,6 @@ export default function AdminSettingsPage() {
             </div>
           )}
 
-          {activeTab === "social" && (
-            <div className="flex flex-col gap-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <div className="flex flex-col gap-1 border-b border-[#1a1a1a] pb-4">
-                <h2 className="text-lg font-bold text-white">Social Links</h2>
-                <p className="text-xs text-neutral-400">Connect your social media accounts.</p>
-              </div>
-
-              <div className="grid gap-6">
-                {Object.entries(socialLinks).map(([platform, url]) => (
-                  <div key={platform} className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-2">
-                      {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                    </label>
-                    <div className="relative flex items-center">
-                      <LinkIcon className="absolute left-4 w-4 h-4 text-neutral-500" />
-                      <input 
-                        type="url" 
-                        value={url}
-                        onChange={(e) => setSocialLinks({...socialLinks, [platform]: e.target.value})}
-                        className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md pl-11 pr-4 py-3 text-sm text-white focus:outline-none transition-colors"
-                        placeholder={`https://${platform}.com/...`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {activeTab === "security" && (
             <div className="flex flex-col gap-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <div className="flex flex-col gap-1 border-b border-[#1a1a1a] pb-4">
@@ -254,6 +319,8 @@ export default function AdminSettingsPage() {
                   <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Current Password</label>
                   <input 
                     type="password" 
+                    value={security.currentPassword}
+                    onChange={(e) => setSecurity({...security, currentPassword: e.target.value})}
                     className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
                     placeholder="••••••••"
                   />
@@ -264,6 +331,8 @@ export default function AdminSettingsPage() {
                     <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">New Password</label>
                     <input 
                       type="password" 
+                      value={security.newPassword}
+                      onChange={(e) => setSecurity({...security, newPassword: e.target.value})}
                       className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
                       placeholder="••••••••"
                     />
@@ -272,6 +341,8 @@ export default function AdminSettingsPage() {
                     <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">Confirm New Password</label>
                     <input 
                       type="password" 
+                      value={security.confirmPassword}
+                      onChange={(e) => setSecurity({...security, confirmPassword: e.target.value})}
                       className="w-full bg-[#111] border border-[#222] focus:border-gold/50 rounded-md px-4 py-3 text-sm text-white focus:outline-none transition-colors"
                       placeholder="••••••••"
                     />
@@ -279,7 +350,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div className="mt-4 pt-6 border-t border-[#1a1a1a]">
-                  <button className="px-6 py-2.5 bg-transparent border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded text-sm font-bold uppercase tracking-wider transition-colors">
+                  <button onClick={() => { localStorage.removeItem("adminToken"); localStorage.removeItem("adminInfo"); window.location.href="/admin/login"; }} className="px-6 py-2.5 bg-transparent border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded text-sm font-bold uppercase tracking-wider transition-colors">
                     Log out of all devices
                   </button>
                 </div>
