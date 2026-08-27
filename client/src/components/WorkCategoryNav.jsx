@@ -2,19 +2,15 @@
 
 import Link from "next/link";
 
-const categories = [
-  { id: "all", label: "All Work" },
-  { id: "documentaries", label: "Documentaries" },
-  { id: "events", label: "Events" },
-  { id: "commercials", label: "Commercials" },
-  { id: "products", label: "Products" },
-  { id: "food", label: "Food" },
-  { id: "model-photography", label: "Model" },
-  { id: "jewellery", label: "Jewellery" },
-  { id: "reels", label: "Reels" },
-];
+export default function WorkCategoryNav({ customCategories = [] }) {
+  const categories = [
+    { id: "all", label: "All Work" },
+    ...customCategories.map(cat => ({
+      id: cat.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+      label: cat
+    }))
+  ];
 
-export default function WorkCategoryNav() {
   return (
     <div className="w-full bg-[#f5f0e6] z-30 relative pt-1 pb-1">
       <div className="w-full border-y-[6px] border-dotted border-[#111] py-8">
@@ -30,11 +26,7 @@ export default function WorkCategoryNav() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }
                 }}
-                className={`font-montserrat text-[10px] md:text-[11px] tracking-[0.2em] font-bold uppercase transition-all duration-300 flex-shrink-0 ${
-                  cat.id === 'all' 
-                    ? 'bg-[#FCA603] text-black px-6 py-2.5 rounded-full shadow-[0_4px_10px_rgba(252,166,3,0.3)] hover:shadow-[0_6px_15px_rgba(252,166,3,0.5)] hover:-translate-y-0.5'
-                    : 'text-neutral-800 hover:text-black hover:-translate-y-0.5'
-                }`}
+                className={`font-montserrat text-[10px] md:text-[11px] tracking-[0.2em] font-bold uppercase transition-all duration-300 flex-shrink-0 text-neutral-800 hover:text-black hover:-translate-y-0.5`}
               >
                 {cat.label}
               </Link>

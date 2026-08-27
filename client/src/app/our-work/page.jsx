@@ -32,6 +32,15 @@ async function getProjects() {
 
 export default async function OurWorkPage() {
   const projects = await getProjects();
+  
+  // Extract unique categories
+  const uniqueCategories = [...new Set(projects.map(p => p.category))].filter(Boolean);
+
+  // Group projects by category
+  const groupedProjects = uniqueCategories.map(cat => ({
+    category: cat,
+    projects: projects.filter(p => p.category === cat)
+  }));
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -39,20 +48,30 @@ export default async function OurWorkPage() {
       
       <WorkHeroSection />
 
-      <WorkCategoryNav />
+      <WorkCategoryNav customCategories={uniqueCategories} />
 
       {/* Main Content Areas */}
       <div className="flex flex-col" id="all-work">
-        {projects.length > 0 ? (
-          <WorkCategoryRow projects={projects.map(p => ({
-            _id: p._id,
-            slug: p.slug,
-            title: p.title,
-            image: p.mediaUrl, // Mapping for the component
-            categoryTitle: p.category,
-            // Fallback for duration if they used it in the UI, now we have year/client instead
-            duration: p.year || "2024"
-          }))} />
+        {groupedProjects.length > 0 ? (
+          groupedProjects.map(group => (
+            <div 
+              key={group.category} 
+              id={group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')}
+              className="pt-24 -mt-24" // Offset for sticky headers if any
+            >
+              <WorkCategoryRow 
+                title={group.category} 
+                projects={group.projects.map(p => ({
+                  _id: p._id,
+                  slug: p.slug,
+                  title: p.title,
+                  image: p.mediaUrl,
+                  categoryTitle: p.category,
+                  duration: p.year || "2024"
+                }))} 
+              />
+            </div>
+          ))
         ) : (
           <div className="py-32 flex justify-center text-neutral-500">
             No projects found. Add some from the admin dashboard!
