@@ -213,7 +213,9 @@ export default function AdminDashboardLayout({ children }) {
           <div className="flex items-center gap-4 md:gap-8">
             <div className="hidden sm:flex items-center gap-2 text-neutral-400">
               <Calendar className="w-4 h-4 stroke-[1.5]" />
-              <span className="text-xs font-medium">May 18, 2024</span>
+              <span className="text-xs font-medium" suppressHydrationWarning>
+                {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </span>
             </div>
             
             <div className="relative group z-40">
