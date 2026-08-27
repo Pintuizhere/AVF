@@ -1,9 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { 
   Clapperboard, Users, Eye, Mail, ArrowUpRight, ArrowDownRight, 
-  ChevronDown, UserCircle2, CheckCircle2, Clock, CalendarClock, PauseCircle, ArrowRight
+  ChevronDown, UserCircle2, CheckCircle2, Clock, CalendarClock, PauseCircle, ArrowRight, Cloud
 } from "lucide-react";
 import {
   AreaChart,
@@ -46,27 +47,64 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function AdminDashboardPage() {
   
-  // Dummy Data
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+        if (!token) return;
+        const res = await fetch("http://localhost:5000/api/admin/dashboard", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setData(json);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
   const stats = [
-    { title: "Total Projects", value: "42", change: "+ 8.6%", isPositive: true, icon: Clapperboard, chart: "M0 20 Q 10 10, 20 15 T 40 5 T 60 10 T 80 0" },
-    { title: "Total Leads", value: "128", change: "+ 12.4%", isPositive: true, icon: Users, chart: "M0 20 Q 15 5, 30 15 T 50 10 T 70 15 T 80 5" },
-    { title: "Page Views", value: "7,845", change: "+ 15.7%", isPositive: true, icon: Eye, chart: "M0 20 Q 10 15, 20 5 T 40 10 T 60 0 T 80 5" },
-    { title: "Subscribers", value: "564", change: "- 3.2%", isPositive: false, icon: Mail, chart: "M0 5 Q 15 15, 30 10 T 50 20 T 70 15 T 80 20" },
+    { 
+      title: "Total Projects", 
+      value: data?.totalProjects || "0", 
+      change: "Live", 
+      isPositive: true, 
+      icon: Clapperboard, 
+      chart: "M0 20 Q 10 10, 20 15 T 40 5 T 60 10 T 80 0" 
+    },
+    { 
+      title: "Total Leads", 
+      value: data?.totalLeads || "0", 
+      change: "Live", 
+      isPositive: true, 
+      icon: Users, 
+      chart: "M0 20 Q 15 5, 30 15 T 50 10 T 70 15 T 80 5" 
+    },
+    { 
+      title: "Cloud Storage", 
+      value: data?.storageUsage?.usedBytes ? `${(data.storageUsage.usedBytes / (1024 * 1024)).toFixed(1)} MB` : "0 MB", 
+      change: data?.storageUsage?.percent ? `${data.storageUsage.percent}% Used` : "0% Used", 
+      isPositive: true, 
+      icon: Cloud, 
+      chart: "M0 20 Q 10 15, 20 5 T 40 10 T 60 0 T 80 5" 
+    },
+    { 
+      title: "Storage Limit", 
+      value: "25 GB", 
+      change: "Free Tier", 
+      isPositive: true, 
+      icon: Cloud, 
+      chart: "M0 5 Q 15 15, 30 10 T 50 20 T 70 15 T 80 20" 
+    },
   ];
 
-  const recentLeads = [
-    { name: "Rohit Sharma", email: "rohit@gmail.com", time: "10 mins ago", status: "New" },
-    { name: "Neha Kapoor", email: "neha.kapoor@mail.com", time: "1 hour ago", status: "New" },
-    { name: "Arjun Verma", email: "arjunv@mail.com", time: "2 hours ago", status: "Contacted" },
-    { name: "Karan Mehta", email: "karan.mehta@mail.com", time: "5 hours ago", status: "Contacted" },
-    { name: "Pooja Singh", email: "pooja.singh@mail.com", time: "1 day ago", status: "Closed" },
-  ];
-
-  const recentProjects = [
-    { title: "Luxury Lifestyle Film", category: "Commercial", status: "In Progress", color: "bg-gold" },
-    { title: "Corporate Event 2024", category: "Event", status: "Completed", color: "bg-green-500" },
-    { title: "Product Promo - TechGear", category: "Commercial", status: "In Progress", color: "bg-gold" },
-  ];
+  const recentLeads = data?.recentLeads || [];
+  const recentProjects = data?.recentProjects || [];
 
   return (
     <div className="flex flex-col gap-6 pb-8">
@@ -177,7 +215,7 @@ export default function AdminDashboardPage() {
           
           <div className="flex flex-col gap-4 flex-1">
             {recentLeads.map((lead, i) => (
-              <div key={i} className="flex items-center justify-between group">
+              <div key={lead._id || i} className="flex items-center justify-between group">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full border border-[#222] bg-[#111] flex items-center justify-center text-gold">
                     <UserCircle2 className="w-4 h-4 stroke-[1.5]" />
@@ -189,13 +227,15 @@ export default function AdminDashboardPage() {
                 </div>
                 
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-[9px] text-neutral-500">{lead.time}</span>
+                  <span className="text-[9px] text-neutral-500">
+                    {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : 'Just now'}
+                  </span>
                   <div className={`px-2 py-0.5 rounded text-[9px] font-medium border ${
-                    lead.status === 'New' ? 'bg-gold/10 border-gold/20 text-gold' : 
-                    lead.status === 'Contacted' ? 'bg-[#222] border-[#333] text-neutral-300' : 
+                    (!lead.status || lead.status === 'new') ? 'bg-gold/10 border-gold/20 text-gold' : 
+                    lead.status === 'contacted' ? 'bg-[#222] border-[#333] text-neutral-300' : 
                     'bg-[#111] border-[#222] text-neutral-500'
                   }`}>
-                    {lead.status}
+                    {lead.status ? lead.status.charAt(0).toUpperCase() + lead.status.slice(1) : 'New'}
                   </div>
                 </div>
               </div>
@@ -208,21 +248,18 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Bottom Row: Projects Overview & Recent Projects */}
+      {/* Bottom Row: Site Assets & Recent Projects */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Projects Overview */}
+        {/* Site Assets Overview */}
         <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-sm font-bold text-white">Projects Overview</h3>
-            <button className="text-[10px] font-bold text-gold hover:text-white transition-colors">
-              View All
-            </button>
+            <h3 className="text-sm font-bold text-white">Site Assets Overview</h3>
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
             
-            {/* Stat: Completed */}
+            {/* Stat: Services */}
             <div className="bg-[#111] border border-[#1a1a1a] rounded-lg p-4 flex flex-col items-center justify-center gap-3">
               <div className="relative flex flex-col items-center justify-center w-12 h-12">
                  <svg className="w-full h-full transform -rotate-90">
@@ -232,12 +269,12 @@ export default function AdminDashboardPage() {
                  <CheckCircle2 className="w-4 h-4 text-green-500 absolute" />
               </div>
               <div className="text-center">
-                <span className="text-xl font-bold text-white block">12</span>
-                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">Completed</span>
+                <span className="text-xl font-bold text-white block">{data?.totalServices || 0}</span>
+                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">Services</span>
               </div>
             </div>
 
-            {/* Stat: In Progress */}
+            {/* Stat: Shorts */}
             <div className="bg-[#111] border border-[#1a1a1a] rounded-lg p-4 flex flex-col items-center justify-center gap-3">
               <div className="relative flex flex-col items-center justify-center w-12 h-12">
                  <svg className="w-full h-full transform -rotate-90">
@@ -247,12 +284,12 @@ export default function AdminDashboardPage() {
                  <Clock className="w-4 h-4 text-gold absolute" />
               </div>
               <div className="text-center">
-                <span className="text-xl font-bold text-white block">18</span>
-                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">In Progress</span>
+                <span className="text-xl font-bold text-white block">{data?.totalShorts || 0}</span>
+                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">Shorts</span>
               </div>
             </div>
 
-            {/* Stat: Upcoming */}
+            {/* Stat: Testimonials */}
             <div className="bg-[#111] border border-[#1a1a1a] rounded-lg p-4 flex flex-col items-center justify-center gap-3">
               <div className="relative flex flex-col items-center justify-center w-12 h-12">
                  <svg className="w-full h-full transform -rotate-90">
@@ -262,12 +299,12 @@ export default function AdminDashboardPage() {
                  <CalendarClock className="w-4 h-4 text-blue-500 absolute" />
               </div>
               <div className="text-center">
-                <span className="text-xl font-bold text-white block">8</span>
-                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">Upcoming</span>
+                <span className="text-xl font-bold text-white block">{data?.totalTestimonials || 0}</span>
+                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">Testimonials</span>
               </div>
             </div>
 
-            {/* Stat: On Hold */}
+            {/* Stat: Clients */}
             <div className="bg-[#111] border border-[#1a1a1a] rounded-lg p-4 flex flex-col items-center justify-center gap-3">
               <div className="relative flex flex-col items-center justify-center w-12 h-12">
                  <svg className="w-full h-full transform -rotate-90">
@@ -277,8 +314,8 @@ export default function AdminDashboardPage() {
                  <PauseCircle className="w-4 h-4 text-red-500 absolute" />
               </div>
               <div className="text-center">
-                <span className="text-xl font-bold text-white block">4</span>
-                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">On Hold</span>
+                <span className="text-xl font-bold text-white block">{data?.totalClients || 0}</span>
+                <span className="text-[9px] text-neutral-400 uppercase tracking-wider">Clients</span>
               </div>
             </div>
 
@@ -296,10 +333,15 @@ export default function AdminDashboardPage() {
           
           <div className="flex flex-col gap-4">
             {recentProjects.map((project, i) => (
-              <div key={i} className="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-[#111] transition-colors">
+              <div key={project._id || i} className="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-[#111] transition-colors">
                 <div className="flex items-center gap-4">
                   <div className="relative w-16 h-10 rounded overflow-hidden border border-[#222]">
-                    <Image src="/images/services-bg.jpg" alt="Project" fill className="object-cover" />
+                    <Image 
+                      src={project.mediaUrl || "/images/services-bg.jpg"} 
+                      alt={project.title} 
+                      fill 
+                      className="object-cover" 
+                    />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-white group-hover:text-gold transition-colors">{project.title}</span>
@@ -308,8 +350,10 @@ export default function AdminDashboardPage() {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-neutral-400">{project.status}</span>
-                  <div className={`w-1.5 h-1.5 rounded-full ${project.color} shadow-[0_0_5px_currentColor]`} />
+                  <span className="text-[10px] text-neutral-400">
+                    {project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'Active'}
+                  </span>
+                  <div className={`w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_currentColor]`} />
                 </div>
               </div>
             ))}
