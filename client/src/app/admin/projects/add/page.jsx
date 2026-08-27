@@ -27,9 +27,20 @@ export default function AdminAddProjectWYSIWYG() {
   const [status, setStatus] = useState({ loading: false, success: false, error: "" });
   const fileInputRef = useRef(null);
 
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategoryChange = (e) => {
+    if (e.target.value === 'CREATE_NEW') {
+      setIsCustomCategory(true);
+      setFormData(prev => ({ ...prev, category: '' }));
+    } else {
+      handleInputChange(e);
+    }
   };
 
   const handleTextareaChange = (e) => {
@@ -62,8 +73,8 @@ export default function AdminAddProjectWYSIWYG() {
       setStatus({ loading: false, success: false, error: "Please provide a valid media URL." });
       return;
     }
-    if (!formData.title || !formData.brief) {
-      setStatus({ loading: false, success: false, error: "Title and brief are required." });
+    if (!formData.title || !formData.brief || !formData.category) {
+      setStatus({ loading: false, success: false, error: "Title, brief, and category are required." });
       return;
     }
 
@@ -134,7 +145,6 @@ export default function AdminAddProjectWYSIWYG() {
       <div className="relative w-full max-w-screen-2xl mx-auto pb-32 overflow-hidden">
         
 
-
         {/* 1. Header & Metadata Section */}
         <section className="container mx-auto px-6 md:px-12 pt-24 md:pt-32 pb-8 md:pb-12 relative">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
@@ -145,17 +155,38 @@ export default function AdminAddProjectWYSIWYG() {
                 <div className="h-[2px] w-8 md:w-12 bg-gold" />
                 <div className="flex items-center gap-2 text-[9px] md:text-xs font-bold tracking-[0.3em] uppercase text-gold">
                   <div className="relative flex items-center">
-                    <select 
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      className="bg-transparent appearance-none focus:outline-none focus:text-white border-b border-transparent focus:border-gold/50 cursor-pointer pr-6"
-                    >
-                      {CATEGORIES.map(cat => (
-                        <option key={cat} value={cat} className="bg-black text-white">{cat}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="w-3 h-3 absolute right-1 pointer-events-none text-gold" />
+                    {isCustomCategory ? (
+                      <input 
+                        type="text"
+                        name="category"
+                        value={formData.category}
+                        onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value.toUpperCase() }))}
+                        placeholder="NEW CATEGORY"
+                        className="bg-transparent focus:outline-none text-white border-b border-gold/50 w-32 md:w-48 placeholder:text-gold/50"
+                        autoFocus
+                        onBlur={(e) => {
+                          if(!e.target.value.trim()) {
+                             setIsCustomCategory(false);
+                             setFormData(prev => ({ ...prev, category: 'DOCUMENTARIES' }));
+                          }
+                        }}
+                      />
+                    ) : (
+                      <>
+                        <select 
+                          name="category"
+                          value={formData.category}
+                          onChange={handleCategoryChange}
+                          className="bg-transparent appearance-none focus:outline-none focus:text-white border-b border-transparent focus:border-gold/50 cursor-pointer pr-6"
+                        >
+                          {CATEGORIES.map(cat => (
+                            <option key={cat} value={cat} className="bg-black text-white">{cat}</option>
+                          ))}
+                          <option value="CREATE_NEW" className="bg-gold text-black font-bold">+ CREATE NEW...</option>
+                        </select>
+                        <ChevronDown className="w-3 h-3 absolute right-1 pointer-events-none text-gold" />
+                      </>
+                    )}
                   </div>
                   <span>—</span>
                   <input 
