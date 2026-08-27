@@ -2,7 +2,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import ProjectMediaViewer from "@/components/ProjectMediaViewer";
 
 async function getProject(id) {
   try {
@@ -18,45 +19,6 @@ async function getProject(id) {
 export default async function WorkDetailsPage({ params }) {
   const unwrappedParams = await params;
   const project = await getProject(unwrappedParams.slug);
-
-  const renderVideo = (url, title) => {
-    const lowerUrl = url.toLowerCase();
-    let embedUrl = "";
-    
-    if (lowerUrl.includes('youtube.com/watch?v=')) {
-      const videoId = url.split('v=')[1]?.split('&')[0];
-      if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
-    } else if (lowerUrl.includes('youtu.be/')) {
-      const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-      if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
-    } else if (lowerUrl.includes('vimeo.com/')) {
-      const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
-      if (videoId) embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=1&muted=1`;
-    }
-
-    if (embedUrl) {
-      return (
-        <iframe 
-          src={embedUrl} 
-          title={title}
-          className="w-full h-full object-cover pointer-events-auto border-none"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowFullScreen
-        />
-      );
-    }
-
-    return (
-      <video 
-        src={url} 
-        className="w-full h-full object-cover" 
-        controls 
-        autoPlay 
-        loop 
-        muted 
-      />
-    );
-  };
 
   if (!project) {
     return (
@@ -111,61 +73,14 @@ export default async function WorkDetailsPage({ params }) {
               </div>
             )}
             
-            {project.metadata && (project.metadata.iso || project.metadata.aperture || project.metadata.fps) && (
-              <div className="flex flex-col gap-1">
-                <span className="text-[9px] text-neutral-500 font-bold tracking-widest uppercase">Camera Settings</span>
-                <div className="flex items-center gap-3 text-sm md:text-base font-mono text-gold uppercase">
-                  {project.metadata.iso && <span>ISO {project.metadata.iso}</span>}
-                  {project.metadata.aperture && <span>F/{project.metadata.aperture}</span>}
-                  {project.metadata.fps && <span>{project.metadata.fps} FPS</span>}
-                </div>
-              </div>
-            )}
+
           </div>
         </div>
       </section>
 
       {/* 2. Massive Image Section (Viewfinder Card Style) */}
       <section className="container mx-auto px-4 sm:px-6 md:px-12 pb-16 md:pb-32">
-        <div className="relative w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9] p-3 md:p-6 bg-[#0a0a0a] flex flex-col justify-center shadow-[0_10px_40px_rgba(0,0,0,0.8)] group">
-          
-          {/* 4 Viewfinder Corners */}
-          <div className="absolute top-0 left-0 w-8 h-8 md:w-16 md:h-16 border-t-[1.5px] border-l-[1.5px] border-gold transition-all duration-700 opacity-50 group-hover:opacity-100 group-hover:-translate-x-1 group-hover:-translate-y-1" />
-          <div className="absolute top-0 right-0 w-8 h-8 md:w-16 md:h-16 border-t-[1.5px] border-r-[1.5px] border-gold transition-all duration-700 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 md:w-16 md:h-16 border-b-[1.5px] border-l-[1.5px] border-gold transition-all duration-700 opacity-50 group-hover:opacity-100 group-hover:-translate-x-1 group-hover:translate-y-1" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 md:w-16 md:h-16 border-b-[1.5px] border-r-[1.5px] border-gold transition-all duration-700 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:translate-y-1" />
-
-          {/* Inner Frame */}
-          <div className="relative w-full h-full overflow-hidden bg-black border border-[#222]">
-            {project.mediaType === 'video' ? (
-              renderVideo(project.mediaUrl, project.title)
-            ) : (
-              <img 
-                src={project.mediaUrl} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                alt={project.title}
-              />
-            )}
-            
-            {/* Dark overlay at bottom for controls */}
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Navigation Arrows */}
-            <button className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-gold hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0">
-              <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 stroke-[1.5]" />
-            </button>
-            <button className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-gold hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0">
-              <ChevronRight className="w-4 h-4 md:w-6 md:h-6 stroke-[1.5]" />
-            </button>
-
-            {/* Pagination Dots */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_10px_rgba(252,166,3,0.5)]" />
-              <div className="w-2 h-2 rounded-full bg-white/40 hover:bg-white/80 transition-colors cursor-pointer" />
-              <div className="w-2 h-2 rounded-full bg-white/40 hover:bg-white/80 transition-colors cursor-pointer" />
-            </div>
-          </div>
-        </div>
+        <ProjectMediaViewer project={project} />
       </section>
 
       {/* 3. Project Overview Section */}

@@ -58,12 +58,22 @@ const getProjects = async (req, res) => {
   }
 };
 
+const mongoose = require("mongoose");
+
 // @desc    Get project by slug
 // @route   GET /api/projects/:slug
 // @access  Public
 const getProjectBySlug = async (req, res) => {
   try {
-    const project = await Project.findOne({ slug: req.params.slug });
+    const { slug } = req.params;
+    let query = { slug: slug };
+    
+    // Fallback to searching by _id if the slug is a valid ObjectId
+    if (mongoose.Types.ObjectId.isValid(slug)) {
+      query = { $or: [{ slug: slug }, { _id: slug }] };
+    }
+
+    const project = await Project.findOne(query);
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });

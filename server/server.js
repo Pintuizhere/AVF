@@ -35,6 +35,7 @@ app.use("/api/clients", require("./routes/clientLogoRoutes"));
 app.use("/api/footer", require("./routes/footerRoutes"));
 app.use("/api/hero", require("./routes/heroRoutes"));
 app.use("/api/abouthero", require("./routes/aboutHeroRoutes"));
+app.use("/api/aboutstory", require("./routes/aboutStoryRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

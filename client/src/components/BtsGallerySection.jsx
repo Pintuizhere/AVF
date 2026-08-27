@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { Play, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function BtsGallerySection() {
   const [galleryMedia, setGalleryMedia] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     fetchBts();
@@ -23,6 +26,17 @@ export default function BtsGallerySection() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = galleryMedia.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(galleryMedia.length / itemsPerPage);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Optional: scroll to top of gallery
+    document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -51,14 +65,15 @@ export default function BtsGallerySection() {
           </div>
         ) : (
           <div className="columns-1 md:columns-2 lg:columns-3 gap-8 mt-8">
-            {galleryMedia.map((media) => {
+            {currentItems.map((media) => {
               
               const MediaContent = (
                 <div 
-                  className="break-inside-avoid relative w-full bg-[rgb(245,240,230)] p-1.5 md:p-2 shadow-[0_10px_30px_rgba(0,0,0,0.7)] group transition-all duration-700 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(252,166,3,0.15)] rounded-sm mb-8"
+                  onClick={() => !media.url && setSelectedMedia(media)}
+                  className={`break-inside-avoid relative w-full bg-white p-2 md:p-3 border-2 border-black shadow-[6px_6px_0px_0px_#fca603] md:shadow-[8px_8px_0px_0px_#fca603] group transition-all duration-300 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_#fca603] md:hover:shadow-[12px_12px_0px_0px_#fca603] mb-8 md:mb-10 ${!media.url ? 'cursor-pointer' : ''}`}
                 >
                   {/* Inner Media Container */}
-                  <div className={`relative w-full ${media.aspect} overflow-hidden bg-[#111] shadow-inner`}>
+                  <div className={`relative w-full ${media.aspect} overflow-hidden bg-[#111] border border-black`}>
                     
                     {media.type === 'video' ? (
                        <div className="w-full h-full bg-black relative flex items-center justify-center filter grayscale-[0.3] contrast-125 group-hover:grayscale-0 transition-all duration-700 ease-out">
@@ -94,7 +109,65 @@ export default function BtsGallerySection() {
           </div>
         )}
 
+        {/* Pagination Controls */}
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-center items-center mt-12 md:mt-16 gap-3 md:gap-4 flex-wrap">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] disabled:translate-y-1 disabled:translate-x-1 transition-all hover:bg-neutral-100"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            
+            <div className="flex items-center gap-1.5 md:gap-2 flex-wrap justify-center">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => paginate(i + 1)}
+                  className={`w-9 h-9 md:w-10 md:h-10 flex items-center justify-center border-2 border-black font-bold text-sm transition-all ${
+                    currentPage === i + 1 
+                      ? 'bg-black text-white shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] translate-y-1 translate-x-1' 
+                      : 'bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-neutral-100'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 flex items-center justify-center border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] disabled:translate-y-1 disabled:translate-x-1 transition-all hover:bg-neutral-100"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedMedia && (
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-8" onClick={() => setSelectedMedia(null)}>
+          <button 
+            className="absolute top-4 right-4 md:top-8 md:right-8 text-white hover:text-gold transition-colors z-[110]"
+            onClick={(e) => { e.stopPropagation(); setSelectedMedia(null); }}
+          >
+            <X className="w-8 h-8 md:w-10 md:h-10" />
+          </button>
+          
+          <div className="relative w-full max-w-7xl max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            {selectedMedia.type === 'video' ? (
+              <video src={selectedMedia.src} autoPlay controls className="max-w-full max-h-[90vh] object-contain" />
+            ) : (
+              <img src={selectedMedia.src} alt={selectedMedia.title || "Full screen media"} className="max-w-full max-h-[90vh] object-contain" />
+            )}
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }

@@ -110,15 +110,14 @@ export default function ServicesSection() {
                   {/* Mobile Only: Inline Visual Card (Accordion Style) */}
                   <div className={`lg:hidden overflow-hidden transition-all duration-700 ease-in-out ${isActive ? 'max-h-[500px] mt-4 mb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <div className="relative h-[350px] w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
-                      <div className={`w-full h-full bg-gradient-to-br ${color} relative`}>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]" />
-                        
+                      <div className={`w-full h-full bg-[#0a0a0a] relative`}>
                         {/* Background Image if uploaded */}
                         {svc.image && (
-                          <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay">
-                            <img src={svc.image} alt={svc.title} className="w-full h-full object-cover grayscale" />
+                          <div className="absolute inset-0 z-0">
+                            <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50" />
                           </div>
                         )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70 z-10" />
 
                         <div className="absolute top-6 left-6 right-6 flex justify-between items-center opacity-60 z-30">
                           <div className="flex gap-2 items-center">
@@ -162,15 +161,14 @@ export default function ServicesSection() {
                   key={svc._id || i}
                   className={`absolute inset-0 transition-all duration-1000 ease-in-out ${activeIndex === i ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0'}`}
                 >
-                  <div className={`w-full h-full bg-gradient-to-br ${color} relative`}>
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]" />
-                    
+                  <div className={`w-full h-full bg-[#0a0a0a] relative`}>
                     {/* Background Image if uploaded */}
                     {svc.image && (
-                      <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay">
-                        <img src={svc.image} alt={svc.title} className="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-1000" />
+                      <div className="absolute inset-0 z-0">
+                        <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-1000" />
                       </div>
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70 z-10" />
 
                     <div className="absolute top-8 left-8 right-8 flex justify-between items-center opacity-60 z-30">
                       <div className="flex gap-3 items-center">

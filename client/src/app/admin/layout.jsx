@@ -14,6 +14,7 @@ const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Hero Section", href: "/admin/hero", icon: PanelTop },
   { name: "About Hero", href: "/admin/about-hero", icon: PanelTop },
+  { name: "Our Story", href: "/admin/about-story", icon: FileText },
   { name: "Projects", href: "/admin/projects", icon: Clapperboard },
   { name: "Featured Work", href: "/admin/featured", icon: Star },
   { name: "Shorts", href: "/admin/shorts", icon: Smartphone },

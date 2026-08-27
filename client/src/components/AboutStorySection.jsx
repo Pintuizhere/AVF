@@ -11,6 +11,14 @@ export default function AboutStorySection() {
     stat4_num: "10", stat4_label: "Industries Served",
   });
 
+  const [story, setStory] = useState({
+    title: "Our Story",
+    heading: "The Journey Behind AVF",
+    description: "AVF Production began with a simple belief—every brand, every person and every moment has a story worth telling. What started as a passion project has grown into a full-scale production house trusted by clients across industries.",
+    media1: null,
+    media2: null
+  });
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -23,7 +31,21 @@ export default function AboutStorySection() {
         console.error(error);
       }
     };
+    
+    const fetchStory = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/aboutstory");
+        const data = await res.json();
+        if (data && data._id) {
+          setStory(data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchStats();
+    fetchStory();
   }, []);
 
   return (
@@ -35,19 +57,37 @@ export default function AboutStorySection() {
         <div className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center">
           {/* Back photo */}
           <div className="absolute top-4 md:top-10 left-4 md:left-10 w-48 md:w-64 aspect-[4/5] bg-white p-2 md:p-4 pb-12 md:pb-16 shadow-xl -rotate-12 flex flex-col grayscale opacity-80 border border-neutral-200">
-            <div className="flex-1 bg-neutral-200 flex items-center justify-center border border-neutral-300">
-               <ImageIcon className="w-8 h-8 md:w-12 md:h-12 text-neutral-400" />
+            <div className="flex-1 bg-neutral-200 flex items-center justify-center border border-neutral-300 relative overflow-hidden">
+               {story.media1 && story.media1.url ? (
+                 story.media1.resource_type === 'video' ? (
+                   <video src={story.media1.url} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+                 ) : (
+                   <img src={story.media1.url} alt="Back Photo" className="absolute inset-0 w-full h-full object-cover" />
+                 )
+               ) : (
+                 <ImageIcon className="w-8 h-8 md:w-12 md:h-12 text-neutral-400 z-10" />
+               )}
             </div>
           </div>
           
           {/* Main front photo */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-80 aspect-square bg-white p-2 md:p-4 pb-16 md:pb-20 shadow-2xl rotate-3 border border-neutral-200 z-10">
             <div className="w-full h-full bg-neutral-900 flex items-center justify-center rounded-sm overflow-hidden relative border-4 border-black/10 shadow-inner">
-               <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.8)_100%)] z-10" />
-               {/* Simulating a lens center in the photo */}
-               <div className="w-32 h-32 rounded-full border-[12px] border-neutral-800 flex items-center justify-center bg-black relative z-0">
-                  <div className="w-16 h-16 rounded-full border-4 border-neutral-600 bg-neutral-900" />
-               </div>
+               {story.media2 && story.media2.url ? (
+                 story.media2.resource_type === 'video' ? (
+                   <video src={story.media2.url} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0" />
+                 ) : (
+                   <img src={story.media2.url} alt="Front Photo" className="absolute inset-0 w-full h-full object-cover z-0" />
+                 )
+               ) : (
+                 <>
+                   <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.8)_100%)] z-10" />
+                   {/* Simulating a lens center in the photo */}
+                   <div className="w-32 h-32 rounded-full border-[12px] border-neutral-800 flex items-center justify-center bg-black relative z-0">
+                      <div className="w-16 h-16 rounded-full border-4 border-neutral-600 bg-neutral-900" />
+                   </div>
+                 </>
+               )}
             </div>
             <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 font-script text-lg md:text-2xl text-neutral-800 -rotate-2">
               AVF - Behind every frame
@@ -64,15 +104,12 @@ export default function AboutStorySection() {
 
         {/* Right: Text Content */}
         <div className="flex flex-col items-start z-10 w-full mt-8 lg:mt-0">
-          <span className="font-script text-gold text-2xl md:text-3xl mb-2 font-bold">Our Story</span>
+          <span className="font-script text-gold text-2xl md:text-3xl mb-2 font-bold">{story.title}</span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-tight mb-6">
-            The Journey Behind AVF
+            {story.heading}
           </h2>
-          <p className="text-neutral-800 leading-relaxed mb-10 text-sm max-w-lg font-medium">
-            AVF Production began with a simple belief—every
-            brand, every person and every moment has a story worth telling.
-            What started as a passion project has grown into a full-scale
-            production house trusted by clients across industries.
+          <p className="text-neutral-800 leading-relaxed mb-10 text-sm max-w-lg font-medium whitespace-pre-wrap">
+            {story.description}
           </p>
           
           {/* Stats Grid */}
