@@ -7,11 +7,13 @@ import Image from "next/image";
 import { 
   LayoutDashboard, Clapperboard, MonitorPlay, Camera, MessageSquareQuote, 
   Mail, Users, FileText, Settings, ShieldCheck, Calendar, Bell, ChevronDown, Menu, LogOut, X,
-  Star, Smartphone, BarChart2, Briefcase, PanelBottom
+  Star, Smartphone, BarChart2, Briefcase, PanelBottom, PanelTop
 } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+  { name: "Hero Section", href: "/admin/hero", icon: PanelTop },
+  { name: "About Hero", href: "/admin/about-hero", icon: PanelTop },
   { name: "Projects", href: "/admin/projects", icon: Clapperboard },
   { name: "Featured Work", href: "/admin/featured", icon: Star },
   { name: "Shorts", href: "/admin/shorts", icon: Smartphone },

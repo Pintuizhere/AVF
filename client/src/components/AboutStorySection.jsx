@@ -69,7 +69,7 @@ export default function AboutStorySection() {
             The Journey Behind AVF
           </h2>
           <p className="text-neutral-800 leading-relaxed mb-10 text-sm max-w-lg font-medium">
-            AVF Productions began with a simple belief—every
+            AVF Production began with a simple belief—every
             brand, every person and every moment has a story worth telling.
             What started as a passion project has grown into a full-scale
             production house trusted by clients across industries.

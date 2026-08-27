@@ -1,18 +1,74 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Play, BatteryMedium } from "lucide-react";
 import Image from "next/image";
 
 export default function HeroSection() {
+  const [heroData, setHeroData] = useState(null);
+
+  useEffect(() => {
+    const fetchHero = async () => {
+      const fallbackData = {
+        headingLine1: "We Don't Just\nCreate Videos,",
+        headingLine2: "We Tell Stories.",
+        subtitle: "Cinematic Visuals. Powerful Stories.<br />Timeless Impact.",
+        videoReelUrl: "",
+        bgMedia: "/images/hero-bg.jpg",
+        bgMediaType: "image"
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/api/hero");
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        
+        if (data && Object.keys(data).length > 0) {
+          setHeroData({
+            headingLine1: data.headingLine1 || fallbackData.headingLine1,
+            headingLine2: data.headingLine2 || fallbackData.headingLine2,
+            subtitle: data.subtitle || fallbackData.subtitle,
+            videoReelUrl: data.videoReelUrl || fallbackData.videoReelUrl,
+            bgMedia: data.bgMedia || fallbackData.bgMedia,
+            bgMediaType: data.bgMediaType || fallbackData.bgMediaType
+          });
+        } else {
+          setHeroData(fallbackData);
+        }
+      } catch (error) {
+        console.error("Error fetching hero data:", error);
+        setHeroData(fallbackData);
+      }
+    };
+    fetchHero();
+  }, []);
+
+  if (!heroData) {
+    return <section className="relative min-h-screen bg-black"></section>;
+  }
+
   return (
     <section id="home" className="relative min-h-screen pt-24 pb-12 flex items-center justify-center overflow-hidden bg-black">
-      {/* Background Image */}
+      {/* Background Media */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/hero-bg.jpg"
-          alt="Cinematic Camera Setup"
-          fill
-          className="object-cover opacity-80"
-          priority
-        />
+        {heroData.bgMediaType === 'video' ? (
+          <video
+            src={heroData.bgMedia}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-80"
+          />
+        ) : (
+          <Image
+            src={heroData.bgMedia}
+            alt="Cinematic Background"
+            fill
+            className="object-cover opacity-80"
+            priority
+          />
+        )}
         {/* Gradient overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10" />
       </div>
@@ -40,30 +96,39 @@ export default function HeroSection() {
         {/* Left Content */}
         <div className="flex flex-col items-start gap-8">
           <div className="flex flex-col">
-            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] text-white opacity-0 animate-fade-up [animation-delay:200ms]">
-              We Don&apos;t Just<br />
-              Create Videos,
+            <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.9] text-white opacity-0 animate-fade-up [animation-delay:200ms] whitespace-pre-line">
+              {heroData.headingLine1}
             </h1>
             <h2 className="text-5xl md:text-7xl font-script text-gold mt-2 -rotate-2 origin-left font-bold opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
-              We Tell Stories.
+              {heroData.headingLine2}
             </h2>
           </div>
 
-          <p className="text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4 opacity-0 animate-fade-up [animation-delay:600ms]">
-            Cinematic Visuals. Powerful Stories.<br />Timeless Impact.
-          </p>
+          <p 
+            className="text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4 opacity-0 animate-fade-up [animation-delay:600ms]"
+            dangerouslySetInnerHTML={{ __html: heroData.subtitle }}
+          />
 
           <div className="flex items-center gap-8 mt-4 opacity-0 animate-fade-up [animation-delay:800ms]">
             <button className="bg-gold text-black px-8 py-4 text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
               View Our Work
               <Play className="w-4 h-4" />
             </button>
-            <button className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
-              <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
-                <Play className="w-4 h-4" />
-              </div>
-              <span className="font-script text-3xl font-bold">Play Reel</span>
-            </button>
+            {heroData.videoReelUrl ? (
+              <a href={heroData.videoReelUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
+                <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
+                  <Play className="w-4 h-4" />
+                </div>
+                <span className="font-script text-3xl font-bold">Play Reel</span>
+              </a>
+            ) : (
+              <button className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
+                <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
+                  <Play className="w-4 h-4" />
+                </div>
+                <span className="font-script text-3xl font-bold">Play Reel</span>
+              </button>
+            )}
           </div>
         </div>
 

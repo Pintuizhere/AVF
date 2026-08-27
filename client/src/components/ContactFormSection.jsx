@@ -45,7 +45,7 @@ export default function ContactFormSection() {
     youtubeUrl: "#",
     linkedinUrl: "#",
     phoneNumbers: "+91 86765 43210",
-    emailAddress: "hello@avfproductions.com",
+    emailAddress: "hello@avfproduction.com",
     address: "New Delhi, India",
     workingHours: "Mon - Sat: 10:00 AM - 7:00 PM"
   });

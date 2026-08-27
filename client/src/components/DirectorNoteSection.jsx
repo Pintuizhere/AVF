@@ -1,6 +1,53 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function DirectorNoteSection() {
+  const [heroData, setHeroData] = useState(null);
+
+  useEffect(() => {
+    const fetchHero = async () => {
+      const fallbackData = {
+        badge: "A Note From Our Founder",
+        title: "Akash Verma",
+        subtitle: "Founder. Filmmaker. Dreamer.",
+        content: "For me, filmmaking is not just about cameras and editing. It's about people, emotions and moments that stay forever. I believe in creating visuals that are honest, raw and real. Every frame we create is a promise—to tell your story with authenticity and passion.",
+        signatureName: "Akash Verma",
+        signatureRole: "Founder",
+        image: "/images/director.jpg"
+      };
+      
+      try {
+        const res = await fetch("http://localhost:5000/api/abouthero");
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        
+        if (data && Object.keys(data).length > 0) {
+          setHeroData({
+            badge: data.badge || fallbackData.badge,
+            title: data.title || fallbackData.title,
+            subtitle: data.subtitle || fallbackData.subtitle,
+            content: data.content || fallbackData.content,
+            signatureName: data.signatureName || fallbackData.signatureName,
+            signatureRole: data.signatureRole || fallbackData.signatureRole,
+            image: data.image || fallbackData.image
+          });
+        } else {
+          setHeroData(fallbackData);
+        }
+      } catch (error) {
+        console.error("Error fetching about hero data:", error);
+        setHeroData(fallbackData);
+      }
+    };
+    fetchHero();
+  }, []);
+
+  if (!heroData) {
+    return <section className="relative bg-[#0a0a0a] min-h-[60vh]"></section>;
+  }
+
   return (
     <section className="relative bg-[#0a0a0a] text-white pt-32 pb-20 lg:pt-40 lg:pb-32 px-4 md:px-6 overflow-hidden w-full mt-12 md:mt-0">
       
@@ -9,7 +56,7 @@ export default function DirectorNoteSection() {
         {/* Mobile Badge (Only visible on small screens, appears above photo) */}
         <div className="w-full flex lg:hidden order-1 z-20 justify-center mb-2">
           <span className="font-bebas bg-gold text-black text-lg tracking-widest uppercase px-4 py-1.5 shadow-md">
-            A Note From Our Founder
+            {heroData.badge}
           </span>
         </div>
 
@@ -17,27 +64,23 @@ export default function DirectorNoteSection() {
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left z-10 w-full lg:w-1/2 order-2 lg:order-1 mt-4 lg:mt-0">
           {/* Desktop Badge */}
           <span className="hidden lg:inline-block font-bebas bg-gold text-black text-lg tracking-widest uppercase mb-6 px-4 py-1.5 shadow-md">
-            A Note From Our Founder
+            {heroData.badge}
           </span>
           
           <h2 className="text-5xl md:text-7xl font-bebas uppercase tracking-wider leading-tight mb-2 md:mb-4 text-white font-bold text-center lg:text-left">
-            Akash Verma
+            {heroData.title}
           </h2>
           <h3 className="font-script text-gold text-3xl md:text-4xl mb-6 md:mb-8 -rotate-1 text-center lg:text-left">
-            Founder. Filmmaker. Dreamer.
+            {heroData.subtitle}
           </h3>
-          <p className="text-neutral-300 leading-relaxed mb-4 lg:mb-10 max-w-lg font-medium text-sm md:text-base text-center lg:text-left">
-            For me, filmmaking is not just about cameras and editing. 
-            It&apos;s about people, emotions and moments that stay forever. 
-            I believe in creating visuals that are honest, raw and real. 
-            Every frame we create is a promise—to tell your story 
-            with authenticity and passion.
+          <p className="text-neutral-300 leading-relaxed mb-4 lg:mb-10 max-w-lg font-medium text-sm md:text-base text-center lg:text-left whitespace-pre-line">
+            {heroData.content}
           </p>
           
           {/* Desktop Signature */}
           <div className="hidden lg:flex flex-col items-start mt-4">
-            <span className="font-script text-gold text-4xl -rotate-2 mb-2">Akash Verma</span>
-            <span className="font-bebas tracking-[0.2em] uppercase text-xs text-neutral-400">Founder</span>
+            <span className="font-script text-gold text-4xl -rotate-2 mb-2">{heroData.signatureName}</span>
+            <span className="font-bebas tracking-[0.2em] uppercase text-xs text-neutral-400">{heroData.signatureRole}</span>
           </div>
         </div>
 
@@ -68,8 +111,8 @@ export default function DirectorNoteSection() {
 
             <div className="w-full h-full bg-neutral-800 relative overflow-hidden ml-3 md:ml-4 w-[calc(100%-1.5rem)] md:w-[calc(100%-2rem)]">
                <Image
-                 src="/images/director.jpg"
-                 alt="Akash Verma - Founder"
+                 src={heroData.image}
+                 alt={heroData.title}
                  fill
                  className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                />
@@ -85,8 +128,8 @@ export default function DirectorNoteSection() {
 
         {/* Mobile Signature */}
         <div className="w-full flex lg:hidden flex-col items-center justify-center order-4 z-10 mt-10">
-          <span className="font-script text-gold text-4xl md:text-5xl -rotate-2 mb-2">Akash Verma</span>
-          <span className="font-bebas tracking-[0.2em] uppercase text-xs md:text-sm text-neutral-400">Founder</span>
+          <span className="font-script text-gold text-4xl md:text-5xl -rotate-2 mb-2">{heroData.signatureName}</span>
+          <span className="font-bebas tracking-[0.2em] uppercase text-xs md:text-sm text-neutral-400">{heroData.signatureRole}</span>
         </div>
         
       </div>

@@ -219,7 +219,7 @@ export default function Footer() {
 
         {/* Bottom Copyright Bar */}
         <div className="border-t border-white/10 pt-8 pb-4 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-500 tracking-wider">
-          <p>&copy; {new Date().getFullYear()} AVF Productions. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} AVF Production. All Rights Reserved.</p>
           <p className="mt-3 md:mt-0">
             Developed by <span className="text-[#3b82f6] font-medium hover:text-blue-400 transition-colors cursor-pointer">anymediaworks</span>
           </p>

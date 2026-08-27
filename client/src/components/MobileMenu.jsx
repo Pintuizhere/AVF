@@ -140,7 +140,7 @@ export default function MobileMenu({ isOpen, onClose }) {
               <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold shrink-0">
                 <Mail className="w-4 h-4 stroke-[1.5]" />
               </div>
-              <span className="text-xs text-neutral-300 font-medium">hello@avfproductions.com</span>
+              <span className="text-xs text-neutral-300 font-medium">hello@avfproduction.com</span>
             </div>
 
             <div className="flex items-center gap-4">

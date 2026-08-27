@@ -33,7 +33,8 @@ app.use("/api/testimonials", require("./routes/testimonialRoutes"));
 app.use("/api/stats", require("./routes/statRoutes"));
 app.use("/api/clients", require("./routes/clientLogoRoutes"));
 app.use("/api/footer", require("./routes/footerRoutes"));
-// app.use("/api/projects", require("./routes/projectRoutes"));
+app.use("/api/hero", require("./routes/heroRoutes"));
+app.use("/api/abouthero", require("./routes/aboutHeroRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

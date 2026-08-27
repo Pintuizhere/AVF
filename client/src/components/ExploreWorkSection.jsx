@@ -56,8 +56,8 @@ export default function ExploreWorkSection() {
 
         {/* Gallery Grid */}
         <div className="w-full">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-            {filteredWork.map((item) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {filteredWork.slice(0, 6).map((item) => (
               <Link 
                 href="/our-work" 
                 key={item.id} 
@@ -101,6 +101,19 @@ export default function ExploreWorkSection() {
           {filteredWork.length === 0 && (
             <div className="w-full text-center py-20 text-neutral-500 font-mono text-sm">
                NO PROJECTS FOUND IN THIS CATEGORY.
+            </div>
+          )}
+
+          {/* View All Work Button */}
+          {filteredWork.length > 0 && (
+            <div className="mt-16 flex justify-center w-full">
+              <Link 
+                href="/our-work"
+                className="bg-gold text-black px-8 py-4 font-bold text-xs tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-3"
+              >
+                View All Work
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
             </div>
           )}
         </div>
