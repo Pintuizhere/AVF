@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, ArrowLeft, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function ReviewsSection() {
@@ -60,10 +60,25 @@ export default function ReviewsSection() {
               What Our Clients Say
             </h2>
           </div>
-          <button className="flex items-center gap-2 text-gold text-xs font-bold tracking-widest uppercase hover:text-white transition-colors group">
-            View All Reviews
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
+              className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-black hover:bg-gold hover:border-gold transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => {
+                const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
+                const visibleCards = isDesktop ? 3 : 1;
+                const maxIndex = Math.max(0, reviews.length - visibleCards);
+                setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+              }}
+              className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-black hover:bg-gold hover:border-gold transition-all"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {loading ? (
