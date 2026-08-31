@@ -44,11 +44,11 @@ export default function ClientsSection() {
                   key={`${setIndex}-${i}`} 
                   className="flex-none group/logo"
                 >
-                  <div className="w-16 sm:w-20 md:w-24 h-8 sm:h-10 md:h-12 relative flex items-center justify-center opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
+                  <div className="w-16 sm:w-20 md:w-24 h-8 sm:h-10 md:h-12 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
                     <img 
                       src={brand.logoUrl} 
                       alt={brand.name} 
-                      className="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-300"
+                      className="max-w-full max-h-full object-contain transition-transform duration-300"
                       style={{ transform: `scale(${brand.zoom || 1.0})` }}
                       loading="lazy"
                       suppressHydrationWarning={true}
