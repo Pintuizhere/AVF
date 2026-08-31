@@ -40,14 +40,7 @@ export default function WorkHeroSection() {
         <div className="absolute top-28 md:top-32 right-4 md:right-8 w-6 md:w-8 h-6 md:h-8 border-t-2 border-r-2 border-neutral-600 z-20" />
         <div className="absolute bottom-8 right-4 md:right-8 w-6 md:w-8 h-6 md:h-8 border-b-2 border-r-2 border-neutral-600 z-20" />
 
-        {/* Camera HUD Elements */}
-        <div className="absolute top-32 md:top-36 left-1/2 -translate-x-1/2 flex items-center gap-4 md:gap-6 text-neutral-400 font-mono text-[8px] md:text-[10px] uppercase tracking-widest z-20 bg-black/50 px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-neutral-800">
-          <span>ISO 800</span>
-          <span className="w-1 h-1 rounded-full bg-gold"></span>
-          <span>F/2.8</span>
-          <span className="w-1 h-1 rounded-full bg-gold"></span>
-          <span>24FPS</span>
-        </div>
+
 
         {/* REC Indicator */}
         <div className="absolute top-36 md:top-40 right-8 md:right-12 flex items-center gap-2 text-red-600 font-mono text-xs md:text-sm z-20">
