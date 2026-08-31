@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { Play, BatteryMedium } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HeroSection() {
   const [heroData, setHeroData] = useState(null);
+  const [isReelPlaying, setIsReelPlaying] = useState(false);
 
   useEffect(() => {
     const fetchHero = async () => {
@@ -65,7 +67,7 @@ export default function HeroSection() {
             src={heroData.bgMedia}
             alt="Cinematic Background"
             fill
-            className="object-cover opacity-80"
+            className={`object-cover opacity-80 ${isReelPlaying ? 'animate-zoom-in-out' : ''}`}
             priority
           />
         )}
@@ -110,10 +112,10 @@ export default function HeroSection() {
           />
 
           <div className="flex items-center gap-6 mt-2 opacity-0 animate-fade-up [animation-delay:800ms]">
-            <button className="bg-gold text-black px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
+            <Link href="/our-work" className="bg-gold text-black px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
               View Our Work
               <Play className="w-4 h-4" />
-            </button>
+            </Link>
             {heroData.videoReelUrl ? (
               <a href={heroData.videoReelUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
                 <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
@@ -122,9 +124,12 @@ export default function HeroSection() {
                 <span className="font-script text-2xl md:text-3xl font-bold">Play Reel</span>
               </a>
             ) : (
-              <button className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
-                <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
-                  <Play className="w-4 h-4" />
+              <button 
+                onClick={() => setIsReelPlaying(prev => !prev)}
+                className="flex items-center gap-3 text-gold hover:text-white transition-colors group"
+              >
+                <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${isReelPlaying ? 'bg-gold border-gold text-black shadow-[0_0_15px_rgba(255,215,0,0.5)]' : 'border-gold group-hover:border-white'}`}>
+                  <Play className={`w-4 h-4 ${isReelPlaying ? 'fill-current' : ''}`} />
                 </div>
                 <span className="font-script text-2xl md:text-3xl font-bold">Play Reel</span>
               </button>
@@ -153,11 +158,19 @@ export default function HeroSection() {
           0% { opacity: 0; }
           100% { opacity: 1; }
         }
+        @keyframes zoom-in-out {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
         .animate-fade-up {
           animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .animate-fade-in {
           animation: fade-in 1.5s ease-out forwards;
+        }
+        .animate-zoom-in-out {
+          animation: zoom-in-out 20s ease-in-out infinite;
         }
       `}} />
     </section>
