@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -6,6 +6,32 @@ import {
   X, Home, User, Clapperboard, MonitorPlay, Camera, Mail, 
   Phone, MapPin, Globe, ArrowRight 
 } from "lucide-react";
+
+const FacebookIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.61l.39-4H14V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+const InstagramIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+  </svg>
+);
+const YoutubeIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+  </svg>
+);
+const LinkedinIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect x="2" y="9" width="4" height="12"/>
+    <circle cx="4" cy="4" r="2"/>
+  </svg>
+);
 
 export default function MobileMenu({ isOpen, onClose }) {
   const pathname = usePathname();
@@ -22,6 +48,31 @@ export default function MobileMenu({ isOpen, onClose }) {
     };
   }, [isOpen]);
 
+  const [footerData, setFooterData] = useState({
+    phoneNumbers: "+91 86765 43210",
+    emailAddress: "hello@avfproduction.com",
+    address: "New Delhi, India",
+    instagramUrl: "#",
+    youtubeUrl: "#",
+    facebookUrl: "#",
+    linkedinUrl: "#"
+  });
+
+  useEffect(() => {
+    const fetchFooter = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/footer");
+        if (res.ok) {
+          const data = await res.json();
+          if (data) setFooterData(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch footer data:", error);
+      }
+    };
+    fetchFooter();
+  }, []);
+
   const links = [
     { name: "HOME", href: "/", icon: Home },
     { name: "ABOUT US", href: "/about", icon: User },
@@ -32,10 +83,10 @@ export default function MobileMenu({ isOpen, onClose }) {
   ];
 
   const socialIcons = [
-    { icon: Camera, label: "IG" },
-    { icon: MonitorPlay, label: "YT" },
-    { icon: Globe, label: "FB" },
-    { icon: Clapperboard, label: "VI" }
+    { icon: FacebookIcon, label: "FB", url: footerData.facebookUrl },
+    { icon: InstagramIcon, label: "IG", url: footerData.instagramUrl },
+    { icon: YoutubeIcon, label: "YT", url: footerData.youtubeUrl },
+    { icon: LinkedinIcon, label: "LI", url: footerData.linkedinUrl }
   ];
 
   return (
@@ -121,43 +172,43 @@ export default function MobileMenu({ isOpen, onClose }) {
         {/* Contact Details */}
         <div className="px-6 py-8">
           <div className="flex flex-col mb-8">
-            <span className="font-script text-2xl text-gold mb-1 -rotate-2">Let&apos;s Connect</span>
-            <p className="text-xs text-neutral-400 leading-relaxed max-w-[200px]">
+            <span className="font-script text-[36px] text-[#FCA603] mb-2 leading-none">Let&apos;s Connect</span>
+            <p className="text-[14px] text-neutral-300 leading-relaxed font-medium">
               Have a project in mind?<br/>
               We&apos;d love to hear from you.
             </p>
           </div>
 
-          <div className="flex flex-col gap-5 mb-10">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold shrink-0">
-                <Phone className="w-4 h-4 stroke-[1.5]" />
+          <div className="flex flex-col gap-6 mb-12">
+            <div className="flex items-center gap-6">
+              <div className="w-[50px] h-[50px] rounded-full border border-[#FCA603] flex items-center justify-center text-[#FCA603] shrink-0">
+                <Phone className="w-5 h-5 stroke-[1.5]" />
               </div>
-              <span className="text-xs text-neutral-300 font-medium">+91 86765 43210</span>
+              <span className="text-[14px] text-white font-semibold tracking-wide">{footerData.phoneNumbers.split('\n')[0]}</span>
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold shrink-0">
-                <Mail className="w-4 h-4 stroke-[1.5]" />
+            <div className="flex items-center gap-6">
+              <div className="w-[50px] h-[50px] rounded-full border border-[#FCA603] flex items-center justify-center text-[#FCA603] shrink-0">
+                <Mail className="w-5 h-5 stroke-[1.5]" />
               </div>
-              <span className="text-xs text-neutral-300 font-medium">hello@avfproduction.com</span>
+              <span className="text-[14px] text-white font-semibold tracking-wide">{footerData.emailAddress}</span>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold shrink-0">
-                <MapPin className="w-4 h-4 stroke-[1.5]" />
+            <div className="flex items-center gap-6">
+              <div className="w-[50px] h-[50px] rounded-full border border-[#FCA603] flex items-center justify-center text-[#FCA603] shrink-0">
+                <MapPin className="w-5 h-5 stroke-[1.5]" />
               </div>
-              <span className="text-xs text-neutral-300 font-medium">New Delhi, India</span>
+              <span className="text-[14px] text-white font-semibold tracking-wide truncate max-w-[200px]">{footerData.address.split('\n').join(', ')}</span>
             </div>
           </div>
 
           {/* Social Follow */}
-          <div className="flex flex-col mb-8">
-            <span className="text-[10px] font-bold text-white uppercase tracking-widest mb-4">FOLLOW US</span>
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col mb-10">
+            <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em] mb-4">FOLLOW US</span>
+            <div className="flex items-center gap-4">
               {socialIcons.map((social, idx) => (
-                <a key={idx} href="#" className="w-10 h-10 rounded-md bg-[#1a1a1a] flex items-center justify-center text-white hover:bg-gold hover:text-black transition-colors shadow-md">
-                  <social.icon className="w-4 h-4 stroke-[2]" />
+                <a key={idx} href={social.url} target="_blank" rel="noreferrer" className="w-[46px] h-[46px] rounded-[10px] bg-[#1a1a1a] flex items-center justify-center text-white hover:bg-[#FCA603] hover:text-black transition-colors shadow-md">
+                  <social.icon className="w-5 h-5 stroke-[1.5]" />
                 </a>
               ))}
             </div>
@@ -167,10 +218,10 @@ export default function MobileMenu({ isOpen, onClose }) {
           <Link 
             href="/contact" 
             onClick={onClose}
-            className="w-full bg-gold hover:bg-white text-black px-6 py-4 font-bold text-xs uppercase tracking-widest flex items-center justify-between transition-colors shadow-md"
+            className="w-full bg-[#FCA603] hover:bg-white text-black px-6 py-4 font-bold text-[13px] uppercase tracking-widest flex items-center justify-between transition-colors shadow-md"
           >
             START YOUR PROJECT
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-5 h-5 stroke-[2]" />
           </Link>
         </div>
 
@@ -202,7 +253,7 @@ export default function MobileMenu({ isOpen, onClose }) {
           </div>
 
           <p className="text-center text-[9px] text-neutral-600 px-6">
-            © 2024 AVF Akash Verma Film Products.<br/>All Rights Reserved.
+            © {new Date().getFullYear()} AVF Production.<br/>All Rights Reserved.
           </p>
         </div>
       </div>

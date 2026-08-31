@@ -31,7 +31,7 @@ export default function Navbar() {
         </div>
 
         {/* Center: Navigation Panel */}
-        <nav className="relative z-10 hidden md:flex items-center gap-2 px-8 h-[56px] bg-black/40 border border-[#1a1a1a] rounded-[16px] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+        <nav className="relative z-10 hidden md:flex items-center gap-4 px-2 h-[56px] bg-[#111111] border border-[#1f1f1f] rounded-[16px] shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)]">
           {[
             { name: "Home", href: "/" },
             { name: "About Us", href: "/about" },
@@ -44,8 +44,8 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`font-montserrat font-semibold text-xs tracking-[0.15em] uppercase px-5 py-2.5 rounded-sm transition-all duration-300 ${isActive
-                    ? "bg-[#FCA603] text-black shadow-[0_0_15px_rgba(252,166,3,0.4)]"
+                className={`font-montserrat font-bold text-[11px] tracking-[0.15em] uppercase px-7 py-2.5 rounded-[10px] transition-all duration-300 ${isActive
+                    ? "bg-[#FCA603] text-black shadow-[0_0_20px_rgba(252,166,3,0.3)]"
                     : "text-white hover:text-[#FCA603]"
                   }`}
               >
