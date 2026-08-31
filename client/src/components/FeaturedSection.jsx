@@ -37,7 +37,7 @@ export default function FeaturedSection() {
   if (featuredItems.length === 0) return null;
 
   return (
-    <section className="bg-black py-16 text-white relative border-b border-white/5">
+    <section className="bg-black py-10 md:py-16 text-white relative border-b border-white/5">
       <div className="container mx-auto px-6 max-w-5xl mb-8 flex justify-between items-end">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter">Featured</h2>
         <div className="flex gap-3">

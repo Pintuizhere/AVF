@@ -38,7 +38,7 @@ export default function ReelsSection() {
   if (reelsData.length === 0) return null;
 
   return (
-    <section className="bg-black pt-20 text-white border-b border-white/5 relative overflow-hidden">
+    <section className="bg-black pt-10 md:pt-20 text-white border-b border-white/5 relative overflow-hidden">
       {/* Background glow effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
