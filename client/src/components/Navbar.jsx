@@ -23,7 +23,7 @@ export default function Navbar() {
         <div className="absolute inset-0 rounded-[24px] bg-noise opacity-10 pointer-events-none mix-blend-overlay" />
 
         {/* Left Side: Camera Lens & Logo */}
-        <div className="relative z-10 flex items-center gap-6 pl-2">
+        <div className="relative z-10 flex items-center gap-6 pl-2 md:pl-6 lg:pl-10">
 
           <div className="flex items-center gap-3">
             <img src="/images/logo.png" alt="AVF Logo" className="h-[70px] w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
@@ -31,29 +31,31 @@ export default function Navbar() {
         </div>
 
         {/* Center: Navigation Panel */}
-        <nav className="relative z-10 hidden md:flex items-center gap-4 px-2 h-[56px] bg-[#111111] border border-[#1f1f1f] rounded-[16px] shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)]">
-          {[
-            { name: "Home", href: "/" },
-            { name: "About Us", href: "/about" },
-            { name: "Services", href: "/services" },
-            { name: "Our Work", href: "/our-work" },
-            { name: "BTS", href: "/bts" }
-          ].map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`font-montserrat font-bold text-[11px] tracking-[0.15em] uppercase px-7 py-2.5 rounded-[10px] transition-all duration-300 ${isActive
-                    ? "bg-[#FCA603] text-black shadow-[0_0_20px_rgba(252,166,3,0.3)]"
-                    : "text-white hover:text-[#FCA603]"
-                  }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 hidden lg:flex">
+          <nav className="relative flex items-center gap-1 lg:gap-4 px-2 h-[56px] bg-[#111111] border border-[#1f1f1f] rounded-[16px] shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)]">
+            {[
+              { name: "Home", href: "/" },
+              { name: "About Us", href: "/about" },
+              { name: "Services", href: "/services" },
+              { name: "Our Work", href: "/our-work" },
+              { name: "BTS", href: "/bts" }
+            ].map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`font-montserrat font-bold text-[10px] lg:text-[11px] tracking-[0.15em] uppercase px-4 lg:px-7 py-2.5 rounded-[10px] transition-all duration-300 whitespace-nowrap ${isActive
+                      ? "bg-[#FCA603] text-black shadow-[0_0_20px_rgba(252,166,3,0.3)]"
+                      : "text-white hover:text-[#FCA603]"
+                    }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
         {/* Right Side: Contact Button (Desktop) & Hamburger (Mobile) */}
         <div className="relative z-10 pr-2 flex items-center gap-4">
