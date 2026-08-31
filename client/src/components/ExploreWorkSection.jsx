@@ -36,7 +36,7 @@ export default function ExploreWorkSection() {
   const filteredWork = activeTab === "ALL" ? workItems : workItems.filter(w => w.category === activeTab);
 
   return (
-    <section className="relative bg-[#050505] text-white pt-16 md:pt-24 pb-16 md:pb-32 px-6 overflow-hidden">
+    <section className="relative bg-[#050505] text-white pt-16 pb-16 md:pt-24 md:pb-32 px-6 overflow-hidden">
       <div className="container mx-auto max-w-5xl flex flex-col items-center z-10 relative">
         
         {/* Header */}
