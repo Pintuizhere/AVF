@@ -46,7 +46,7 @@ export default function ReviewsSection() {
     }
   };
   return (
-    <section className="bg-[#0d0d0d] text-white py-32 px-6 overflow-hidden">
+    <section className="bg-[#0d0d0d] text-white py-16 md:py-32 px-6 overflow-hidden">
       <div className="container mx-auto max-w-5xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="flex flex-col">

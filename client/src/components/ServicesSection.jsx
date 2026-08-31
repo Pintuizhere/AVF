@@ -54,7 +54,7 @@ export default function ServicesSection() {
   if (servicesData.length === 0) return null;
 
   return (
-    <section id="services" className="relative bg-black pt-24 pb-32 text-white border-y border-white/5 overflow-hidden">
+    <section id="services" className="relative bg-black pt-16 md:pt-24 pb-16 md:pb-32 text-white border-y border-white/5 overflow-hidden">
       
       {/* Background glow behind the active visual */}
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-[800px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />

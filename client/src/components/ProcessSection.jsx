@@ -12,7 +12,7 @@ const steps = [
 
 export default function ProcessSection() {
   return (
-    <section className="relative bg-[#f5f0e6] text-black py-32 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
+    <section className="relative bg-[#f5f0e6] text-black py-16 md:py-32 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
       
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
