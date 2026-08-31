@@ -10,25 +10,50 @@ import {
   Star, Smartphone, BarChart2, Briefcase, PanelBottom, PanelTop, Link2
 } from "lucide-react";
 
-const navItems = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Hero Section", href: "/admin/hero", icon: PanelTop },
-  { name: "About Hero", href: "/admin/about-hero", icon: PanelTop },
-  { name: "Our Story", href: "/admin/about-story", icon: FileText },
-  { name: "Projects", href: "/admin/projects", icon: Clapperboard },
-  { name: "Featured Work", href: "/admin/featured", icon: Star },
-  { name: "Shorts", href: "/admin/shorts", icon: Smartphone },
-  { name: "Services", href: "/admin/services", icon: MonitorPlay },
-  { name: "BTS Gallery", href: "/admin/bts", icon: Camera },
-  { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquareQuote },
-  { name: "Stats", href: "/admin/stats", icon: BarChart2 },
-  { name: "Brands", href: "/admin/clients", icon: Briefcase },
-  { name: "Leads / Inquiries", href: "/admin/leads", icon: Mail },
-  { name: "Social Links", href: "/admin/social-links", icon: Link2 },
-  { name: "Team", href: "/admin/team", icon: Users },
-  { name: "Footer", href: "/admin/footer", icon: PanelBottom },
-  { name: "Settings", href: "/admin/settings", icon: Settings },
-  { name: "Users", href: "/admin/users", icon: ShieldCheck },
+const navGroups = [
+  {
+    label: "Main",
+    items: [
+      { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+      { name: "Leads / Inquiries", href: "/admin/leads", icon: Mail },
+    ]
+  },
+  {
+    label: "Home Page",
+    items: [
+      { name: "Hero Section", href: "/admin/hero", icon: PanelTop },
+      { name: "Our Story", href: "/admin/about-story", icon: FileText },
+      { name: "Featured Work", href: "/admin/featured", icon: Star },
+      { name: "Brands", href: "/admin/clients", icon: Briefcase },
+      { name: "Services", href: "/admin/services", icon: MonitorPlay },
+    ]
+  },
+  {
+    label: "Portfolio",
+    items: [
+      { name: "Projects", href: "/admin/projects", icon: Clapperboard },
+      { name: "Shorts", href: "/admin/shorts", icon: Smartphone },
+      { name: "BTS Gallery", href: "/admin/bts", icon: Camera },
+    ]
+  },
+  {
+    label: "Other Pages",
+    items: [
+      { name: "About Hero", href: "/admin/about-hero", icon: PanelTop },
+      { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquareQuote },
+      { name: "Stats", href: "/admin/stats", icon: BarChart2 },
+      { name: "Team", href: "/admin/team", icon: Users },
+    ]
+  },
+  {
+    label: "System",
+    items: [
+      { name: "Footer", href: "/admin/footer", icon: PanelBottom },
+      { name: "Social Links", href: "/admin/social-links", icon: Link2 },
+      { name: "Settings", href: "/admin/settings", icon: Settings },
+      { name: "Users", href: "/admin/users", icon: ShieldCheck },
+    ]
+  }
 ];
 
 export default function AdminDashboardLayout({ children }) {
@@ -142,40 +167,47 @@ export default function AdminDashboardLayout({ children }) {
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar py-6 px-4 flex flex-col gap-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/admin");
-            
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center justify-between px-4 py-3 rounded-md transition-all group ${
-                  isActive 
-                    ? "bg-[#1f1606] border border-gold/20 shadow-[0_0_15px_rgba(252,166,3,0.05)]" 
-                    : "hover:bg-[#111] border border-transparent"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <item.icon className={`w-5 h-5 stroke-[1.5] transition-colors ${
-                    isActive ? "text-gold" : "text-neutral-500 group-hover:text-white"
-                  }`} />
-                  <span className={`text-sm font-medium transition-colors ${
-                    isActive ? "text-gold" : "text-neutral-400 group-hover:text-white"
-                  }`}>
-                    {item.name}
-                  </span>
-                </div>
+        <div className="flex-1 overflow-y-auto custom-scrollbar py-6 px-4 flex flex-col gap-6">
+          {navGroups.map((group, groupIdx) => (
+            <div key={groupIdx} className="flex flex-col gap-1">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2 px-4">
+                {group.label}
+              </span>
+              {group.items.map((item) => {
+                const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/admin");
                 
-                {/* Chevron for non-active/hover */}
-                {!isActive && (
-                   <svg className="w-4 h-4 text-neutral-600 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                   </svg>
-                )}
-              </Link>
-            );
-          })}
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`flex items-center justify-between px-4 py-3 rounded-md transition-all group ${
+                      isActive 
+                        ? "bg-[#1f1606] border border-gold/20 shadow-[0_0_15px_rgba(252,166,3,0.05)]" 
+                        : "hover:bg-[#111] border border-transparent"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <item.icon className={`w-5 h-5 stroke-[1.5] transition-colors ${
+                        isActive ? "text-gold" : "text-neutral-500 group-hover:text-white"
+                      }`} />
+                      <span className={`text-sm font-medium transition-colors ${
+                        isActive ? "text-gold" : "text-neutral-400 group-hover:text-white"
+                      }`}>
+                        {item.name}
+                      </span>
+                    </div>
+                    
+                    {/* Chevron for non-active/hover */}
+                    {!isActive && (
+                       <svg className="w-4 h-4 text-neutral-600 opacity-0 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                       </svg>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </div>
 
         {/* Bottom Section: Sign Out */}
