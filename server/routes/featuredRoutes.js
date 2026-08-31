@@ -9,8 +9,10 @@ const {
 const { upload } = require("../config/cloudinary");
 const { protect } = require("../middleware/authMiddleware");
 
+const { cacheMiddleware } = require("../middleware/cache");
+
 // Public route
-router.get("/", getAllFeatured);
+router.get("/", cacheMiddleware('featured'), getAllFeatured);
 
 // Admin only routes
 router.post("/", protect, upload.single("media"), addFeatured);

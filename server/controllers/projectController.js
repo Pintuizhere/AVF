@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const { invalidateCache } = require("../middleware/cache");
 
 // @desc    Create a new project
 // @route   POST /api/projects
@@ -39,6 +40,7 @@ const createProject = async (req, res) => {
     });
 
     res.status(201).json(project);
+    await invalidateCache('projects');
   } catch (error) {
     console.error("Create Project Error:", error);
     res.status(500).json({ message: "Server error while creating project" });
@@ -98,6 +100,7 @@ const deleteProject = async (req, res) => {
     }
 
     res.status(200).json({ message: "Project removed" });
+    await invalidateCache('projects');
   } catch (error) {
     console.error("Delete Project Error:", error);
     res.status(500).json({ message: "Server error while deleting project" });

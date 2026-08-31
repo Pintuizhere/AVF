@@ -9,9 +9,11 @@ const {
   deleteProject 
 } = require("../controllers/projectController");
 
+const { cacheMiddleware } = require('../middleware/cache');
+
 // Public routes
-router.get("/", getProjects);
-router.get("/:slug", getProjectBySlug);
+router.get("/", cacheMiddleware('projects'), getProjects);
+router.get("/:slug", cacheMiddleware('projects'), getProjectBySlug);
 
 // Protected admin routes
 router.post("/", protect, upload.single("media"), createProject);

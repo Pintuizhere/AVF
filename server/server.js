@@ -4,8 +4,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const connectDB = require("./config/db");
 
-// Connect to MongoDB
+// Connect to MongoDB and Redis
 connectDB();
+const { connectRedis } = require("./config/redis");
+connectRedis();
 
 const app = express();
 

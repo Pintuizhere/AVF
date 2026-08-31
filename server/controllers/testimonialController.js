@@ -1,5 +1,6 @@
 const Testimonial = require('../models/Testimonial');
 const { cloudinary } = require('../config/cloudinary');
+const { invalidateCache } = require('../middleware/cache');
 
 exports.getTestimonials = async (req, res) => {
   try {
@@ -31,6 +32,7 @@ exports.createTestimonial = async (req, res) => {
 
     await newItem.save();
     res.status(201).json(newItem);
+    await invalidateCache('testimonials');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -58,6 +60,7 @@ exports.updateTestimonial = async (req, res) => {
 
     await item.save();
     res.json(item);
+    await invalidateCache('testimonials');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -74,6 +77,7 @@ exports.deleteTestimonial = async (req, res) => {
     
     await Testimonial.findByIdAndDelete(req.params.id);
     res.json({ message: 'Deleted' });
+    await invalidateCache('testimonials');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

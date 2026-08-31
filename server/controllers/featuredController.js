@@ -1,5 +1,6 @@
 const Featured = require("../models/Featured");
 const fs = require("fs");
+const { invalidateCache } = require("../middleware/cache");
 
 // @desc    Get all featured projects
 // @route   GET /api/featured
@@ -38,6 +39,7 @@ const addFeatured = async (req, res) => {
     });
 
     res.status(201).json({ success: true, data: featured });
+    await invalidateCache('featured');
   } catch (error) {
     console.error("Error creating featured item:", error);
     res.status(500).json({ message: "Server Error" });
@@ -69,6 +71,7 @@ const updateFeatured = async (req, res) => {
 
     await featured.save();
     res.json({ success: true, data: featured });
+    await invalidateCache('featured');
   } catch (error) {
     console.error("Error updating featured item:", error);
     res.status(500).json({ message: "Server Error" });
@@ -86,6 +89,7 @@ const deleteFeatured = async (req, res) => {
       return res.status(404).json({ message: "Featured item not found" });
     }
     res.json({ success: true, message: "Item deleted successfully" });
+    await invalidateCache('featured');
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }

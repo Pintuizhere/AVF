@@ -1,4 +1,5 @@
 const Footer = require('../models/Footer');
+const { invalidateCache } = require('../middleware/cache');
 
 // Get the footer (there should only be one)
 exports.getFooter = async (req, res) => {
@@ -48,6 +49,7 @@ exports.updateFooter = async (req, res) => {
     if (workingHours !== undefined) footer.workingHours = workingHours;
 
     await footer.save();
+    await invalidateCache('footer');
     res.json(footer);
   } catch (error) {
     res.status(500).json({ error: error.message });
