@@ -42,7 +42,16 @@ export default function ServicesSection() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services`);
       const data = await res.json();
-      setServicesData(data);
+      
+      // Filter out "Automotive" and "Reels", then slice to max 6 items
+      const filteredData = data
+        .filter(svc => {
+          const title = svc.title.toLowerCase();
+          return !title.includes('automotive') && !title.includes('reel');
+        })
+        .slice(0, 6);
+        
+      setServicesData(filteredData);
     } catch (err) {
       console.error(err);
     } finally {
