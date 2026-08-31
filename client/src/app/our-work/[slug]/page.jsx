@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ProjectMediaViewer from "@/components/ProjectMediaViewer";
+import ViewTracker from "@/components/ViewTracker";
 
 export const dynamic = 'force-dynamic';
 
@@ -46,6 +47,7 @@ export default async function WorkDetailsPage({ params }) {
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-gold selection:text-black">
+      <ViewTracker projectId={project._id} />
       <Navbar />
 
       {/* 1. Header & Metadata Section */}

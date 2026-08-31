@@ -107,9 +107,30 @@ const deleteProject = async (req, res) => {
   }
 };
 
+const Analytics = require("../models/Analytics");
+
+// @desc    Record a project view
+// @route   POST /api/projects/:id/view
+// @access  Public
+const recordProjectView = async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    await Analytics.findOneAndUpdate(
+      { date: today, type: "project_view" },
+      { $inc: { views: 1 } },
+      { upsert: true, new: true }
+    );
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Record View Error:", error);
+    res.status(500).json({ message: "Server error while recording view" });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
   getProjectBySlug,
-  deleteProject
+  deleteProject,
+  recordProjectView
 };

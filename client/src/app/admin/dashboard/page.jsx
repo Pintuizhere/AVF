@@ -16,23 +16,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const analyticsData = [
-  { date: 'Apr 18', views: 1800 },
-  { date: 'Apr 20', views: 4000 },
-  { date: 'Apr 22', views: 6000 },
-  { date: 'Apr 24', views: 5000 },
-  { date: 'Apr 26', views: 5200 },
-  { date: 'Apr 30', views: 3900 },
-  { date: 'May 02', views: 5200 },
-  { date: 'May 04', views: 7000 },
-  { date: 'May 06', views: 5000 },
-  { date: 'May 08', views: 4800 },
-  { date: 'May 12', views: 7500 },
-  { date: 'May 14', views: 6500 },
-  { date: 'May 16', views: 5000 },
-  { date: 'May 18', views: 7845 },
-];
-
+ 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
@@ -48,13 +32,15 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function AdminDashboardPage() {
   
   const [data, setData] = useState(null);
+  const [timeRange, setTimeRange] = useState("30");
+  const [isTimeRangeOpen, setIsTimeRangeOpen] = useState(false);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("adminToken");
         if (!token) return;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/admin/dashboard`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/admin/dashboard?range=${timeRange}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -66,7 +52,7 @@ export default function AdminDashboardPage() {
       }
     };
     fetchDashboard();
-  }, []);
+  }, [timeRange]);
 
   const stats = [
     { 
@@ -160,15 +146,45 @@ export default function AdminDashboardPage() {
         <div className="lg:col-span-2 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-sm font-bold text-white">Website Analytics</h3>
-            <button className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#111] border border-[#222] text-xs text-neutral-300 hover:text-white transition-colors">
-              Last 30 Days
-              <ChevronDown className="w-3 h-3" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setIsTimeRangeOpen(!isTimeRangeOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#111] border border-[#222] text-xs text-neutral-300 hover:text-white transition-colors"
+              >
+                {timeRange === '30' ? 'Last 30 Days' : timeRange === '180' ? 'Last 6 Months' : timeRange === '365' ? 'Last 1 Year' : 'Lifetime'}
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              
+              {isTimeRangeOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsTimeRangeOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-36 bg-[#111] border border-[#222] rounded-md shadow-xl z-50 overflow-hidden flex flex-col">
+                    {[
+                      { label: "Last 30 Days", value: "30" },
+                      { label: "Last 6 Months", value: "180" },
+                      { label: "Last 1 Year", value: "365" },
+                      { label: "Lifetime", value: "all" },
+                    ].map(option => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setTimeRange(option.value);
+                          setIsTimeRangeOpen(false);
+                        }}
+                        className={`text-left px-4 py-2 text-xs transition-colors ${timeRange === option.value ? 'bg-gold/10 text-gold font-bold' : 'text-neutral-400 hover:bg-[#222] hover:text-white'}`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
           
           <div className="flex-1 relative w-full min-h-[300px] mt-4" style={{ WebkitFilter: 'drop-shadow(0px 0px 10px rgba(252, 166, 3, 0.2))' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={analyticsData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+              <AreaChart data={data?.analyticsData || []} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#FCA603" stopOpacity={0.4}/>
