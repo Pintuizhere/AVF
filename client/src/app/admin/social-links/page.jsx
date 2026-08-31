@@ -35,7 +35,7 @@ export default function AdminSocialLinksPage() {
   const fetchLinks = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/social-links/admin", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/social-links/admin`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -58,7 +58,7 @@ export default function AdminSocialLinksPage() {
     setSubmitting(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/social-links", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/social-links`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ export default function AdminSocialLinksPage() {
     if (!confirm("Are you sure you want to delete this link?")) return;
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/social-links/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/social-links/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -98,7 +98,7 @@ export default function AdminSocialLinksPage() {
     
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/social-links/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/social-links/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

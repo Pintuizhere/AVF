@@ -19,7 +19,7 @@ export default function AdminFeaturedPage() {
 
   const fetchFeatured = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/featured");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured`);
       const data = await res.json();
       setFeaturedItems(data);
     } catch (err) {
@@ -36,7 +36,7 @@ export default function AdminFeaturedPage() {
   const saveUpdateToBackend = async (id, field, value) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/featured/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export default function AdminFeaturedPage() {
     if (!deleteConfirmId) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/featured/${deleteConfirmId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -88,7 +88,7 @@ export default function AdminFeaturedPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/featured", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData

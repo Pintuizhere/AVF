@@ -25,7 +25,7 @@ export default function AdminStatsPage() {
 
   const fetchStats = async (pageName) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/stats?page=${pageName}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/stats?page=${pageName}`);
       const data = await res.json();
       setStatsData(prev => ({ ...prev, [pageName]: data.stats }));
     } catch (err) {
@@ -49,7 +49,7 @@ export default function AdminStatsPage() {
     setSaving(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/stats/${pageName}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/stats/${pageName}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

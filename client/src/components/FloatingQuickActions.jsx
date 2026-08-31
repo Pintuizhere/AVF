@@ -28,7 +28,7 @@ export default function FloatingQuickActions() {
     // Fetch dynamic social links
     const fetchLinks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/social-links");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/social-links`);
         if (res.ok) {
           const data = await res.json();
           setSocialLinks(data);

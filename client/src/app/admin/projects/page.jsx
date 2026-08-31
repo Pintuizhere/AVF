@@ -15,7 +15,7 @@ export default function AdminProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/projects");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`);
       const data = await res.json();
       setProjects(data);
     } catch (error) {
@@ -31,7 +31,7 @@ export default function AdminProjectsPage() {
     if (!deleteConfirmId) return;
     try {
       const adminToken = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/projects/${deleteConfirmId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${adminToken}` },
       });

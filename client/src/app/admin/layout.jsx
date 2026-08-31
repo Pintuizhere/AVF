@@ -86,7 +86,7 @@ export default function AdminDashboardLayout({ children }) {
 
     const fetchLeads = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/leads", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/leads`, {
           headers: { Authorization: `Bearer ${adminToken}` }
         });
         if (res.ok) {

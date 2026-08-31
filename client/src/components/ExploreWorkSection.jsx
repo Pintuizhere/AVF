@@ -14,7 +14,7 @@ export default function ExploreWorkSection() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/projects");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`);
         if (res.ok) {
           const data = await res.json();
           setWorkItems(data);

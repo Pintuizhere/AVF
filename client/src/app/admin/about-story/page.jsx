@@ -29,7 +29,7 @@ export default function AdminAboutStoryPage() {
 
   const fetchAboutStory = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/aboutstory");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/aboutstory`);
       const data = await res.json();
       setFormData({
         title: data.title || "",
@@ -86,7 +86,7 @@ export default function AdminAboutStoryPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/aboutstory", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/aboutstory`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
         body: submitData,

@@ -43,7 +43,9 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col font-sans bg-[#0a0a0a] text-white">
         <ScrollToTop />
-        {children}
+        <div className="flex-1 w-full overflow-x-hidden relative">
+          {children}
+        </div>
       </body>
     </html>
   );

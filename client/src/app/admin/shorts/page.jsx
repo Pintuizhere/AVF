@@ -20,7 +20,7 @@ export default function AdminShortsPage() {
 
   const fetchShorts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/shorts");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts`);
       const data = await res.json();
       setShorts(data);
     } catch (err) {
@@ -37,7 +37,7 @@ export default function AdminShortsPage() {
   const saveUpdateToBackend = async (id, field, value) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/shorts/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function AdminShortsPage() {
     if (!deleteConfirmId) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/shorts/${deleteConfirmId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -89,7 +89,7 @@ export default function AdminShortsPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/shorts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData

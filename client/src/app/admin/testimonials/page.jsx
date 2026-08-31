@@ -20,7 +20,7 @@ export default function AdminTestimonialsPage() {
 
   const fetchItems = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/testimonials");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials`);
       const data = await res.json();
       setItems(data);
     } catch (err) {
@@ -37,7 +37,7 @@ export default function AdminTestimonialsPage() {
   const saveUpdateToBackend = async (id, field, value) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/testimonials/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function AdminTestimonialsPage() {
     if (!deleteConfirmId) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/testimonials/${deleteConfirmId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -89,7 +89,7 @@ export default function AdminTestimonialsPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/testimonials", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData

@@ -20,7 +20,7 @@ export default function AdminBtsPage() {
 
   const fetchBts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/bts");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/bts`);
       const data = await res.json();
       setBtsItems(data);
     } catch (err) {
@@ -37,7 +37,7 @@ export default function AdminBtsPage() {
   const saveUpdateToBackend = async (id, field, value) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/bts/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/bts/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function AdminBtsPage() {
     if (!deleteConfirmId) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/bts/${deleteConfirmId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/bts/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -87,7 +87,7 @@ export default function AdminBtsPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/bts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/bts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData

@@ -18,7 +18,7 @@ export default function BtsGallerySection() {
 
   const fetchBts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/bts");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/bts`);
       const data = await res.json();
       setGalleryMedia(data);
     } catch (err) {

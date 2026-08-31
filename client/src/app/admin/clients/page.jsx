@@ -22,7 +22,7 @@ export default function AdminClientsPage() {
 
   const fetchClients = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/clients");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients`);
       const data = await res.json();
       setClients(data);
     } catch (err) {
@@ -60,7 +60,7 @@ export default function AdminClientsPage() {
     formData.append("zoom", zoom);
 
     try {
-      const res = await fetch("http://localhost:5000/api/clients", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ export default function AdminClientsPage() {
     const timer = setTimeout(async () => {
       const token = localStorage.getItem("adminToken");
       try {
-        await fetch(`http://localhost:5000/api/clients/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -123,7 +123,7 @@ export default function AdminClientsPage() {
     const token = localStorage.getItem("adminToken");
     
     try {
-      const res = await fetch(`http://localhost:5000/api/clients/${deleteId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients/${deleteId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

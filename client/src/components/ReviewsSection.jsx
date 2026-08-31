@@ -13,7 +13,7 @@ export default function ReviewsSection() {
 
   const fetchTestimonials = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/testimonials");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials`);
       const data = await res.json();
       setReviews(data);
     } catch (error) {

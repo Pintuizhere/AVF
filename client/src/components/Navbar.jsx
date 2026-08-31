@@ -78,24 +78,24 @@ export default function Navbar() {
       </header>
 
       {/* Hanging HUD Panel (ISO / f-stop / FPS) */}
-      <div className="absolute top-[88px] left-1/2 -translate-x-1/2 z-0">
-        <div className="bg-[#151515] border border-[#2c2c2c] border-t-0 rounded-b-lg px-8 py-1.5 flex items-center gap-6 shadow-[0_10px_20px_rgba(0,0,0,0.8)] relative">
+      <div className="absolute top-[88px] left-1/2 -translate-x-1/2 z-0 w-max max-w-full">
+        <div className="bg-[#151515] border border-[#2c2c2c] border-t-0 rounded-b-lg px-4 md:px-8 py-1.5 flex items-center justify-center gap-3 md:gap-6 shadow-[0_10px_20px_rgba(0,0,0,0.8)] relative">
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent rounded-b-lg pointer-events-none" />
           
           {/* Left Flare */}
-          <div className="absolute -top-[1px] -left-[12px] w-[13px] h-[13px] overflow-hidden pointer-events-none">
+          <div className="absolute -top-[1px] -left-[12px] w-[13px] h-[13px] overflow-hidden pointer-events-none hidden md:block">
             <div className="absolute top-0 right-0 w-[26px] h-[26px] bg-transparent rounded-tr-[13px] border border-[#2c2c2c] shadow-[0_0_0_13px_#151515]" />
           </div>
 
           {/* Right Flare */}
-          <div className="absolute -top-[1px] -right-[12px] w-[13px] h-[13px] overflow-hidden pointer-events-none">
+          <div className="absolute -top-[1px] -right-[12px] w-[13px] h-[13px] overflow-hidden pointer-events-none hidden md:block">
             <div className="absolute top-0 left-0 w-[26px] h-[26px] bg-transparent rounded-tl-[13px] border border-[#2c2c2c] shadow-[0_0_0_13px_#151515]" />
           </div>
-          <span className="font-montserrat font-semibold text-[9px] tracking-[0.2em] text-[#888] uppercase relative z-10">ISO 800</span>
-          <div className="w-1 h-1 rounded-full bg-[#333] relative z-10" />
-          <span className="font-montserrat font-semibold text-[9px] tracking-[0.2em] text-[#888] uppercase relative z-10">f/2.8</span>
-          <div className="w-1 h-1 rounded-full bg-[#333] relative z-10" />
-          <span className="font-montserrat font-semibold text-[9px] tracking-[0.2em] text-[#888] uppercase relative z-10">24FPS</span>
+          <span className="font-montserrat font-semibold text-[8px] md:text-[9px] tracking-[0.1em] md:tracking-[0.2em] text-[#888] uppercase relative z-10 whitespace-nowrap">ISO 800</span>
+          <div className="w-1 h-1 rounded-full bg-[#333] relative z-10 shrink-0" />
+          <span className="font-montserrat font-semibold text-[8px] md:text-[9px] tracking-[0.1em] md:tracking-[0.2em] text-[#888] uppercase relative z-10 whitespace-nowrap">f/2.8</span>
+          <div className="w-1 h-1 rounded-full bg-[#333] relative z-10 shrink-0" />
+          <span className="font-montserrat font-semibold text-[8px] md:text-[9px] tracking-[0.1em] md:tracking-[0.2em] text-[#888] uppercase relative z-10 whitespace-nowrap">24FPS</span>
         </div>
       </div>
 

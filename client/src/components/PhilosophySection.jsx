@@ -93,8 +93,8 @@ export default function PhilosophySection() {
             </div>
             
             {/* Overlay Script Text Box */}
-            <div className="absolute -bottom-4 md:-bottom-8 -left-2 md:-left-8 bg-black/90 backdrop-blur-md border border-neutral-800 text-gold p-3 md:p-6 shadow-2xl -rotate-[5deg] z-20 hover:-rotate-2 transition-transform duration-500 max-w-[80%]">
-              <p className="font-script text-xl md:text-3xl leading-snug drop-shadow-md">
+            <div className="absolute bottom-0 md:-bottom-8 left-0 md:-left-8 bg-black/90 backdrop-blur-md border border-neutral-800 text-gold p-3 md:p-6 shadow-2xl -rotate-[5deg] z-20 hover:-rotate-2 transition-transform duration-500 max-w-[90%] md:max-w-[80%]">
+              <p className="font-script text-lg sm:text-xl md:text-3xl leading-snug drop-shadow-md">
                 Real stories.<br/>Real people.<br/>Real impact.
               </p>
             </div>
@@ -105,9 +105,9 @@ export default function PhilosophySection() {
           <div className="absolute top-1/4 -right-4 md:-right-8 w-10 md:w-16 h-3 md:h-6 bg-neutral-800/80 backdrop-blur-sm rotate-[-45deg] shadow-lg border border-neutral-700/50 z-20" />
           
           {/* Circular Stamp (Gold version) */}
-          <div className="absolute -bottom-6 md:-bottom-12 -right-4 md:-right-8 w-24 md:w-40 h-24 md:h-40 border-[1px] border-gold/30 rounded-full flex items-center justify-center opacity-40 rotate-12 z-0 pointer-events-none animate-[spin_60s_linear_infinite]">
-            <div className="w-20 md:w-36 h-20 md:h-36 border-[1px] border-gold/30 rounded-full flex items-center justify-center">
-               <span className="font-bebas text-gold/60 tracking-[0.2em] md:tracking-[0.4em] uppercase text-[8px] md:text-xs text-center w-16 md:w-24 leading-tight">
+          <div className="absolute -bottom-6 md:-bottom-12 -right-2 sm:-right-4 md:-right-8 w-16 h-16 sm:w-24 sm:h-24 md:w-40 md:h-40 border-[1px] border-gold/30 rounded-full flex items-center justify-center opacity-40 rotate-12 z-0 pointer-events-none animate-[spin_60s_linear_infinite]">
+            <div className="w-12 h-12 sm:w-20 sm:h-20 md:w-36 md:h-36 border-[1px] border-gold/30 rounded-full flex items-center justify-center">
+               <span className="font-bebas text-gold/60 tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.4em] uppercase text-[6px] sm:text-[8px] md:text-xs text-center w-10 sm:w-16 md:w-24 leading-tight">
                   Authentic <br/> Visuals
                </span>
             </div>

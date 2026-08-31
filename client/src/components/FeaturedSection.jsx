@@ -15,7 +15,7 @@ export default function FeaturedSection() {
 
   const fetchFeatured = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/featured");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured`);
       const data = await res.json();
       setFeaturedItems(data);
     } catch (err) {

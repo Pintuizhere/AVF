@@ -61,7 +61,7 @@ export default function MobileMenu({ isOpen, onClose }) {
   useEffect(() => {
     const fetchFooter = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/footer");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/footer`);
         if (res.ok) {
           const data = await res.json();
           if (data) setFooterData(data);

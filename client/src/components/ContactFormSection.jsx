@@ -53,7 +53,7 @@ export default function ContactFormSection() {
   useEffect(() => {
     const fetchFooterData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/footer");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/footer`);
         if (res.ok) {
           const data = await res.json();
           if (data) setContactData(data);
@@ -74,7 +74,7 @@ export default function ContactFormSection() {
     setStatus({ loading: true, success: false, error: "" });
 
     try {
-      const res = await fetch("http://localhost:5000/api/leads", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/leads`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -5,9 +5,11 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ProjectMediaViewer from "@/components/ProjectMediaViewer";
 
+export const dynamic = 'force-dynamic';
+
 async function getProject(id) {
   try {
-    const res = await fetch(`http://localhost:5000/api/projects/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${id}`, { cache: 'no-store' });
     if (!res.ok) return null;
     return await res.json();
   } catch (error) {

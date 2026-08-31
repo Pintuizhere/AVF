@@ -34,7 +34,7 @@ export default function AdminAboutHero() {
 
   const fetchHero = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/abouthero");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/abouthero`);
       const data = await res.json();
       if (data) {
         setFormData({
@@ -85,7 +85,7 @@ export default function AdminAboutHero() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/abouthero", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/abouthero`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`

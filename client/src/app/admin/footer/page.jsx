@@ -33,7 +33,7 @@ export default function AdminFooter() {
 
   const fetchFooter = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/footer");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/footer`);
       const data = await res.json();
       if (data) {
         setFormData({
@@ -66,7 +66,7 @@ export default function AdminFooter() {
     const token = localStorage.getItem("adminToken");
 
     try {
-      const res = await fetch("http://localhost:5000/api/footer", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/footer`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

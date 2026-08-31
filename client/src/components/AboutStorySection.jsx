@@ -22,7 +22,7 @@ export default function AboutStorySection() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/stats?page=about");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/stats?page=about`);
         const data = await res.json();
         if (data && data.stats) {
           setStats(data.stats);
@@ -34,7 +34,7 @@ export default function AboutStorySection() {
     
     const fetchStory = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/aboutstory");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/aboutstory`);
         const data = await res.json();
         if (data && data._id) {
           setStory(data);
@@ -54,9 +54,9 @@ export default function AboutStorySection() {
       <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
         {/* Left: Scattered Photos / Polaroids */}
-        <div className="relative h-[350px] md:h-[500px] w-full flex items-center justify-center">
+        <div className="relative h-[300px] sm:h-[350px] md:h-[500px] w-full flex items-center justify-center mb-8 lg:mb-0">
           {/* Back photo */}
-          <div className="absolute top-4 md:top-10 left-4 md:left-10 w-48 md:w-64 aspect-[4/5] bg-white p-2 md:p-4 pb-12 md:pb-16 shadow-xl -rotate-12 flex flex-col grayscale opacity-80 border border-neutral-200">
+          <div className="absolute top-2 sm:top-4 md:top-10 left-2 sm:left-4 md:left-10 w-40 sm:w-48 md:w-64 aspect-[4/5] bg-white p-2 md:p-4 pb-10 sm:pb-12 md:pb-16 shadow-xl -rotate-12 flex flex-col grayscale opacity-80 border border-neutral-200">
             <div className="flex-1 bg-neutral-200 flex items-center justify-center border border-neutral-300 relative overflow-hidden">
                {story.media1 && story.media1.url ? (
                  story.media1.resource_type === 'video' ? (
@@ -65,13 +65,13 @@ export default function AboutStorySection() {
                    <img src={story.media1.url} alt="Back Photo" className="absolute inset-0 w-full h-full object-cover" />
                  )
                ) : (
-                 <ImageIcon className="w-8 h-8 md:w-12 md:h-12 text-neutral-400 z-10" />
+                 <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-neutral-400 z-10" />
                )}
             </div>
           </div>
           
           {/* Main front photo */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 md:w-80 aspect-square bg-white p-2 md:p-4 pb-16 md:pb-20 shadow-2xl rotate-3 border border-neutral-200 z-10">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 sm:w-64 md:w-80 aspect-square bg-white p-2 md:p-4 pb-12 sm:pb-16 md:pb-20 shadow-2xl rotate-3 border border-neutral-200 z-10">
             <div className="w-full h-full bg-neutral-900 flex items-center justify-center rounded-sm overflow-hidden relative border-4 border-black/10 shadow-inner">
                {story.media2 && story.media2.url ? (
                  story.media2.resource_type === 'video' ? (
@@ -83,8 +83,8 @@ export default function AboutStorySection() {
                  <>
                    <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.8)_100%)] z-10" />
                    {/* Simulating a lens center in the photo */}
-                   <div className="w-32 h-32 rounded-full border-[12px] border-neutral-800 flex items-center justify-center bg-black relative z-0">
-                      <div className="w-16 h-16 rounded-full border-4 border-neutral-600 bg-neutral-900" />
+                   <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-[8px] sm:border-[12px] border-neutral-800 flex items-center justify-center bg-black relative z-0">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 sm:border-4 border-neutral-600 bg-neutral-900" />
                    </div>
                  </>
                )}

@@ -53,7 +53,7 @@ export default function StatsSection() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/stats?page=home");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/stats?page=home`);
         const data = await res.json();
         if (data && data.stats) {
           setStats(data.stats);

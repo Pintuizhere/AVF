@@ -88,7 +88,7 @@ export default function AdminAddProjectWYSIWYG() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/projects", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: data

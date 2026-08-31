@@ -29,7 +29,7 @@ export default function ServicesGridSection() {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/services");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services`);
       const data = await res.json();
       setServicesData(data);
     } catch (err) {

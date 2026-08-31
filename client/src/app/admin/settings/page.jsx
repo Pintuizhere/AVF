@@ -36,7 +36,7 @@ export default function AdminSettingsPage() {
       const token = localStorage.getItem("adminToken");
       if (!token) return;
 
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -69,7 +69,7 @@ export default function AdminSettingsPage() {
         const formData = new FormData();
         formData.append("image", selectedFile);
         
-        const picRes = await fetch("http://localhost:5000/api/users/profile-picture", {
+        const picRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/profile-picture`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`
@@ -88,7 +88,7 @@ export default function AdminSettingsPage() {
         }
       }
 
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,7 @@ export default function AdminSettingsPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/users/password", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/users/password`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

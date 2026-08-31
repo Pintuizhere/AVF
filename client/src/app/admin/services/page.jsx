@@ -43,7 +43,7 @@ export default function AdminServicesPage() {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/services");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services`);
       const data = await res.json();
       setServices(data);
     } catch (err) {
@@ -66,7 +66,7 @@ export default function AdminServicesPage() {
   const saveUpdateToBackend = async (id, field, value) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await fetch(`http://localhost:5000/api/services/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export default function AdminServicesPage() {
     if (!deleteConfirmId) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/services/${deleteConfirmId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services/${deleteConfirmId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -120,7 +120,7 @@ export default function AdminServicesPage() {
 
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/services", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -155,7 +155,7 @@ export default function AdminServicesPage() {
       const formData = new FormData();
       formData.append("media", file);
 
-      const res = await fetch(`http://localhost:5000/api/services/${activeUploadId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services/${activeUploadId}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -204,7 +204,7 @@ export default function AdminServicesPage() {
         formData.append("description", svc.description);
         formData.append("iconName", svc.iconName);
         
-        await fetch("http://localhost:5000/api/services", {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
           body: formData

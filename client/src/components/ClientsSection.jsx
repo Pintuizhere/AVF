@@ -8,7 +8,7 @@ export default function ClientsSection() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/clients?t=" + Date.now());
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients?t=` + Date.now());
         const data = await res.json();
         setBrands(data);
       } catch (err) {

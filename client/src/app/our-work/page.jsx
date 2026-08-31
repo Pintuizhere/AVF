@@ -14,6 +14,8 @@ import {
   Smartphone 
 } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Our Work | Akash Verma Film Products",
   description: "Explore our portfolio of documentaries, events, commercials, and more.",
@@ -21,7 +23,7 @@ export const metadata = {
 
 async function getProjects() {
   try {
-    const res = await fetch("http://localhost:5000/api/projects", { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`, { cache: 'no-store' });
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {

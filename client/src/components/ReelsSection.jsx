@@ -16,7 +16,7 @@ export default function ReelsSection() {
 
   const fetchReels = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/shorts");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts`);
       const data = await res.json();
       setReelsData(data);
     } catch (err) {

@@ -33,7 +33,7 @@ export default function AdminHero() {
 
   const fetchHero = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/hero");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/hero`);
       const data = await res.json();
       if (data) {
         setFormData({
@@ -81,7 +81,7 @@ export default function AdminHero() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/hero", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/hero`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`
