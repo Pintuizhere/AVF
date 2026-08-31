@@ -70,43 +70,43 @@ export default function StatsSection() {
       <div className="container mx-auto px-6 py-10 md:py-14 max-w-5xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-black/20">
           
-          <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-4 sm:pt-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:text-left gap-3 sm:gap-4 lg:gap-6 px-4 pt-6 pb-2 sm:py-0">
             <Film className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
-              <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+              <h4 className="text-4xl md:text-4xl font-black leading-none tracking-tight">
                 <AnimatedCounter end={stats.stat1_num} duration={2500} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat1_label}</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-2 uppercase">{stats.stat1_label}</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-8 sm:pt-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:text-left gap-3 sm:gap-4 lg:gap-6 px-4 pt-6 pb-2 sm:py-0">
             <Target className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
-              <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+              <h4 className="text-4xl md:text-4xl font-black leading-none tracking-tight">
                 <AnimatedCounter end={stats.stat2_num} duration={1500} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat2_label}</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-2 uppercase">{stats.stat2_label}</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-8 sm:pt-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:text-left gap-3 sm:gap-4 lg:gap-6 px-4 pt-6 pb-2 sm:py-0">
             <Users className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
-              <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+              <h4 className="text-4xl md:text-4xl font-black leading-none tracking-tight">
                 <AnimatedCounter end={stats.stat3_num} duration={2000} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat3_label}</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-2 uppercase">{stats.stat3_label}</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 pt-8 sm:pt-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:text-left gap-3 sm:gap-4 lg:gap-6 px-4 pt-6 pb-2 sm:py-0">
             <Clock className="w-10 h-10 md:w-12 md:h-12 text-black stroke-[1.5]" />
             <div className="flex flex-col">
-              <h4 className="text-3xl md:text-4xl font-black leading-none tracking-tight">
+              <h4 className="text-4xl md:text-4xl font-black leading-none tracking-tight">
                 <AnimatedCounter end={stats.stat4_num} duration={3000} />+
               </h4>
-              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-1.5 uppercase">{stats.stat4_label}</p>
+              <p className="text-[10px] md:text-xs font-bold tracking-[0.15em] text-black/60 mt-2 uppercase">{stats.stat4_label}</p>
             </div>
           </div>
 
