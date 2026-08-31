@@ -47,11 +47,21 @@ exports.getDashboardStats = async (req, res) => {
 
     if (range === 'all') {
       const analyticsRecords = await Analytics.find({ type: 'project_view' }).sort({ date: 1 });
+      const yearlyData = {};
+      
       analyticsRecords.forEach(record => {
         const d = new Date(record.date);
+        const year = d.getFullYear().toString();
+        if (!yearlyData[year]) {
+          yearlyData[year] = 0;
+        }
+        yearlyData[year] += record.views;
+      });
+
+      Object.keys(yearlyData).sort().forEach(year => {
         analyticsData.push({
-          date: `${d.toLocaleString('en-US', { month: 'short' })} ${d.getDate()} '${d.getFullYear().toString().slice(-2)}`,
-          views: record.views
+          date: year,
+          views: yearlyData[year]
         });
       });
     } else {
