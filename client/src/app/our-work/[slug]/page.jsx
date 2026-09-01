@@ -19,6 +19,17 @@ async function getProject(id) {
   }
 }
 
+async function getProjects() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to fetch projects:", error);
+    return [];
+  }
+}
+
 export default async function WorkDetailsPage({ params }) {
   const unwrappedParams = await params;
   const project = await getProject(unwrappedParams.slug);
@@ -38,12 +49,26 @@ export default async function WorkDetailsPage({ params }) {
     );
   }
 
-  // Next Project dummy for now since we don't have an endpoint for 'next project'
-  const nextProject = {
+  // Find the Next Project
+  let nextProject = {
     title: "View More Work",
     slug: "",
     image: "/images/services-bg.jpg"
   };
+
+  const allProjects = await getProjects();
+  if (allProjects && allProjects.length > 0) {
+    const currentIndex = allProjects.findIndex(p => p.slug === unwrappedParams.slug || p._id === unwrappedParams.slug);
+    if (currentIndex !== -1) {
+      const nextIndex = (currentIndex + 1) % allProjects.length;
+      const nextData = allProjects[nextIndex];
+      nextProject = {
+        title: nextData.title,
+        slug: nextData.slug || nextData._id,
+        image: nextData.image || nextData.mediaUrl || "/images/services-bg.jpg"
+      };
+    }
+  }
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-gold selection:text-black">
@@ -51,17 +76,17 @@ export default async function WorkDetailsPage({ params }) {
       <Navbar />
 
       {/* 1. Header & Metadata Section */}
-      <section className="container mx-auto px-6 md:px-12 pt-24 md:pt-32 pb-8 md:pb-12">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+      <section className="container mx-auto px-4 md:px-12 pt-40 md:pt-48 pb-6 md:pb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-12">
           {/* Main Title Area */}
-          <div className="flex flex-col max-w-4xl">
-            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-              <div className="h-[2px] w-8 md:w-12 bg-gold" />
-              <span className="text-gold text-[9px] md:text-xs font-bold tracking-[0.3em] uppercase">
+          <div className="flex flex-col max-w-4xl w-full">
+            <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6">
+              <div className="h-[2px] w-6 md:w-12 bg-gold" />
+              <span className="text-gold text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase">
                 {project.category} — {project.year}
               </span>
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[110px] font-bebas tracking-wide uppercase leading-[0.85] text-white">
+            <h1 className="text-[12vw] sm:text-6xl md:text-8xl lg:text-[110px] font-bebas tracking-wide uppercase leading-[0.9] md:leading-[0.85] text-white break-words">
               {project.title.split(' ').map((word, i) => (
                 <span key={i} className="block">{word}</span>
               ))}
@@ -69,10 +94,10 @@ export default async function WorkDetailsPage({ params }) {
           </div>
 
           {/* Minimal Metadata Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 shrink-0 w-full md:w-auto border-t md:border-t-0 border-neutral-900 pt-8 md:pt-0">
+          <div className="grid grid-cols-2 gap-x-6 md:gap-x-12 gap-y-6 shrink-0 w-full md:w-auto border-t md:border-t-0 border-neutral-900 pt-6 md:pt-0">
             {project.client && (
               <div className="flex flex-col gap-1">
-                <span className="text-[9px] text-neutral-500 font-bold tracking-widest uppercase">Client</span>
+                <span className="text-[10px] text-neutral-500 font-bold tracking-widest uppercase">Client</span>
                 <span className="text-sm md:text-base font-bold uppercase">{project.client}</span>
               </div>
             )}
@@ -88,23 +113,23 @@ export default async function WorkDetailsPage({ params }) {
       </section>
 
       {/* 3. Project Overview Section */}
-      <section className="pt-12 pb-6 md:py-32 container mx-auto px-6 md:px-12 border-t border-neutral-900">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-24">
+      <section className="pt-10 pb-12 md:py-32 container mx-auto px-4 md:px-12 border-t border-neutral-900">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-24">
           
           <div className="lg:col-span-4 flex flex-col">
-            <div className="sticky top-32">
-              <span className="text-gold text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase mb-4 block">
+            <div className="sticky top-24 md:top-32">
+              <span className="text-gold text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase mb-3 md:mb-4 block">
                 Overview
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bebas tracking-wide uppercase text-white mb-8">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bebas tracking-wide uppercase text-white mb-6 md:mb-8">
                 About The Project<span className="text-gold">.</span>
               </h2>
-              <div className="w-16 h-[1px] bg-gold" />
+              <div className="w-12 md:w-16 h-[1px] bg-gold" />
             </div>
           </div>
 
-          <div className="lg:col-span-8 flex flex-col">
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-neutral-300 leading-[1.8] md:leading-[1.9] font-light max-w-4xl">
+          <div className="lg:col-span-8 flex flex-col mt-4 md:mt-0">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-neutral-300 leading-[1.7] md:leading-[1.9] font-light max-w-4xl">
               {project.brief}
             </p>
           </div>
@@ -116,7 +141,7 @@ export default async function WorkDetailsPage({ params }) {
       <section className="pt-6 pb-16 md:py-32 container mx-auto px-4 sm:px-6 md:px-12">
         <div className="w-full h-[1px] bg-neutral-900 mb-8 md:mb-16" />
         
-        <Link href="/our-work" className="group block relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[2rem] overflow-hidden border border-neutral-800 hover:border-neutral-700 transition-colors duration-500 shadow-2xl">
+        <Link href={nextProject.slug ? `/our-work/${nextProject.slug}` : "/our-work"} className="group block relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-neutral-800 hover:border-neutral-700 transition-colors duration-500 shadow-2xl">
           
           {/* Background Image */}
           <div className="absolute inset-0 bg-black z-0">
@@ -131,15 +156,15 @@ export default async function WorkDetailsPage({ params }) {
           
           {/* Centered Content */}
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-4 sm:p-8">
-            <div className="flex items-center gap-4 mb-6 transform md:translate-y-2 md:group-hover:-translate-y-1 transition-transform duration-500">
-              <div className="h-[1px] w-8 md:w-12 bg-gold md:bg-neutral-500 md:group-hover:bg-gold transition-colors duration-500" />
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 transform md:translate-y-2 md:group-hover:-translate-y-1 transition-transform duration-500">
+              <div className="h-[1px] w-6 md:w-12 bg-gold md:bg-neutral-500 md:group-hover:bg-gold transition-colors duration-500" />
               <span className="text-gold md:text-neutral-400 md:group-hover:text-gold text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase transition-colors duration-500">
                 Up Next
               </span>
-              <div className="h-[1px] w-8 md:w-12 bg-gold md:bg-neutral-500 md:group-hover:bg-gold transition-colors duration-500" />
+              <div className="h-[1px] w-6 md:w-12 bg-gold md:bg-neutral-500 md:group-hover:bg-gold transition-colors duration-500" />
             </div>
             
-            <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bebas tracking-wide uppercase text-white mb-6 md:mb-8 drop-shadow-2xl">
+            <h2 className="text-[10vw] sm:text-5xl md:text-7xl lg:text-8xl font-bebas tracking-wide uppercase text-white mb-6 md:mb-8 drop-shadow-2xl px-4">
               {nextProject.title}
             </h2>
 
