@@ -59,7 +59,7 @@ export default function WorkGridContainer({ customCategories = [], projects = []
       {/* Category Navigation */}
       <div className="w-full bg-[#f5f0e6] z-30 relative pt-1 pb-1">
         <div className="w-full border-y-[6px] border-dotted border-[#111] py-8">
-          <div className="container mx-auto px-6 max-w-[1400px]">
+          <div className="w-full px-6 md:px-0 md:w-[96%] max-w-[1400px] mx-auto">
             <div className="flex items-center justify-start xl:justify-center gap-8 md:gap-12 overflow-x-auto scrollbar-hide whitespace-nowrap pb-2 pt-2 -mx-6 px-6 xl:mx-0 xl:px-0">
               {categories.map((cat) => (
                 <button 
@@ -80,8 +80,8 @@ export default function WorkGridContainer({ customCategories = [], projects = []
       </div>
 
       {/* Grid */}
-      <div className="border-b border-neutral-900 bg-black min-h-screen pb-24 pt-16" id="work-grid">
-        <div className="container mx-auto px-6 md:px-12">
+      <div className="border-b border-neutral-900 bg-black pb-12 md:pb-24 pt-8 md:pt-16" id="work-grid">
+        <div className="w-full px-6 md:px-0 md:w-[96%] max-w-[1400px] mx-auto">
           {filteredProjects.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

@@ -76,7 +76,7 @@ export default async function WorkDetailsPage({ params }) {
       <Navbar />
 
       {/* 1. Header & Metadata Section */}
-      <section className="container mx-auto px-4 md:px-12 pt-40 md:pt-48 pb-6 md:pb-12">
+      <section className="w-full px-4 md:px-0 md:w-[96%] max-w-[1400px] mx-auto pt-40 md:pt-48 pb-6 md:pb-12">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-12">
           {/* Main Title Area */}
           <div className="flex flex-col max-w-4xl w-full">
@@ -108,12 +108,12 @@ export default async function WorkDetailsPage({ params }) {
       </section>
 
       {/* 2. Massive Image Section (Viewfinder Card Style) */}
-      <section className="container mx-auto px-4 sm:px-6 md:px-12 pb-16 md:pb-32">
+      <section className="w-full px-4 sm:px-6 md:px-0 md:w-[96%] max-w-[1400px] mx-auto pb-16 md:pb-32">
         <ProjectMediaViewer project={project} />
       </section>
 
       {/* 3. Project Overview Section */}
-      <section className="pt-10 pb-12 md:py-32 container mx-auto px-4 md:px-12 border-t border-neutral-900">
+      <section className="pt-10 pb-12 md:py-32 w-full px-4 md:px-0 md:w-[96%] max-w-[1400px] mx-auto border-t border-neutral-900">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-24">
           
           <div className="lg:col-span-4 flex flex-col">
@@ -138,7 +138,7 @@ export default async function WorkDetailsPage({ params }) {
       </section>
 
       {/* 4. Next Project (Full Image Card Style) */}
-      <section className="pt-6 pb-16 md:py-32 container mx-auto px-4 sm:px-6 md:px-12">
+      <section className="pt-6 pb-16 md:py-32 w-full px-4 sm:px-6 md:px-0 md:w-[96%] max-w-[1400px] mx-auto">
         <div className="w-full h-[1px] bg-neutral-900 mb-8 md:mb-16" />
         
         <Link href={nextProject.slug ? `/our-work/${nextProject.slug}` : "/our-work"} className="group block relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-neutral-800 hover:border-neutral-700 transition-colors duration-500 shadow-2xl">
