@@ -19,7 +19,7 @@ export default function AboutPage() {
         <ManifestoSection />
       </main>
 
-      <Footer />
+      <Footer hideCta={true} />
     </div>
   );
 }

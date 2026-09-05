@@ -31,7 +31,7 @@ const LinkedinIcon = ({ className }) => (
   </svg>
 );
 
-export default function Footer() {
+export default function Footer({ hideCta = false }) {
   const [footerData, setFooterData] = useState({
     aboutText: "AVF is committed to creating premium visual experiences and telling stories with trust, quality, and excellence.",
     facebookUrl: "#",
@@ -79,42 +79,44 @@ export default function Footer() {
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-black/80 to-transparent z-0 pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none mix-blend-overlay" />
       
-      <div className="container mx-auto px-6 max-w-5xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-        
-        {/* Left: Lens element */}
-        <div className="hidden md:flex w-72 h-72 items-center justify-center relative z-10">
-           <Image
-             src="/images/camera_lens_PNG7.png"
-             alt="Camera Lens"
-             fill
-             className="object-contain object-center filter drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]"
-           />
-        </div>
+      {!hideCta && (
+        <div className="container mx-auto px-6 max-w-5xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+          
+          {/* Left: Lens element */}
+          <div className="hidden md:flex w-72 h-72 items-center justify-center relative z-10">
+             <Image
+               src="/images/camera_lens_PNG7.png"
+               alt="Camera Lens"
+               fill
+               className="object-contain object-center filter drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]"
+             />
+          </div>
 
-        {/* Center: CTA */}
-        <div className="flex-1 flex flex-col items-center text-center">
-          <span className="font-script text-gold text-3xl mb-4 font-bold">Let's Create</span>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 leading-none">
-            Something Extraordinary<br />Together
-          </h2>
-          <button className="bg-gold text-black px-8 py-4 font-bold text-xs tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-3">
-            Start Your Project
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+          {/* Center: CTA */}
+          <div className="flex-1 flex flex-col items-center text-center">
+            <span className="font-script text-gold text-3xl mb-4 font-bold">Let's Create</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 leading-none">
+              Something Extraordinary<br />Together
+            </h2>
+            <button className="bg-gold text-black px-8 py-4 font-bold text-xs tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-3">
+              Start Your Project
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
 
-        {/* Right: Image */}
-        <div className="relative w-72 h-72 hidden md:flex items-center justify-center">
-           <Image
-             src="/images/retakeflip.png"
-             alt="Retake Flipboard"
-             fill
-             className="object-contain object-center filter drop-shadow-[0_0_20px_rgba(0,0,0,0.6)]"
-           />
+          {/* Right: Image */}
+          <div className="relative w-72 h-72 hidden md:flex items-center justify-center">
+             <Image
+               src="/images/retakeflip.png"
+               alt="Retake Flipboard"
+               fill
+               className="object-contain object-center filter drop-shadow-[0_0_20px_rgba(0,0,0,0.6)]"
+             />
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="container mx-auto px-6 max-w-7xl relative z-10 mt-24 pt-16 border-t border-white/10">
+      <div className={`container mx-auto px-6 max-w-7xl relative z-10 ${!hideCta ? 'mt-24 pt-16 border-t border-white/10' : 'pt-8'}`}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 max-w-5xl mx-auto mb-16">
           
           {/* Column 1: Brand Info */}

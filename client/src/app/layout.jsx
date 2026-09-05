@@ -32,7 +32,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "AVF PRODUCTION",
-  description: "Passionate Filmmakers, Storytellers & Visual Artists",
+  description: "Passionate Photography, Storytellers & Visual Artists",
 };
 
 export default function RootLayout({ children }) {

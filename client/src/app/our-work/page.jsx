@@ -45,7 +45,7 @@ export default async function OurWorkPage() {
 
       <WorkGridContainer customCategories={uniqueCategories} projects={projects} />
 
-      <Footer />
+      <Footer hideCta={true} />
     </main>
   );
 }

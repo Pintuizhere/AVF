@@ -20,7 +20,7 @@ export default function BtsPage() {
 
       <BtsGallerySection />
 
-      <Footer />
+      <Footer hideCta={true} />
     </main>
   );
 }
