@@ -5,9 +5,18 @@ import { Play, BatteryMedium } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+const subtitleLines = [
+  { type: 'number', label: '01', text: 'CINEMATIC', size: 'text-xs md:text-sm' },
+  { type: 'dot', text: 'VISUALS.', size: 'text-xs md:text-sm' },
+  { type: 'dot', text: 'POWERFUL', size: 'text-xs md:text-sm' },
+  { type: 'dot', text: 'STORIES.', size: 'text-xs md:text-sm' },
+  { type: 'number', label: '03', text: 'TIMELESS IMPACT.', size: 'text-[10px] md:text-xs mt-1' },
+];
+
 export default function HeroSection() {
   const [heroData, setHeroData] = useState(null);
   const [isReelPlaying, setIsReelPlaying] = useState(false);
+  const [activeTextIndex, setActiveTextIndex] = useState(0);
 
   useEffect(() => {
     const fetchHero = async () => {
@@ -43,6 +52,13 @@ export default function HeroSection() {
       }
     };
     fetchHero();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTextIndex((prev) => (prev + 1) % subtitleLines.length);
+    }, 2500);
+    return () => clearInterval(interval);
   }, []);
 
   if (!heroData) {
@@ -106,34 +122,46 @@ export default function HeroSection() {
             </h2>
           </div>
 
-          <p 
-            className="text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-neutral-300 leading-loose max-w-sm border-l border-gold pl-4 opacity-0 animate-fade-up [animation-delay:600ms]"
-            dangerouslySetInnerHTML={{ __html: heroData.subtitle }}
-          />
+          <div className="flex items-stretch gap-5 opacity-0 animate-fade-up [animation-delay:600ms]">
+            {/* Scroll Indicator */}
+            <div className="flex flex-col items-center justify-between py-1">
+              {subtitleLines.map((line, i) => (
+                <div 
+                  key={`ind-${i}`} 
+                  onClick={() => setActiveTextIndex(i)}
+                  className="cursor-pointer py-1 flex items-center justify-center min-h-[16px]"
+                >
+                  {line.type === 'number' ? (
+                    <span className={`text-[9px] font-bold transition-colors duration-300 ${activeTextIndex === i ? 'text-gold' : 'text-neutral-600 hover:text-neutral-400'}`}>
+                      {line.label}
+                    </span>
+                  ) : (
+                    <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${activeTextIndex === i ? 'bg-gold' : 'border border-neutral-600 hover:border-neutral-400'}`}></div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Subtitle Text */}
+            <div className="flex flex-col font-bold tracking-[0.2em] uppercase max-w-sm justify-between">
+              {subtitleLines.map((line, i) => (
+                <span 
+                  key={`text-${i}`} 
+                  onClick={() => setActiveTextIndex(i)}
+                  className={`${line.size} cursor-pointer leading-relaxed transition-all duration-500 ${activeTextIndex === i ? 'text-gold opacity-100 scale-[1.02] origin-left' : 'text-neutral-500 opacity-50'}`}
+                >
+                  {line.text}
+                </span>
+              ))}
+            </div>
+          </div>
 
           <div className="flex items-center gap-6 mt-2 opacity-0 animate-fade-up [animation-delay:800ms]">
             <Link href="/our-work" className="bg-gold text-black px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-2">
               View Our Work
               <Play className="w-4 h-4" />
             </Link>
-            {heroData.videoReelUrl ? (
-              <a href={heroData.videoReelUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gold hover:text-white transition-colors group">
-                <div className="w-10 h-10 rounded-full border border-gold flex items-center justify-center group-hover:border-white transition-colors">
-                  <Play className="w-4 h-4" />
-                </div>
-                <span className="font-script text-2xl md:text-3xl font-bold">Play Reel</span>
-              </a>
-            ) : (
-              <button 
-                onClick={() => setIsReelPlaying(prev => !prev)}
-                className="flex items-center gap-3 text-gold hover:text-white transition-colors group"
-              >
-                <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${isReelPlaying ? 'bg-gold border-gold text-black shadow-[0_0_15px_rgba(255,215,0,0.5)]' : 'border-gold group-hover:border-white'}`}>
-                  <Play className={`w-4 h-4 ${isReelPlaying ? 'fill-current' : ''}`} />
-                </div>
-                <span className="font-script text-2xl md:text-3xl font-bold">Play Reel</span>
-              </button>
-            )}
+
           </div>
         </div>
 
