@@ -109,7 +109,7 @@ export default function HeroSection() {
       </div>
 
 
-      <div className="container mx-auto px-6 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10 mt-8 md:mt-12">
+      <div className="container mx-auto px-8 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10 mt-8 md:mt-12">
         
         {/* Left Content */}
         <div className="flex flex-col items-start gap-6">
