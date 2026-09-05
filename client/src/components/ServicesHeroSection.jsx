@@ -45,7 +45,7 @@ export default function ServicesHeroSection() {
             Services
           </h1>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-script text-gold -rotate-2 ml-2 md:ml-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bebas text-gold uppercase tracking-widest mt-2 md:mt-4">
             We Bring Your Vision<br />
             To Life.
           </h2>

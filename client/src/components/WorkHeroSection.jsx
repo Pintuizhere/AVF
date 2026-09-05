@@ -57,7 +57,7 @@ export default function WorkHeroSection() {
 
         <div className="container mx-auto px-6 max-w-6xl relative z-10 flex flex-col mt-4 md:mt-8">
           <div className="max-w-3xl flex flex-col items-start gap-2 md:gap-3">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-script text-gold -rotate-2 ml-2 md:ml-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bebas text-gold uppercase tracking-widest mb-2 md:mb-4">
               Our Work
             </h2>
             

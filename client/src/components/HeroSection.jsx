@@ -114,10 +114,10 @@ export default function HeroSection() {
         {/* Left Content */}
         <div className="flex flex-col items-start gap-6">
           <div className="flex flex-col">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold uppercase tracking-tighter leading-tight text-white opacity-0 animate-fade-up [animation-delay:200ms] whitespace-pre-line">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bebas uppercase tracking-tighter leading-[0.85] text-white opacity-0 animate-fade-up [animation-delay:200ms] whitespace-pre-line">
               {heroData.headingLine1}
             </h1>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bebas text-gold uppercase tracking-widest mt-1 md:mt-2 lg:mt-3 origin-left opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bebas text-gold uppercase tracking-widest mt-1 md:mt-2 lg:mt-3 origin-left opacity-0 animate-fade-up [animation-delay:400ms]">
               {heroData.headingLine2}
             </h2>
           </div>

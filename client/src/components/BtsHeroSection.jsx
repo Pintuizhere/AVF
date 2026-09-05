@@ -40,7 +40,7 @@ export default function BtsHeroSection() {
 
       <div className="container mx-auto px-6 max-w-6xl relative z-10 flex flex-col mt-4 md:mt-8">
         <div className="max-w-3xl flex flex-col items-start gap-2 md:gap-3">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-script text-gold -rotate-2 ml-2 md:ml-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bebas text-gold uppercase tracking-widest mb-2 md:mb-4">
             Behind The Scenes
           </h2>
           
@@ -49,7 +49,7 @@ export default function BtsHeroSection() {
             RAW ENERGY.
           </h1>
 
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-script text-gold -rotate-2 ml-4 md:ml-8 mt-1 md:mt-2">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bebas text-gold uppercase tracking-widest mt-2 md:mt-4">
             That&apos;s Where The Story Begins.
           </h3>
 
