@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedSection from "@/components/FeaturedSection";
-import ReelsSection from "@/components/ReelsSection";
 import ServicesSection from "@/components/ServicesSection";
 import ProcessSection from "@/components/ProcessSection";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -19,7 +18,6 @@ export default function Home() {
       <main>
         <HeroSection />
         <FeaturedSection />
-        <ReelsSection />
         <ServicesSection />
         <ProcessSection />
         <ExploreWorkSection />
