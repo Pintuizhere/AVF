@@ -45,7 +45,7 @@ export default function FeaturedSection() {
       {/* Background glow effect */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-      <div className="container mx-auto px-6 max-w-5xl mb-2 relative z-10 flex flex-row justify-between items-end gap-4">
+      <div className="container mx-auto px-6 max-w-5xl mb-8 md:mb-10 relative z-10 flex flex-row justify-between items-end gap-4">
         <div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">Featured</h2>
         </div>
