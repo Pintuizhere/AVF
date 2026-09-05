@@ -174,7 +174,7 @@ export default function AdminHero() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Heading Line 2 (Script font)</label>
+              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Heading Line 2 (Gold block font)</label>
               <input 
                 type="text" 
                 name="headingLine2"

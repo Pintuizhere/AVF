@@ -11,7 +11,6 @@ export default function DirectorNoteSection() {
       const fallbackData = {
         badge: "A Note From Our Founder",
         title: "Akash Verma",
-        subtitle: "Founder. Filmmaker. Dreamer.",
         content: "For me, filmmaking is not just about cameras and editing. It's about people, emotions and moments that stay forever. I believe in creating visuals that are honest, raw and real. Every frame we create is a promise—to tell your story with authenticity and passion.",
         signatureName: "Akash Verma",
         signatureRole: "Founder",
@@ -27,7 +26,6 @@ export default function DirectorNoteSection() {
           setHeroData({
             badge: data.badge || fallbackData.badge,
             title: data.title || fallbackData.title,
-            subtitle: data.subtitle || fallbackData.subtitle,
             content: data.content || fallbackData.content,
             signatureName: data.signatureName || fallbackData.signatureName,
             signatureRole: data.signatureRole || fallbackData.signatureRole,
@@ -67,12 +65,9 @@ export default function DirectorNoteSection() {
             {heroData.badge}
           </span>
           
-          <h2 className="text-5xl md:text-7xl font-bebas uppercase tracking-wider leading-tight mb-2 md:mb-4 text-white font-bold text-center lg:text-left">
+          <h2 className="text-5xl md:text-7xl font-bebas uppercase tracking-wider leading-tight mb-6 md:mb-8 text-white font-bold text-center lg:text-left">
             {heroData.title}
           </h2>
-          <h3 className="font-script text-gold text-3xl md:text-4xl mb-6 md:mb-8 -rotate-1 text-center lg:text-left">
-            {heroData.subtitle}
-          </h3>
           <p className="text-neutral-300 leading-relaxed mb-4 lg:mb-10 max-w-lg font-medium text-sm md:text-base text-center lg:text-left whitespace-pre-line">
             {heroData.content}
           </p>
@@ -114,7 +109,7 @@ export default function DirectorNoteSection() {
                  src={heroData.image}
                  alt={heroData.title}
                  fill
-                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                 className="object-cover grayscale-0 md:grayscale hover:grayscale-0 transition-all duration-700"
                />
                <div className="absolute inset-0 bg-black/20" />
             </div>

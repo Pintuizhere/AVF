@@ -31,7 +31,7 @@ export default function AboutStorySection() {
         console.error(error);
       }
     };
-    
+
     const fetchStory = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/aboutstory`);
@@ -49,69 +49,72 @@ export default function AboutStorySection() {
   }, []);
 
   return (
-    <section id="story" className="relative bg-[#f5f0e6] text-black py-20 lg:py-32 px-4 md:px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden w-full">
-      
-      <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
+    <section id="story" className="relative bg-[#f5f0e6] text-black py-12 lg:py-32 px-4 md:px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden w-full">
+
+      <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+
         {/* Left: Scattered Photos / Polaroids */}
-        <div className="relative h-[300px] sm:h-[350px] md:h-[500px] w-full flex items-center justify-center mb-8 lg:mb-0">
+        <div className="relative h-[300px] sm:h-[350px] md:h-[500px] w-full flex items-center justify-center">
           {/* Back photo */}
-          <div className="absolute top-2 sm:top-4 md:top-10 left-2 sm:left-4 md:left-10 w-40 sm:w-48 md:w-64 aspect-[4/5] bg-white p-2 md:p-4 pb-10 sm:pb-12 md:pb-16 shadow-xl -rotate-12 flex flex-col grayscale opacity-80 border border-neutral-200">
+          <div className="absolute top-2 sm:top-4 md:top-10 left-2 sm:left-4 md:left-10 w-40 sm:w-48 md:w-64 aspect-[4/5] bg-white p-2 md:p-4 pb-10 sm:pb-12 md:pb-16 shadow-xl -rotate-12 flex flex-col grayscale-0 md:grayscale opacity-80 border border-neutral-200">
             <div className="flex-1 bg-neutral-200 flex items-center justify-center border border-neutral-300 relative overflow-hidden">
-               {story.media1 && story.media1.url ? (
-                 story.media1.resource_type === 'video' ? (
-                   <video src={story.media1.url} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
-                 ) : (
-                   <img src={story.media1.url} alt="Back Photo" className="absolute inset-0 w-full h-full object-cover" />
-                 )
-               ) : (
-                 <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-neutral-400 z-10" />
-               )}
+              {story.media1 && story.media1.url ? (
+                story.media1.resource_type === 'video' ? (
+                  <video src={story.media1.url} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
+                ) : (
+                  <img src={story.media1.url} alt="Back Photo" className="absolute inset-0 w-full h-full object-cover" />
+                )
+              ) : (
+                <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-neutral-400 z-10" />
+              )}
             </div>
           </div>
-          
+
           {/* Main front photo */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 sm:w-64 md:w-80 aspect-square bg-white p-2 md:p-4 pb-12 sm:pb-16 md:pb-20 shadow-2xl rotate-3 border border-neutral-200 z-10">
             <div className="w-full h-full bg-neutral-900 flex items-center justify-center rounded-sm overflow-hidden relative border-4 border-black/10 shadow-inner">
-               {story.media2 && story.media2.url ? (
-                 story.media2.resource_type === 'video' ? (
-                   <video src={story.media2.url} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0" />
-                 ) : (
-                   <img src={story.media2.url} alt="Front Photo" className="absolute inset-0 w-full h-full object-cover z-0" />
-                 )
-               ) : (
-                 <>
-                   <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.8)_100%)] z-10" />
-                   {/* Simulating a lens center in the photo */}
-                   <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-[8px] sm:border-[12px] border-neutral-800 flex items-center justify-center bg-black relative z-0">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 sm:border-4 border-neutral-600 bg-neutral-900" />
-                   </div>
-                 </>
-               )}
-            </div>
-            <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 font-script text-lg md:text-2xl text-neutral-800 -rotate-2">
-              AVF - Behind every frame
-            </div>
-            <div className="absolute bottom-1 right-4 md:right-6 font-script text-lg md:text-2xl text-neutral-800 -rotate-2">
-              is a vision
+              {story.media2 && story.media2.url ? (
+                story.media2.resource_type === 'video' ? (
+                  <video src={story.media2.url} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0" />
+                ) : (
+                  <img src={story.media2.url} alt="Front Photo" className="absolute inset-0 w-full h-full object-cover z-0" />
+                )
+              ) : (
+                <>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_0%,rgba(0,0,0,0.8)_100%)] z-10" />
+                  {/* Simulating a lens center in the photo */}
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-[8px] sm:border-[12px] border-neutral-800 flex items-center justify-center bg-black relative z-0">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 sm:border-4 border-neutral-600 bg-neutral-900" />
+                  </div>
+                </>
+              )}
             </div>
           </div>
-          
+
           {/* Tape elements for realism */}
           <div className="absolute top-1/4 left-1/4 w-16 h-6 bg-white/40 backdrop-blur-sm -rotate-45 shadow-sm" />
           <div className="absolute bottom-1/4 right-1/4 w-12 h-4 bg-white/40 backdrop-blur-sm rotate-12 shadow-sm z-20" />
         </div>
 
         {/* Right: Text Content */}
-        <div className="flex flex-col items-start z-10 w-full mt-8 lg:mt-0">
+        <div className="flex flex-col items-start z-10 w-full">
           <span className="font-script text-gold text-2xl md:text-3xl mb-2 font-bold">{story.title}</span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-tight mb-6">
-            {story.heading}
+            {story.heading?.split(' ').map((word, i) => {
+              const uWord = word.toUpperCase();
+              if (uWord.includes('AVF')) {
+                return <span key={i} className="text-gold">{word} </span>;
+              }
+              if (uWord.includes('PRODUCTION')) {
+                return <span key={i} className="font-bebas text-black tracking-widest text-[1.1em] align-baseline">{word} </span>;
+              }
+              return word + ' ';
+            })}
           </h2>
           <p className="text-neutral-800 leading-relaxed mb-10 text-sm max-w-lg font-medium whitespace-pre-wrap">
             {story.description}
           </p>
-          
+
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 w-full border border-neutral-300/60 bg-white/30 backdrop-blur-sm rounded-sm">
             {/* Stat 1 */}
@@ -140,7 +143,7 @@ export default function AboutStorySection() {
             </div>
           </div>
         </div>
-        
+
       </div>
     </section>
   );

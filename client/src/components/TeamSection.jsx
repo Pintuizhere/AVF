@@ -95,7 +95,7 @@ export default function TeamSection() {
                 <img 
                   src={member.image} 
                   alt={member.name} 
-                  className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transform group-hover:scale-105 transition-all duration-700 ease-out"
+                  className="w-full h-full object-cover filter grayscale-0 md:grayscale group-hover:grayscale-0 transform group-hover:scale-105 transition-all duration-700 ease-out"
                 />
                 
                 {/* Social Overlay */}
