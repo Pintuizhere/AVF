@@ -20,6 +20,8 @@ export default function ClientsSection() {
 
   if (brands.length === 0) return null;
 
+  const repeatedBrands = Array(10).fill(brands).flat();
+
   return (
     <section className="bg-[#e9e6dc] text-black py-10 border-y-[6px] border-dotted border-[#111] overflow-hidden">
       <div className="container mx-auto max-w-5xl px-6">
@@ -39,7 +41,7 @@ export default function ClientsSection() {
               key={setIndex}
               className="flex items-center justify-around gap-6 md:gap-10 px-4 md:px-6 w-max"
             >
-              {brands.map((brand, i) => (
+              {repeatedBrands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
                   className="flex-none group/logo"
@@ -77,7 +79,7 @@ export default function ClientsSection() {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 35s linear infinite;
+          animation: marquee 350s linear infinite;
         }
       `}} />
     </section>
