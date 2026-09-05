@@ -118,26 +118,6 @@ export default function MobileMenu({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Hero Image Section */}
-        <div className="relative w-full aspect-[4/3] bg-black">
-          <Image
-            src="/images/services-bg.jpg"
-            alt="Hero Background"
-            fill
-            className="object-cover opacity-60"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
-          <div className="absolute bottom-6 left-6 right-6 flex flex-col items-start">
-             <h3 className="text-3xl font-bebas uppercase text-white leading-[0.9] tracking-widest drop-shadow-md">
-               RECORDED.<br/>
-               CRAFTED.<br/>
-               <span className="text-gold">REMEMBERED.</span>
-             </h3>
-             <p className="text-[10px] uppercase tracking-widest text-neutral-300 font-bold mt-2">
-               EVERY FRAME HAS<br/>A PURPOSE.
-             </p>
-          </div>
-        </div>
 
         {/* Navigation Links */}
         <nav className="flex flex-col py-2 border-b border-[#1a1a1a]">
@@ -230,27 +210,6 @@ export default function MobileMenu({ isOpen, onClose }) {
           {/* Torn Paper Top Edge */}
           <div className="absolute top-0 left-0 w-full h-[60px] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgoJPHBvbHlnb24gZmlsbD0iIzBhMGEwYSIgcG9pbnRzPSIwLDggOCw4IDgsMCAwLDAgIi8+Cgk8cG9seWdvbiBmaWxsPSIjMDAwMDAwIiBwb2ludHM9IjAsOCA0LDQgOCw4ICIvPgo8L3N2Zz4=')] bg-repeat-x bg-bottom -translate-y-full opacity-100 z-10" />
           
-          <div className="flex items-center justify-center relative h-32 px-4 mb-6">
-            {/* Lens */}
-            <div className="absolute -left-10 bottom-0 w-32 h-32 rounded-full overflow-hidden opacity-60 mix-blend-luminosity">
-               <Image src="/images/hero-bg.jpg" alt="Lens" fill className="object-cover object-left-bottom" />
-               <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-black/50" />
-            </div>
-
-            {/* Taped Note */}
-            <div className="relative z-10 w-24 h-24 bg-[#f5f1e6] shadow-xl flex flex-col items-center justify-center -rotate-6 border border-neutral-300">
-               <div className="absolute -top-1 -left-2 w-8 h-3 bg-[#c2b49d]/80 shadow-sm backdrop-blur-md transform -rotate-12" />
-               <div className="absolute inset-0 bg-noise opacity-20 mix-blend-multiply pointer-events-none" />
-               <span className="font-script text-xs text-black -rotate-2 mt-1">Lights.</span>
-               <span className="font-script text-xs text-black -rotate-2">Camera.</span>
-               <span className="font-script text-sm text-black font-bold -rotate-2">AVF.</span>
-            </div>
-
-            {/* Film Rolls */}
-            <div className="absolute -right-4 bottom-2 w-28 h-28 opacity-80 mix-blend-luminosity transform rotate-6">
-               <Image src="/images/services-bg.jpg" alt="Film" fill className="object-cover rounded-md" />
-            </div>
-          </div>
 
           <p className="text-center text-[9px] text-neutral-600 px-6">
             © {new Date().getFullYear()} AVF Production.<br/>All Rights Reserved.
