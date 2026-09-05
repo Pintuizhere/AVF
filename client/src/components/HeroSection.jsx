@@ -6,11 +6,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const subtitleLines = [
-  { type: 'number', label: '01', text: 'CINEMATIC', size: 'text-xs md:text-sm' },
+  { type: 'dot', text: 'CINEMATIC', size: 'text-xs md:text-sm' },
   { type: 'dot', text: 'VISUALS.', size: 'text-xs md:text-sm' },
   { type: 'dot', text: 'POWERFUL', size: 'text-xs md:text-sm' },
   { type: 'dot', text: 'STORIES.', size: 'text-xs md:text-sm' },
-  { type: 'number', label: '03', text: 'TIMELESS IMPACT.', size: 'text-[10px] md:text-xs mt-1' },
+  { type: 'dot', text: 'TIMELESS IMPACT.', size: 'text-[10px] md:text-xs mt-1' },
 ];
 
 export default function HeroSection() {
@@ -117,7 +117,7 @@ export default function HeroSection() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold uppercase tracking-tighter leading-tight text-white opacity-0 animate-fade-up [animation-delay:200ms] whitespace-pre-line">
               {heroData.headingLine1}
             </h1>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-script text-gold mt-1 md:mt-2 lg:mt-3 -rotate-2 origin-left font-bold opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bebas text-gold uppercase tracking-widest mt-1 md:mt-2 lg:mt-3 origin-left opacity-0 animate-fade-up [animation-delay:400ms] ml-4 md:ml-8">
               {heroData.headingLine2}
             </h2>
           </div>
