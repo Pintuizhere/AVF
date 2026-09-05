@@ -191,10 +191,10 @@ export default function ServicesSection() {
                       <div className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center mb-8 bg-black/20 backdrop-blur-md shadow-2xl group-hover:scale-110 group-hover:border-gold/30 transition-all duration-700">
                         <Icon className="w-12 h-12 text-gold stroke-[1.5]" />
                       </div>
-                      <h4 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white px-8 text-center drop-shadow-2xl">
+                      <h4 className="text-3xl xl:text-4xl font-black uppercase tracking-tighter text-white px-8 text-center drop-shadow-2xl">
                         {svc.title}
                       </h4>
-                      <p className="text-gold font-script text-3xl mt-4 -rotate-2 drop-shadow-lg">
+                      <p className="text-gold font-script text-2xl xl:text-3xl mt-4 -rotate-2 drop-shadow-lg text-center px-8">
                         {svc.description}
                       </p>
                     </div>

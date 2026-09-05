@@ -31,7 +31,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "AVF | Akash Verma Film Products",
+  title: "AVF PRODUCTION",
   description: "Passionate Filmmakers, Storytellers & Visual Artists",
 };
 
