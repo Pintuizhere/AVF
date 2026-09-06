@@ -41,7 +41,7 @@ export default function FeaturedSection() {
   if (featuredItems.length === 0 && shortsItems.length === 0) return null;
 
   return (
-    <section className="bg-black pt-10 md:pt-20 pb-10 md:pb-16 text-white relative border-b border-white/5 overflow-hidden">
+    <section className="bg-black pt-10 md:pt-20 text-white relative overflow-hidden">
       {/* Background glow effect */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gold/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
 

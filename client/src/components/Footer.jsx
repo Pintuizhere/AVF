@@ -80,38 +80,46 @@ export default function Footer({ hideCta = false }) {
       <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none mix-blend-overlay" />
       
       {!hideCta && (
-        <div className="container mx-auto px-6 max-w-5xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-          
-          {/* Left: Lens element */}
-          <div className="hidden md:flex w-72 h-72 items-center justify-center relative z-10">
-             <Image
-               src="/images/camera_lens_PNG7.png"
-               alt="Camera Lens"
-               fill
-               className="object-contain object-center filter drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]"
-             />
-          </div>
+        <div className="container mx-auto px-6 max-w-5xl relative z-10 mb-12 mt-8">
+          <div className="relative p-8 md:py-12 md:px-16 group border border-white/10 hover:border-white/20 transition-colors duration-500 overflow-hidden">
+            
+            {/* Corner Brackets */}
+            <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-gold z-20"></div>
+            <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-gold z-20"></div>
+            <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-gold z-20"></div>
+            <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-gold z-20"></div>
+            
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+              <Image 
+                src="/images/hero-bg.jpg"
+                alt="Background"
+                fill
+                className="object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000 ease-in-out"
+              />
+              <div className="absolute inset-0 bg-black/70 group-hover:bg-black/60 transition-colors duration-700" />
+            </div>
 
-          {/* Center: CTA */}
-          <div className="flex-1 flex flex-col items-center text-center">
-            <span className="font-script text-gold text-3xl mb-4 font-bold">Let's Create</span>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 leading-none">
-              Something Extraordinary<br />Together
-            </h2>
-            <button className="bg-gold text-black px-8 py-4 font-bold text-xs tracking-widest uppercase hover:bg-white transition-colors flex items-center gap-3">
-              Start Your Project
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Right: Image */}
-          <div className="relative w-72 h-72 hidden md:flex items-center justify-center">
-             <Image
-               src="/images/retakeflip.png"
-               alt="Retake Flipboard"
-               fill
-               className="object-contain object-center filter drop-shadow-[0_0_20px_rgba(0,0,0,0.6)]"
-             />
+            <div className="relative z-10 flex flex-col items-center text-center gap-4 max-w-3xl mx-auto">
+              
+              <span className="font-script text-gold text-3xl md:text-4xl font-bold drop-shadow-md">
+                Let's Create
+              </span>
+              
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight uppercase">
+                Something Extraordinary<br />Together
+              </h2>
+              
+              <p className="text-neutral-400 text-sm md:text-base leading-relaxed mt-2 max-w-xl">
+                We are committed to creating premium visual experiences and telling stories with trust, quality, and excellence. Let's bring your vision to life.
+              </p>
+              
+              <button className="mt-4 bg-gold text-black border border-gold hover:bg-white hover:border-white px-8 py-4 font-bold text-xs tracking-widest uppercase transition-all duration-300 flex items-center gap-3 group/btn shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                Start Your Project
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            </div>
+            
           </div>
         </div>
       )}
