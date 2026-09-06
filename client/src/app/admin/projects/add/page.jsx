@@ -16,13 +16,11 @@ export default function AdminAddProjectWYSIWYG() {
     title: "",
     slug: "",
     client: "",
-    category: "DOCUMENTARIES",
     year: new Date().getFullYear().toString(),
     brief: "",
     mediaUrl: "",
     aspect: "aspect-[16/9]"
   });
-  const [inputType, setInputType] = useState('file'); // 'file' or 'url'
   const [mediaFile, setMediaFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [status, setStatus] = useState({ loading: false, success: false, error: "" });
@@ -66,12 +64,8 @@ export default function AdminAddProjectWYSIWYG() {
   };
 
   const handleSubmit = async () => {
-    if (inputType === 'file' && !mediaFile) {
-      setStatus({ loading: false, success: false, error: "Please upload a master image or video." });
-      return;
-    }
-    if (inputType === 'url' && !formData.mediaUrl) {
-      setStatus({ loading: false, success: false, error: "Please provide a valid media URL." });
+    if (!mediaFile && !formData.mediaUrl) {
+      setStatus({ loading: false, success: false, error: "Please upload a media file or provide an external URL." });
       return;
     }
     if (!formData.title || !formData.brief || !formData.category) {
@@ -83,7 +77,7 @@ export default function AdminAddProjectWYSIWYG() {
     const data = new FormData();
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
     
-    if (inputType === 'file') {
+    if (mediaFile) {
       data.append("media", mediaFile);
     }
 
@@ -276,87 +270,69 @@ export default function AdminAddProjectWYSIWYG() {
             <div className="absolute bottom-0 right-0 w-8 h-8 md:w-16 md:h-16 border-b-[1.5px] border-r-[1.5px] border-gold transition-all duration-700 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:translate-y-1" />
 
             {/* Inner Frame - Upload Zone */}
-            <div className="absolute -top-12 right-0 flex items-center gap-2 bg-[#111] border border-[#222] rounded-t-xl px-4 py-2 z-20 shadow-xl">
-              <button 
-                onClick={(e) => { e.stopPropagation(); setInputType('file'); }}
-                className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded transition-colors ${inputType === 'file' ? 'bg-gold text-black' : 'text-neutral-500 hover:text-white'}`}
+            <div className="absolute inset-0 bg-black border border-[#222] flex items-center justify-between border-dashed z-10">
+              
+              {/* Left Side: File Upload (Thumbnail/Primary) */}
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className="relative w-1/2 h-full flex flex-col items-center justify-center cursor-pointer group/upload hover:bg-[#111] transition-colors border-r border-[#222]"
               >
-                File Upload
-              </button>
-              <button 
-                onClick={(e) => { e.stopPropagation(); setInputType('url'); }}
-                className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded transition-colors ${inputType === 'url' ? 'bg-gold text-black' : 'text-neutral-500 hover:text-white'}`}
-              >
-                External URL
-              </button>
-            </div>
-
-            <div 
-              onClick={() => inputType === 'file' && fileInputRef.current?.click()}
-              className={`relative w-full h-full overflow-hidden bg-black border border-[#222] flex flex-col items-center justify-center border-dashed transition-colors ${inputType === 'file' ? 'group-hover:border-gold/50 cursor-pointer' : ''}`}
-            >
-              {inputType === 'file' ? (
-                <>
-                  <input 
-                    type="file" 
-                    ref={fileInputRef}
-                    className="hidden" 
-                    accept="image/*,video/mp4,video/quicktime"
-                    onChange={handleFileChange}
-                  />
-                  
-                  {previewUrl ? (
-                    mediaFile?.type.startsWith('video/') ? (
-                      <video src={previewUrl} className="w-full h-full object-cover" controls muted autoPlay loop />
-                    ) : (
-                      <img src={previewUrl} className="w-full h-full object-cover" alt="Preview" />
-                    )
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  className="hidden" 
+                  accept="image/*,video/mp4,video/quicktime"
+                  onChange={handleFileChange}
+                />
+                
+                {previewUrl ? (
+                  mediaFile?.type.startsWith('video/') ? (
+                    <video src={previewUrl} className="w-full h-full object-cover" controls muted autoPlay loop />
                   ) : (
-                    <div className="flex flex-col items-center gap-4 z-10 p-8 text-center bg-black/40 backdrop-blur-md rounded-2xl border border-white/5 group-hover:border-gold/20 transition-all">
-                      <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center text-gold group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(252,166,3,0.2)]">
-                        <UploadCloud className="w-8 h-8" />
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-xl font-bold text-white uppercase tracking-wider">Upload Master File</span>
-                        <span className="text-xs text-neutral-400 font-mono">Image or Video. Will be auto-compressed.</span>
-                      </div>
+                    <img src={previewUrl} className="w-full h-full object-cover" alt="Preview" />
+                  )
+                ) : (
+                  <div className="flex flex-col items-center gap-4 z-10 p-4 text-center bg-black/40 backdrop-blur-md rounded-2xl border border-white/5 group-hover/upload:border-gold/20 transition-all">
+                    <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center text-gold group-hover/upload:scale-110 transition-transform shadow-[0_0_20px_rgba(252,166,3,0.2)]">
+                      <UploadCloud className="w-6 h-6" />
                     </div>
-                  )}
-                </>
-              ) : (
-                <div className="flex flex-col items-center gap-6 z-10 p-8 text-center w-full max-w-lg">
-                  <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center text-gold shadow-[0_0_20px_rgba(252,166,3,0.2)]">
-                    <Settings2 className="w-8 h-8" />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-base font-bold text-white uppercase tracking-wider">Upload Thumbnail / File</span>
+                      <span className="text-[10px] text-neutral-400 font-mono">Image or Video.</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Side: External URL */}
+              <div className="w-1/2 h-full flex flex-col items-center justify-center p-8 bg-[#0a0a0a]">
+                <div className="flex flex-col items-center gap-4 text-center w-full max-w-sm">
+                  <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center text-gold shadow-[0_0_20px_rgba(252,166,3,0.2)]">
+                    <Settings2 className="w-6 h-6" />
                   </div>
                   <div className="flex flex-col gap-2 w-full">
-                    <span className="text-xl font-bold text-white uppercase tracking-wider">Provide Media URL</span>
-                    <span className="text-xs text-neutral-400 font-mono mb-4">Link to a YouTube video or external image.</span>
+                    <span className="text-base font-bold text-white uppercase tracking-wider">External Media URL (Optional)</span>
+                    <span className="text-[10px] text-neutral-400 font-mono mb-2">Provide a YouTube/Vimeo link. The uploaded file on the left will act as the thumbnail!</span>
                     <input 
                       type="text"
                       name="mediaUrl"
                       value={formData.mediaUrl}
                       onChange={handleInputChange}
                       placeholder="https://youtube.com/watch?v=..."
-                      className="w-full bg-[#111] border border-[#333] rounded px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors text-center"
+                      className="w-full bg-[#111] border border-[#333] rounded px-4 py-2.5 text-white focus:outline-none focus:border-gold transition-colors text-center text-sm"
                     />
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Fake Navigation Arrows just for visual aesthetic of the gallery */}
-              <div className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-neutral-600 opacity-30">
+              <div className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-neutral-600 opacity-30 pointer-events-none">
                 <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 stroke-[1.5]" />
               </div>
-              <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-neutral-600 opacity-30">
+              <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-neutral-600 opacity-30 pointer-events-none">
                 <ChevronRight className="w-4 h-4 md:w-6 md:h-6 stroke-[1.5]" />
               </div>
 
-              {/* Fake Pagination Dots */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30">
-                <div className="w-2.5 h-2.5 rounded-full bg-gold" />
-                <div className="w-2 h-2 rounded-full bg-neutral-600" />
-                <div className="w-2 h-2 rounded-full bg-neutral-600" />
-              </div>
             </div>
           </div>
         </section>

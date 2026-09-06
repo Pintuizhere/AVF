@@ -118,8 +118,8 @@ export default function ExploreWorkSection() {
                     ) : (
                       <>
                         <Image
-                          src={getThumbnail(item.mediaUrl, item.mediaType)}
-                      alt={item.title}
+                          src={item.thumbnailUrl || getThumbnail(item.mediaUrl, item.mediaType)}
+                          alt={item.title}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-70 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
                     />

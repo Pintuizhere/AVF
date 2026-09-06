@@ -13,6 +13,7 @@ const projectSchema = new mongoose.Schema({
     fps: { type: String }
   },
   mediaUrl: { type: String, required: true },
+  thumbnailUrl: { type: String }, // Custom uploaded thumbnail for external links
   mediaType: { type: String, enum: ["image", "video"], required: true },
   aspect: { type: String, default: "aspect-[16/9]" }
 }, {

@@ -99,7 +99,7 @@ export default function WorkGridContainer({ customCategories = [], projects = []
                       {/* Inner Frame */}
                       <div className="relative w-full h-full overflow-hidden bg-black transition-colors duration-500">
                         <Image
-                          src={project.image || project.mediaUrl}
+                          src={project.thumbnailUrl || project.image || project.mediaUrl}
                           alt={project.title}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-70 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"

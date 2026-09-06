@@ -8,20 +8,27 @@ const createProject = async (req, res) => {
   try {
     const { title, slug, client, category, year, brief, mediaUrl: bodyMediaUrl, aspect } = req.body;
 
-    let mediaUrl = "";
+    let mediaUrl = bodyMediaUrl || "";
+    let thumbnailUrl = "";
     let mediaType = "image";
 
-    if (req.file) {
-      mediaUrl = req.file.path; // Cloudinary URL
-      mediaType = req.file.mimetype.startsWith("video/") ? "video" : "image";
-    } else if (bodyMediaUrl) {
-      mediaUrl = bodyMediaUrl;
-      // Infer type from URL
+    if (mediaUrl) {
       const lowerUrl = mediaUrl.toLowerCase();
-      if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be') || lowerUrl.includes('vimeo.com') || lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm')) {
+      if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be') || lowerUrl.includes('vimeo.com') || lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm') || lowerUrl.includes('instagram.com')) {
         mediaType = "video";
       }
-    } else {
+    }
+
+    if (req.file) {
+      if (mediaUrl) {
+        // External URL provided, use the uploaded file as a thumbnail
+        thumbnailUrl = req.file.path;
+      } else {
+        // No external URL, the uploaded file is the primary media
+        mediaUrl = req.file.path;
+        mediaType = req.file.mimetype.startsWith("video/") ? "video" : "image";
+      }
+    } else if (!mediaUrl) {
       return res.status(400).json({ message: "Media file or external URL is required" });
     }
 
@@ -36,6 +43,7 @@ const createProject = async (req, res) => {
       year,
       brief,
       mediaUrl,
+      thumbnailUrl,
       mediaType,
       aspect: aspect || "aspect-[16/9]",
     });
