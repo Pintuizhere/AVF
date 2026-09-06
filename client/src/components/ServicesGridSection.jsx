@@ -45,13 +45,6 @@ export default function ServicesGridSection() {
     <section className="relative bg-[#f5f0e6] text-black py-24 px-6 border-y-[6px] border-dotted border-[#111] overflow-hidden">
       <div className="container mx-auto max-w-[1400px]">
         
-        {/* Section Title */}
-        <div className="mb-12 border-l-4 border-black pl-4">
-          <h2 className="text-4xl md:text-5xl font-bebas uppercase tracking-wider text-black">
-            Our Services
-          </h2>
-        </div>
-
         {/* Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {servicesData.map((service, index) => {
