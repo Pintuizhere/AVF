@@ -10,6 +10,18 @@ export default function AdminClientsPage() {
   const [deleteId, setDeleteId] = useState(null);
   const fileInputRef = useRef(null);
 
+  // Section Settings State
+  const [sectionHeading, setSectionHeading] = useState("Our Clients");
+  const [savingHeading, setSavingHeading] = useState(false);
+
+  // UI State
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: "", type }), 3000);
+  };
+
   // Form State
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
@@ -18,7 +30,20 @@ export default function AdminClientsPage() {
 
   useEffect(() => {
     fetchClients();
+    fetchSettings();
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.clientsSectionHeading) setSectionHeading(data.clientsSectionHeading);
+      }
+    } catch (err) {
+      console.error("Failed to load settings:", err);
+    }
+  };
 
   const fetchClients = async () => {
     try {
@@ -45,6 +70,29 @@ export default function AdminClientsPage() {
       if (!name) {
         setName(selected.name.split(".")[0].toUpperCase());
       }
+    }
+  };
+
+  const handleSaveHeading = async (e) => {
+    e.preventDefault();
+    setSavingHeading(true);
+    const token = localStorage.getItem("adminToken");
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ clientsSectionHeading: sectionHeading }),
+      });
+      if (!res.ok) throw new Error("Failed to update heading");
+      showToast("Section heading updated successfully!", "success");
+    } catch (err) {
+      console.error(err);
+      showToast("Error updating section heading", "error");
+    } finally {
+      setSavingHeading(false);
     }
   };
 
@@ -78,12 +126,14 @@ export default function AdminClientsPage() {
         
         // Refresh list
         fetchClients();
+        showToast("Brand logo added successfully!", "success");
       } else {
         const errorData = await res.json();
-        alert(errorData.error || "Failed to add client logo.");
+        showToast(errorData.error || "Failed to add client logo.", "error");
       }
     } catch (err) {
       console.error(err);
+      showToast("An error occurred while adding brand.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -141,8 +191,19 @@ export default function AdminClientsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
+    <div className="flex flex-col gap-6 pb-12 relative">
       
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className={`fixed top-4 right-4 z-[300] px-6 py-3 rounded-md shadow-2xl border font-bold text-sm tracking-widest uppercase transition-all animate-in slide-in-from-top-4 ${
+          toast.type === "error" 
+            ? "bg-red-500/20 text-red-400 border-red-500/30" 
+            : "bg-green-500/20 text-green-400 border-green-500/30"
+        }`}>
+          {toast.message}
+        </div>
+      )}
+
       {/* Header */}
       <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border border-[#1a1a1a] rounded-xl p-4 flex flex-col shadow-xl mt-2">
         <h1 className="text-xl font-bold text-white">Manage Client Brands</h1>
@@ -152,7 +213,34 @@ export default function AdminClientsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left: Upload Form */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 flex flex-col gap-6">
+          
+          {/* Section Settings */}
+          <form onSubmit={handleSaveHeading} className="bg-[#0a0a0a] border border-white/10 rounded-xl p-6 flex flex-col gap-6">
+            <h2 className="text-lg font-bold text-white uppercase tracking-widest border-b border-white/10 pb-4">Section Settings</h2>
+            
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Section Heading</label>
+              <input 
+                type="text" 
+                value={sectionHeading}
+                onChange={(e) => setSectionHeading(e.target.value)}
+                placeholder="e.g. Our Clients"
+                className="w-full bg-[#111] border border-[#222] text-white text-sm rounded-md px-4 py-3 focus:outline-none focus:border-gold/50 transition-colors"
+                required
+              />
+            </div>
+            
+            <button 
+              type="submit" 
+              disabled={savingHeading}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-widest rounded-md transition-colors mt-2"
+            >
+              {savingHeading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 stroke-[2]" />} 
+              {savingHeading ? "Saving..." : "Save Heading"}
+            </button>
+          </form>
+
           <form onSubmit={handleSubmit} className="bg-[#0a0a0a] border border-white/10 rounded-xl p-6 flex flex-col gap-6 sticky top-28">
             <h2 className="text-lg font-bold text-white uppercase tracking-widest border-b border-white/10 pb-4">Add New Brand</h2>
             

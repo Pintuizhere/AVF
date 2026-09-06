@@ -14,9 +14,36 @@ export default function AdminTestimonialsPage() {
   const fileInputRef = useRef(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
+  // Section Settings State
+  const [sectionVisible, setSectionVisible] = useState(true);
+  const [savingSettings, setSavingSettings] = useState(false);
+  
+  // UI State
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: "", type }), 3000);
+  };
+
   useEffect(() => {
     fetchItems();
+    fetchSettings();
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.testimonialsSectionVisible !== undefined) {
+          setSectionVisible(data.testimonialsSectionVisible);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load settings:", err);
+    }
+  };
 
   const fetchItems = async () => {
     try {
@@ -66,6 +93,31 @@ export default function AdminTestimonialsPage() {
     }
   };
 
+  const handleToggleVisibility = async () => {
+    setSavingSettings(true);
+    const newValue = !sectionVisible;
+    const token = localStorage.getItem("adminToken");
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ testimonialsSectionVisible: newValue }),
+      });
+      if (res.ok) {
+        setSectionVisible(newValue);
+        showToast(`Testimonials section is now ${newValue ? 'Visible' : 'Hidden'}`, "success");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Error updating section visibility", "error");
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -111,15 +163,38 @@ export default function AdminTestimonialsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
+    <div className="flex flex-col gap-6 pb-12 relative">
       
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className={`fixed top-4 right-4 z-[300] px-6 py-3 rounded-md shadow-2xl border font-bold text-sm tracking-widest uppercase transition-all animate-in slide-in-from-top-4 ${
+          toast.type === "error" 
+            ? "bg-red-500/20 text-red-400 border-red-500/30" 
+            : "bg-green-500/20 text-green-400 border-green-500/30"
+        }`}>
+          {toast.message}
+        </div>
+      )}
+
       {/* Floating Action Bar */}
       <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border border-[#1a1a1a] rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl mt-2">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold text-white">Manage Testimonials</h1>
           <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Live WYSIWYG Editor. Click directly on text/rating to edit (auto-saves on blur).</p>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div className="flex items-center justify-end gap-2 sm:gap-3 w-full sm:w-auto">
+          <button
+            onClick={handleToggleVisibility}
+            disabled={savingSettings}
+            className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-md transition-colors ${
+              sectionVisible 
+                ? "bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20" 
+                : "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20"
+            }`}
+          >
+            {savingSettings ? <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" /> : null}
+            {sectionVisible ? "Section: ON" : "Section: OFF"}
+          </button>
           {!isAdding && (
             <button 
               onClick={() => setIsAdding(true)}

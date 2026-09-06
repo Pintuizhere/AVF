@@ -8,6 +8,7 @@ export default function ReviewsSection() {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(3);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,15 +38,28 @@ export default function ReviewsSection() {
 
   const fetchTestimonials = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials`);
-      const data = await res.json();
+      const [testRes, settingsRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`)
+      ]);
+      const data = await testRes.json();
       setReviews(data);
+
+      if (settingsRes.ok) {
+        const settingsData = await settingsRes.json();
+        if (settingsData.testimonialsSectionVisible !== undefined) {
+          setIsVisible(settingsData.testimonialsSectionVisible);
+        }
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  if (!isVisible) return null;
+
   return (
     <section className="bg-[#0d0d0d] text-white py-16 md:py-32 px-6 overflow-hidden">
       <div className="container mx-auto max-w-5xl">

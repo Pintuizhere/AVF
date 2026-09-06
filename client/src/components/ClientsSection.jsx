@@ -4,18 +4,32 @@ import { useState, useEffect } from "react";
 
 export default function ClientsSection() {
   const [brands, setBrands] = useState([]);
+  const [heading, setHeading] = useState("Our Clients");
 
   useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients?t=` + Date.now());
-        const data = await res.json();
-        setBrands(data);
+        const [brandsRes, settingsRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients?t=` + Date.now()),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings?t=` + Date.now())
+        ]);
+        
+        if (brandsRes.ok) {
+          const brandsData = await brandsRes.json();
+          setBrands(brandsData);
+        }
+
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          if (settingsData.clientsSectionHeading) {
+            setHeading(settingsData.clientsSectionHeading);
+          }
+        }
       } catch (err) {
-        console.error("Failed to load client logos", err);
+        console.error("Failed to load client data", err);
       }
     };
-    fetchBrands();
+    fetchData();
   }, []);
 
   if (brands.length === 0) return null;
@@ -27,7 +41,7 @@ export default function ClientsSection() {
       <div className="container mx-auto max-w-5xl px-6">
         <div className="flex justify-center mb-10">
           <h3 className="font-bold text-sm sm:text-base tracking-[0.2em] uppercase bg-[#fbbf24] px-4 py-2 text-black shadow-sm">
-            Trusted By Amazing Brands
+            {heading}
           </h3>
         </div>
       </div>
