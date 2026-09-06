@@ -41,7 +41,7 @@ export default function BtsGallerySection() {
 
   return (
     <section id="gallery" className="relative w-full bg-[#050505] py-24 md:py-32 z-20">
-      <div className="container mx-auto px-4 md:px-8 lg:px-12 max-w-[1600px]">
+      <div className="w-full px-6 md:px-0 lg:pl-10 lg:pr-2 md:w-[96%] max-w-[1400px] mx-auto">
         
         {/* Minimal Header */}
         <div className="flex flex-col items-center justify-center text-center mb-16 md:mb-24">
