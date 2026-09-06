@@ -19,7 +19,8 @@ export default function AdminAddProjectWYSIWYG() {
     category: "DOCUMENTARIES",
     year: new Date().getFullYear().toString(),
     brief: "",
-    mediaUrl: ""
+    mediaUrl: "",
+    aspect: "aspect-[16/9]"
   });
   const [inputType, setInputType] = useState('file'); // 'file' or 'url'
   const [mediaFile, setMediaFile] = useState(null);
@@ -223,6 +224,25 @@ export default function AdminAddProjectWYSIWYG() {
                   placeholder="auto-generated-slug"
                   className="bg-transparent text-white focus:outline-none focus:text-gold border-b border-transparent focus:border-gold/50 w-full md:w-64"
                 />
+              </div>
+
+              {/* Aspect Ratio Selector */}
+              <div className="flex items-center gap-4 mt-6">
+                <span className="text-[10px] text-neutral-500 font-bold tracking-widest uppercase">Grid Layout Aspect Ratio</span>
+                <div className="flex bg-[#111] border border-[#222] rounded-md p-1 w-fit">
+                  <button 
+                    onClick={() => setFormData(prev => ({ ...prev, aspect: 'aspect-[16/9]' }))}
+                    className={`flex items-center justify-center px-4 py-2 rounded text-[10px] font-bold uppercase tracking-wider transition-colors ${formData.aspect === 'aspect-[16/9]' ? 'bg-[#222] text-white' : 'text-neutral-500 hover:text-white'}`}
+                  >
+                    16:9 (Horizontal)
+                  </button>
+                  <button 
+                    onClick={() => setFormData(prev => ({ ...prev, aspect: 'aspect-[9/16]' }))}
+                    className={`flex items-center justify-center px-4 py-2 rounded text-[10px] font-bold uppercase tracking-wider transition-colors ${formData.aspect === 'aspect-[9/16]' ? 'bg-[#222] text-white' : 'text-neutral-500 hover:text-white'}`}
+                  >
+                    9:16 (Vertical)
+                  </button>
+                </div>
               </div>
             </div>
 

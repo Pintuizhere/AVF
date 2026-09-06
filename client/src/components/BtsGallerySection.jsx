@@ -64,16 +64,18 @@ export default function BtsGallerySection() {
             No Behind The Scenes content yet.
           </div>
         ) : (
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-8 mt-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 auto-rows-[200px] md:auto-rows-[300px] grid-flow-dense mt-8">
             {currentItems.map((media) => {
+              const isVertical = media.aspect === 'aspect-[9/16]' || media.aspect === 'aspect-[4/5]';
+              const aspectClass = isVertical ? 'col-span-1 row-span-2' : 'col-span-2 row-span-1';
               
               const MediaContent = (
                 <div 
                   onClick={() => !media.url && setSelectedMedia(media)}
-                  className={`break-inside-avoid relative w-full bg-white p-2 md:p-3 border-2 border-black shadow-[6px_6px_0px_0px_#fca603] md:shadow-[8px_8px_0px_0px_#fca603] group transition-all duration-300 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_#fca603] md:hover:shadow-[12px_12px_0px_0px_#fca603] mb-8 md:mb-10 ${!media.url ? 'cursor-pointer' : ''}`}
+                  className={`relative w-full h-full bg-black group transition-all duration-300 border border-neutral-900 overflow-hidden ${!media.url ? 'cursor-pointer' : ''}`}
                 >
                   {/* Inner Media Container */}
-                  <div className={`relative w-full ${media.aspect} overflow-hidden bg-[#111] border border-black`}>
+                  <div className={`relative w-full h-full overflow-hidden bg-[#111]`}>
                     
                     {media.type === 'video' ? (
                        <div className="w-full h-full bg-black relative flex items-center justify-center filter grayscale-[0.3] contrast-125 group-hover:grayscale-0 transition-all duration-700 ease-out">
@@ -98,11 +100,11 @@ export default function BtsGallerySection() {
 
               // Wrap in an anchor tag if a URL exists
               return media.url ? (
-                <Link href={media.url} key={media._id} target="_blank" rel="noopener noreferrer" className="block outline-none">
+                <Link href={media.url} key={media._id} target="_blank" rel="noopener noreferrer" className={`block outline-none ${aspectClass}`}>
                   {MediaContent}
                 </Link>
               ) : (
-                <div key={media._id}>{MediaContent}</div>
+                <div key={media._id} className={aspectClass}>{MediaContent}</div>
               );
 
             })}

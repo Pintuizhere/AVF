@@ -84,17 +84,20 @@ export default function WorkGridContainer({ customCategories = [], projects = []
         <div className="w-full px-6 md:px-0 md:w-[96%] max-w-[1400px] mx-auto">
           {filteredProjects.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-0 auto-rows-[200px] md:auto-rows-[300px] grid-flow-dense border border-neutral-800">
                 {currentProjects.map((project, index) => {
                   const identifier = project.slug || project._id;
+                  const isVertical = project.aspect === 'aspect-[9/16]';
+                  const aspectClass = isVertical ? 'col-span-1 row-span-2' : 'col-span-2 row-span-1';
+
                   return (
                     <Link 
                       href={`/our-work/${identifier}`}
                       key={index} 
-                      className="relative group w-full aspect-[4/3] p-2 md:p-3 bg-[#131313] cursor-pointer border border-neutral-800 rounded-sm flex flex-col justify-center shadow-[0_5px_20px_rgba(0,0,0,0.8)] hover:border-neutral-600 transition-colors duration-500"
+                      className={`relative group w-full h-full bg-[#131313] cursor-pointer border border-neutral-800 flex flex-col justify-center overflow-hidden hover:z-10 transition-colors duration-500 ${aspectClass}`}
                     >
                       {/* Inner Frame */}
-                      <div className="relative w-full h-full rounded-sm overflow-hidden bg-black border border-[#222] group-hover:border-neutral-700 transition-colors duration-500">
+                      <div className="relative w-full h-full overflow-hidden bg-black transition-colors duration-500">
                         <Image
                           src={project.image || project.mediaUrl}
                           alt={project.title}
@@ -111,9 +114,9 @@ export default function WorkGridContainer({ customCategories = [], projects = []
                           {/* Left Side: Category and Title */}
                           <div className="flex flex-col gap-1 md:gap-1.5 pr-4">
                             <span className="text-gold text-[8px] md:text-[9px] font-bold tracking-[0.2em] uppercase">
-                              {project.category || project.categoryTitle || 'PROJECT'} / {project.year || "2024"}
+                              {project.category || project.categoryTitle || 'PROJECT'}
                             </span>
-                            <h3 className="text-[26px] md:text-[32px] font-bebas tracking-wide text-white uppercase leading-[0.9] group-hover:text-gold transition-colors duration-500">
+                            <h3 className={`${isVertical ? 'text-xl md:text-2xl' : 'text-[26px] md:text-[32px]'} font-bebas tracking-wide text-white uppercase leading-[0.9] group-hover:text-gold transition-colors duration-500`}>
                               {project.title}
                             </h3>
                           </div>

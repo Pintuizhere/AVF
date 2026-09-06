@@ -6,7 +6,7 @@ const { invalidateCache } = require("../middleware/cache");
 // @access  Private (Admin only)
 const createProject = async (req, res) => {
   try {
-    const { title, slug, client, category, year, brief, mediaUrl: bodyMediaUrl } = req.body;
+    const { title, slug, client, category, year, brief, mediaUrl: bodyMediaUrl, aspect } = req.body;
 
     let mediaUrl = "";
     let mediaType = "image";
@@ -37,6 +37,7 @@ const createProject = async (req, res) => {
       brief,
       mediaUrl,
       mediaType,
+      aspect: aspect || "aspect-[16/9]",
     });
 
     res.status(201).json(project);

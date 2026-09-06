@@ -13,7 +13,8 @@ const projectSchema = new mongoose.Schema({
     fps: { type: String }
   },
   mediaUrl: { type: String, required: true },
-  mediaType: { type: String, enum: ["image", "video"], required: true }
+  mediaType: { type: String, enum: ["image", "video"], required: true },
+  aspect: { type: String, default: "aspect-[16/9]" }
 }, {
   timestamps: true
 });
