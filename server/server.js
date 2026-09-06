@@ -40,6 +40,7 @@ app.use("/api/abouthero", require("./routes/aboutHeroRoutes"));
 app.use("/api/aboutstory", require("./routes/aboutStoryRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/social-links", require("./routes/socialLinkRoutes"));
+app.use("/api/settings", require("./routes/settingsRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

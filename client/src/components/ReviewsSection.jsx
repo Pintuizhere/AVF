@@ -7,32 +7,33 @@ export default function ReviewsSection() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCards, setVisibleCards] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setVisibleCards(window.innerWidth >= 768 ? 3 : 1);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     fetchTestimonials();
   }, []);
 
   useEffect(() => {
-    if (reviews.length <= 1) return;
+    if (reviews.length <= visibleCards) return;
     
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
-        // Determine how many cards are visible based on standard md breakpoint (768px)
-        const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
-        const visibleCards = isDesktop ? 3 : 1;
-        
-        // If we only have enough cards to fill the screen (or fewer), don't slide
-        if (reviews.length <= visibleCards) return prev;
-        
-        // The maximum index we can slide to without showing empty space at the end
-        const maxIndex = reviews.length - visibleCards;
-        
+        const maxIndex = Math.ceil(reviews.length / visibleCards) - 1;
         return prev >= maxIndex ? 0 : prev + 1;
       });
     }, 4000);
     
     return () => clearInterval(interval);
-  }, [reviews.length]);
+  }, [reviews.length, visibleCards]);
 
   const fetchTestimonials = async () => {
     try {
@@ -69,10 +70,8 @@ export default function ReviewsSection() {
             </button>
             <button 
               onClick={() => {
-                const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
-                const visibleCards = isDesktop ? 3 : 1;
-                const maxIndex = Math.max(0, reviews.length - visibleCards);
-                setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+                const maxIndex = Math.ceil(reviews.length / visibleCards) - 1;
+                setCurrentIndex(prev => Math.min(Math.max(0, maxIndex), prev + 1));
               }}
               className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-black hover:bg-gold hover:border-gold transition-all"
             >
@@ -136,16 +135,16 @@ export default function ReviewsSection() {
             </div>
 
             {/* Bottom Dots */}
-            {reviews.length > 1 && (
+            {Math.ceil(reviews.length / visibleCards) > 1 && (
               <div className="flex justify-center gap-3 mt-12">
-                {reviews.map((_, idx) => (
+                {Array.from({ length: Math.ceil(reviews.length / visibleCards) }).map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
                     className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                       currentIndex === idx ? "bg-gold scale-125" : "bg-neutral-700 hover:bg-neutral-500"
                     }`}
-                    aria-label={`Go to slide ${idx + 1}`}
+                    aria-label={`Go to page ${idx + 1}`}
                   />
                 ))}
               </div>

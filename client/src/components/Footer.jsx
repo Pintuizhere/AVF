@@ -7,27 +7,27 @@ import Link from "next/link";
 
 const FacebookIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.61l.39-4H14V7a1 1 0 0 1 1-1h3z"/>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.61l.39-4H14V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
 const InstagramIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
   </svg>
 );
 const YoutubeIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
   </svg>
 );
 const LinkedinIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-    <rect x="2" y="9" width="4" height="12"/>
-    <circle cx="4" cy="4" r="2"/>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
   </svg>
 );
 
@@ -66,10 +66,10 @@ export default function Footer({ hideCta = false }) {
   ];
 
   return (
-    <footer id="contact" className="relative bg-black pt-24 pb-12 overflow-hidden border-t border-white/10 text-white">
+    <footer id="contact" className="relative bg-black pt-24 pb-5 overflow-hidden border-t border-white/10 text-white">
       {/* Background cinematic elements */}
       <div className="absolute top-0 left-0 w-full h-full z-0 opacity-20 pointer-events-none">
-        <Image 
+        <Image
           src="/images/hero-bg.jpg"
           alt="Cinematic Background"
           fill
@@ -78,20 +78,20 @@ export default function Footer({ hideCta = false }) {
       </div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black via-black/80 to-transparent z-0 pointer-events-none" />
       <div className="absolute top-0 left-0 w-full h-full bg-noise opacity-50 z-0 pointer-events-none mix-blend-overlay" />
-      
+
       {!hideCta && (
         <div className="container mx-auto px-6 max-w-5xl relative z-10 mb-12 mt-8">
           <div className="relative p-8 md:py-12 md:px-16 group border border-white/10 hover:border-white/20 transition-colors duration-500 overflow-hidden">
-            
+
             {/* Corner Brackets */}
             <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-gold z-20"></div>
             <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-gold z-20"></div>
             <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-gold z-20"></div>
             <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-gold z-20"></div>
-            
+
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
-              <Image 
+              <Image
                 src="/images/hero-bg.jpg"
                 alt="Background"
                 fill
@@ -101,40 +101,40 @@ export default function Footer({ hideCta = false }) {
             </div>
 
             <div className="relative z-10 flex flex-col items-center text-center gap-4 max-w-3xl mx-auto">
-              
+
               <span className="font-script text-gold text-3xl md:text-4xl font-bold drop-shadow-md">
                 Let's Create
               </span>
-              
+
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight uppercase">
                 Something Extraordinary<br />Together
               </h2>
-              
+
               <p className="text-neutral-400 text-sm md:text-base leading-relaxed mt-2 max-w-xl">
                 We are committed to creating premium visual experiences and telling stories with trust, quality, and excellence. Let's bring your vision to life.
               </p>
-              
+
               <button className="mt-4 bg-gold text-black border border-gold hover:bg-white hover:border-white px-8 py-4 font-bold text-xs tracking-widest uppercase transition-all duration-300 flex items-center gap-3 group/btn shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                 Start Your Project
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
-            
+
           </div>
         </div>
       )}
 
       <div className={`container mx-auto px-6 max-w-7xl relative z-10 ${!hideCta ? 'mt-24 pt-16 border-t border-white/10' : 'pt-8'}`}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 max-w-5xl mx-auto mb-16">
-          
+
           {/* Column 1: Brand Info */}
           <div className="flex flex-col gap-6">
             <div className="relative w-44 h-24">
-              <Image 
-                src="/images/logo.png" 
-                alt="AVF Logo" 
-                fill 
-                className="object-contain object-left" 
+              <Image
+                src="/images/logo.png"
+                alt="AVF Logo"
+                fill
+                className="object-contain object-left"
               />
             </div>
             <p className="text-sm text-neutral-400 leading-relaxed">
@@ -204,7 +204,7 @@ export default function Footer({ hideCta = false }) {
                 <Phone className="w-5 h-5 text-gold shrink-0 mt-0.5" />
                 <a href={`tel:${footerData.phoneNumbers.split('\n')[0]}`} className="text-sm text-neutral-400 hover:text-white transition-colors">
                   {footerData.phoneNumbers.split('\n').map((num, i) => (
-                    <span key={i}>{num}<br/></span>
+                    <span key={i}>{num}<br /></span>
                   ))}
                 </a>
               </div>
@@ -218,13 +218,13 @@ export default function Footer({ hideCta = false }) {
                 <MapPin className="w-5 h-5 text-gold shrink-0 mt-0.5" />
                 <span className="text-sm text-neutral-400 leading-relaxed">
                   {footerData.address.split('\n').map((line, i) => (
-                    <span key={i}>{line}<br/></span>
+                    <span key={i}>{line}<br /></span>
                   ))}
                 </span>
               </div>
             </div>
           </div>
-          
+
         </div>
 
         {/* Bottom Copyright Bar */}

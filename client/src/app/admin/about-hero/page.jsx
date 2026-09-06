@@ -14,7 +14,6 @@ export default function AdminAboutHero() {
   const [formData, setFormData] = useState({
     badge: "",
     title: "",
-    subtitle: "",
     content: "",
     signatureName: "",
     signatureRole: "",
@@ -40,7 +39,6 @@ export default function AdminAboutHero() {
         setFormData({
           badge: data.badge || "",
           title: data.title || "",
-          subtitle: data.subtitle || "",
           content: data.content || "",
           signatureName: data.signatureName || "",
           signatureRole: data.signatureRole || "",
@@ -76,7 +74,6 @@ export default function AdminAboutHero() {
     const submitData = new FormData();
     submitData.append("badge", formData.badge);
     submitData.append("title", formData.title);
-    submitData.append("subtitle", formData.subtitle);
     submitData.append("content", formData.content);
     submitData.append("signatureName", formData.signatureName);
     submitData.append("signatureRole", formData.signatureRole);
@@ -183,18 +180,7 @@ export default function AdminAboutHero() {
               />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Subtitle (Script Font)</label>
-              <input 
-                type="text" 
-                name="subtitle"
-                value={formData.subtitle}
-                onChange={handleChange}
-                placeholder="Founder. Filmmaker. Dreamer."
-                className="w-full bg-[#111] border border-[#222] text-white text-sm rounded-md px-4 py-3 focus:outline-none focus:border-gold/50 transition-colors"
-              />
-            </div>
-            
+
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Main Paragraph</label>
               <textarea 

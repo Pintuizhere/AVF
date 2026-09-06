@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import StatsSection from "./StatsSection";
+import InlineVideoPlayer from "./InlineVideoPlayer";
 
 export default function FeaturedSection() {
   const scrollContainerRefHorizontal = useRef(null);
@@ -12,14 +13,22 @@ export default function FeaturedSection() {
   const [featuredItems, setFeaturedItems] = useState([]);
   const [shortsItems, setShortsItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
+  
+  // Track which card is currently playing video
+  const [playingCardId, setPlayingCardId] = useState(null);
 
   useEffect(() => {
     Promise.all([
       fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured`).then(res => res.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts`).then(res => res.json())
-    ]).then(([featuredData, shortsData]) => {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts`).then(res => res.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`).then(res => res.json())
+    ]).then(([featuredData, shortsData, settingsData]) => {
       setFeaturedItems(featuredData);
       setShortsItems(shortsData);
+      if (settingsData && settingsData.featuredSectionVisible !== undefined) {
+        setIsVisible(settingsData.featuredSectionVisible);
+      }
     }).catch(err => {
       console.error(err);
     }).finally(() => {
@@ -38,7 +47,7 @@ export default function FeaturedSection() {
   };
 
   if (loading) return null; // Or a subtle skeleton
-  if (featuredItems.length === 0 && shortsItems.length === 0) return null;
+  if (featuredItems.length === 0 && shortsItems.length === 0) return <StatsSection />;
 
   return (
     <section className="bg-black pt-10 md:pt-20 text-white relative overflow-hidden">
@@ -119,12 +128,13 @@ export default function FeaturedSection() {
 
               const className = "relative flex-none w-[240px] sm:w-[280px] md:w-[320px] aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden group snap-start cursor-pointer border border-white/10 hover:border-gold/50 transition-all duration-500 shadow-xl hover:shadow-[0_0_40px_rgba(255,215,0,0.15)] block";
               const uniqueKey = reel._id ? `${reel._id}-${index}` : `reel-${index}`;
+              const isPlaying = playingCardId === uniqueKey;
 
               if (reel.url) {
                 return (
-                  <Link key={uniqueKey} href={reel.url} target="_blank" className={className}>
-                    {content}
-                  </Link>
+                  <div key={uniqueKey} onClick={() => setPlayingCardId(uniqueKey)} className={className}>
+                    {isPlaying ? <InlineVideoPlayer url={reel.url} /> : content}
+                  </div>
                 );
               }
 
@@ -139,7 +149,7 @@ export default function FeaturedSection() {
       )}
 
       {/* FEATURED BLOCK (Horizontal) */}
-      {featuredItems.length > 0 && (
+      {isVisible && featuredItems.length > 0 && (
         <div className="container mx-auto px-6 max-w-5xl relative group z-10 mb-8">
 
           <div 
@@ -147,44 +157,59 @@ export default function FeaturedSection() {
             className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0 scroll-pl-6 md:scroll-pl-0"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {featuredItems.map((item) => (
-              <Link 
-                href={item.url ? item.url : "#"} 
-                target={item.url ? "_blank" : "_self"}
-                key={item._id} 
-                className="relative flex-none w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] aspect-[16/9] rounded-xl overflow-hidden group/card snap-start cursor-pointer border border-neutral-800/50 hover:border-gold/30 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold/5 block"
-              >
-                <div className="absolute inset-0 z-0 bg-neutral-900">
-                  <img 
-                    src={item.src} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
-                  />
-                </div>
-                
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none z-0" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none z-0" />
+            {featuredItems.map((item, index) => {
+              const uniqueKey = item._id || `featured-${index}`;
+              const innerContent = (
+                <>
+                  <div className="absolute inset-0 z-0 bg-neutral-900">
+                    <img 
+                      src={item.src} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
+                    />
+                  </div>
+                  
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none z-0" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none z-0" />
 
-                {item.type === 'video' && (
-                  <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-                    <div className="w-16 h-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black transition-all duration-300 shadow-2xl scale-90 group-hover/card:scale-100">
-                      <Play className="w-6 h-6 ml-1 fill-current" />
+                  {item.type === 'video' && (
+                    <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
+                      <div className="w-16 h-16 rounded-full border border-white/20 bg-white/10 flex items-center justify-center group-hover/card:bg-gold group-hover/card:border-gold group-hover/card:text-black transition-all duration-300 shadow-2xl scale-90 group-hover/card:scale-100">
+                        <Play className="w-6 h-6 ml-1 fill-current" />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 z-10 flex flex-col justify-end p-6">
+                    <div className="transform translate-y-2 group-hover/card:translate-y-0 transition-transform duration-300">
+                      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold mb-2 block shadow-black drop-shadow-md">
+                        {item.category}
+                      </span>
+                      <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white drop-shadow-lg">
+                        {item.title}
+                      </h3>
                     </div>
                   </div>
-                )}
+                </>
+              );
 
-                <div className="absolute inset-0 z-10 flex flex-col justify-end p-6">
-                  <div className="transform translate-y-2 group-hover/card:translate-y-0 transition-transform duration-300">
-                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold mb-2 block shadow-black drop-shadow-md">
-                      {item.category}
-                    </span>
-                    <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white drop-shadow-lg">
-                      {item.title}
-                    </h3>
+              const className = "relative flex-none w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] aspect-[16/9] rounded-xl overflow-hidden group/card snap-start cursor-pointer border border-neutral-800/50 hover:border-gold/30 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-gold/5 block";
+              const isPlaying = playingCardId === uniqueKey;
+
+              if (item.url) {
+                return (
+                  <div key={uniqueKey} onClick={() => setPlayingCardId(uniqueKey)} className={className}>
+                    {isPlaying ? <InlineVideoPlayer url={item.url} /> : innerContent}
                   </div>
-                </div>
-              </Link>
-            ))}
+                );
+              }
+
+              return (
+                <Link key={uniqueKey} href="#" className={className}>
+                  {innerContent}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

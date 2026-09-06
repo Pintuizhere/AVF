@@ -3,13 +3,15 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Loader2 } from "lucide-react";
+import { ArrowUpRight, Loader2, Play } from "lucide-react";
+import InlineVideoPlayer from "./InlineVideoPlayer";
 
 export default function ExploreWorkSection() {
   const [activeTab, setActiveTab] = useState("ALL");
   const [workItems, setWorkItems] = useState([]);
   const [categories, setCategories] = useState(["ALL"]);
   const [loading, setLoading] = useState(true);
+  const [playingCardId, setPlayingCardId] = useState(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -34,6 +36,24 @@ export default function ExploreWorkSection() {
   }, []);
 
   const filteredWork = activeTab === "ALL" ? workItems : workItems.filter(w => w.category === activeTab);
+
+  const getThumbnail = (url, type) => {
+    if (!url) return "/images/services-bg.jpg";
+    if (type !== 'video') return url;
+    
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) {
+      let videoId = "";
+      if (lowerUrl.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1]?.split('&')[0];
+      } else if (lowerUrl.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      }
+      if (videoId) return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    }
+    // Fallback for vimeo/others (requires API for exact thumbnail, using placeholder)
+    return url.endsWith('.mp4') ? "/images/services-bg.jpg" : url;
+  };
 
   return (
     <section className="relative bg-[#050505] text-white pt-16 pb-16 md:pt-24 md:pb-32 px-6 overflow-hidden">
@@ -72,16 +92,30 @@ export default function ExploreWorkSection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-              {filteredWork.slice(0, 6).map((item) => (
-                <Link 
-                  href={`/our-work/${item.slug || item._id}`} 
+              {filteredWork.slice(0, 6).map((item) => {
+                const isVideo = item.mediaType === 'video';
+                const isPlaying = playingCardId === item._id;
+                
+                const containerProps = isVideo 
+                  ? { onClick: () => setPlayingCardId(item._id) }
+                  : { href: `/our-work/${item.slug || item._id}` };
+                
+                const ContainerComponent = isVideo ? "div" : Link;
+
+                return (
+                <ContainerComponent 
+                  {...containerProps}
                   key={item._id} 
                   className="relative group w-full aspect-[4/3] p-2 bg-[#131313] cursor-pointer border border-neutral-800 rounded-sm flex flex-col justify-center shadow-[0_5px_20px_rgba(0,0,0,0.8)] hover:border-neutral-600 transition-colors duration-500"
                 >
                   {/* Inner Frame */}
                   <div className="relative w-full h-full rounded-sm overflow-hidden bg-black border border-[#222] group-hover:border-neutral-700 transition-colors duration-500">
-                    <Image
-                      src={item.mediaUrl || "/images/services-bg.jpg"}
+                    {isPlaying ? (
+                      <InlineVideoPlayer url={item.mediaUrl} />
+                    ) : (
+                      <>
+                        <Image
+                          src={getThumbnail(item.mediaUrl, item.mediaType)}
                       alt={item.title}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-70 group-hover:opacity-100 grayscale-[30%] group-hover:grayscale-0"
@@ -103,14 +137,20 @@ export default function ExploreWorkSection() {
                         </h3>
                       </div>
 
-                      {/* Right Side: Arrow Icon */}
+                      {/* Right Side: Arrow Icon or Play Icon */}
                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shrink-0 group-hover:bg-gold transition-colors duration-500 shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
-                        <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
+                        {isVideo ? (
+                          <Play className="w-4 h-4 md:w-5 md:h-5 text-black fill-current ml-0.5" />
+                        ) : (
+                          <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 text-black stroke-[2.5]" />
+                        )}
                       </div>
                     </div>
+                      </>
+                    )}
                   </div>
-                </Link>
-              ))}
+                </ContainerComponent>
+              )})}
             </div>
           )}
 

@@ -11,11 +11,43 @@ export default function AdminFeaturedPage() {
   const [newMediaFile, setNewMediaFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchFeatured();
+    fetchSettings();
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`);
+      const data = await res.json();
+      if (data && data.featuredSectionVisible !== undefined) {
+        setIsVisible(data.featuredSectionVisible);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const toggleVisibility = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const newVisibility = !isVisible;
+      setIsVisible(newVisibility);
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ featuredSectionVisible: newVisibility })
+      });
+    } catch (err) {
+      console.error("Failed to update visibility", err);
+    }
+  };
 
   const fetchFeatured = async () => {
     try {
@@ -118,7 +150,18 @@ export default function AdminFeaturedPage() {
           <h1 className="text-xl font-bold text-white">Manage Featured Work</h1>
           <p className="text-[10px] sm:text-xs text-neutral-400 mt-1">Live WYSIWYG Editor. Click directly on text to edit (auto-saves on blur).</p>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto">
+          
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Show on Home</span>
+            <button 
+              onClick={toggleVisibility}
+              className={`w-12 h-6 rounded-full p-1 transition-colors relative flex items-center ${isVisible ? 'bg-gold' : 'bg-neutral-800 border border-neutral-600'}`}
+            >
+              <div className={`w-4 h-4 bg-white rounded-full shadow-md transition-transform ${isVisible ? 'translate-x-6' : 'translate-x-0'}`} />
+            </button>
+          </div>
+
           {!isAdding && (
             <button 
               onClick={() => setIsAdding(true)}
