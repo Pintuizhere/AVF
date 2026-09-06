@@ -60,37 +60,35 @@ export default function ServicesGridSection() {
             return (
               <div 
                 key={service._id || index} 
-                className="bg-[#0a0a0a] text-white rounded-sm overflow-hidden flex flex-col group relative shadow-xl border border-neutral-800 hover:border-gold transition-colors duration-500"
+                className="bg-[#0a0a0a] text-white rounded-sm overflow-hidden flex flex-col group relative shadow-xl border border-neutral-800 hover:border-gold transition-colors duration-500 h-[400px]"
               >
-                {/* Top Half Image */}
-                <div className="h-[240px] relative w-full overflow-hidden">
+                {/* Full Background Image */}
+                <div className="absolute inset-0 w-full h-full overflow-hidden">
                   {service.image ? (
                     <Image
                       src={service.image}
                       alt={service.title}
                       fill
-                      className="object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0"
+                      className="object-cover opacity-100 group-hover:scale-105 transition-all duration-700 grayscale group-hover:grayscale-0"
                     />
                   ) : (
                     <div className="w-full h-full bg-neutral-900 group-hover:bg-neutral-800 transition-colors" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a] z-10" />
+                  {/* Bottom Fade */}
+                  <div className="absolute bottom-0 left-0 w-full h-[180px] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent z-10 pointer-events-none" />
                 </div>
 
-                {/* Overlapping Icon */}
-                <div className="absolute top-[210px] left-1/2 -translate-x-1/2 w-14 h-14 rounded-full border border-gold bg-black flex items-center justify-center z-20 shadow-[0_0_15px_rgba(252,166,3,0.2)] group-hover:shadow-[0_0_20px_rgba(252,166,3,0.5)] transition-shadow">
-                  <Icon className="w-6 h-6 text-gold stroke-[1.5]" />
-                </div>
-
-                {/* Bottom Half Content */}
-                <div className="pt-12 pb-8 px-6 flex flex-col items-center text-center flex-1 z-10 relative bg-[#0a0a0a]">
-                  <h3 className="font-bebas text-2xl tracking-widest uppercase mb-4 text-white group-hover:text-gold transition-colors">
+                {/* Center Content Overlay */}
+                <div className="relative z-20 flex flex-col items-center justify-center h-full px-6">
+                  {/* Icon */}
+                  <div className="w-14 h-14 rounded-full border border-gold bg-black flex items-center justify-center shadow-[0_0_15px_rgba(252,166,3,0.2)] group-hover:shadow-[0_0_20px_rgba(252,166,3,0.5)] transition-shadow mb-4">
+                    <Icon className="w-6 h-6 text-gold stroke-[1.5]" />
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 className="font-bebas text-2xl tracking-widest uppercase text-white group-hover:text-gold transition-colors text-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">
                     {service.title}
                   </h3>
-                  
-                  <p className="text-xs text-neutral-400 leading-relaxed font-medium whitespace-pre-line flex-1">
-                    {service.description}
-                  </p>
                 </div>
               </div>
             );

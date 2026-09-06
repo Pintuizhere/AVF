@@ -106,8 +106,8 @@ export default function AdminServicesPage() {
   };
 
   const handleAddNewService = async () => {
-    if (!newItem.title || !newItem.description) {
-      alert("Title and Description are required.");
+    if (!newItem.title) {
+      alert("Title is required.");
       return;
     }
 
@@ -273,17 +273,6 @@ export default function AdminServicesPage() {
                 />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Description *</label>
-                <textarea 
-                  value={newItem.description}
-                  onChange={(e) => setNewItem({...newItem, description: e.target.value})}
-                  placeholder="Service description..." 
-                  rows={3}
-                  className="w-full bg-[#111] border border-[#222] text-white text-sm rounded-md px-4 py-2.5 focus:outline-none focus:border-gold/50 transition-colors"
-                />
-              </div>
-
               <div className="flex flex-col gap-2 mt-2">
                 <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Upload Background Image</label>
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
@@ -330,12 +319,9 @@ export default function AdminServicesPage() {
 
                 {/* Bottom Half Content */}
                 <div className="pt-10 pb-6 px-4 flex flex-col items-center text-center flex-1 z-10 relative bg-[#0a0a0a]">
-                  <h3 className="font-bebas text-xl tracking-widest uppercase mb-3 text-white">
+                  <h3 className="font-bebas text-xl tracking-widest uppercase text-white">
                     {newItem.title || "SERVICE TITLE"}
                   </h3>
-                  <p className="text-[10px] text-neutral-400 leading-relaxed font-medium">
-                    {newItem.description || "Service description goes here."}
-                  </p>
                 </div>
               </div>
             </div>
@@ -345,7 +331,7 @@ export default function AdminServicesPage() {
           <div className="mt-8 flex justify-end">
             <button 
               onClick={handleAddNewService}
-              disabled={submitting || !newItem.title || !newItem.description}
+              disabled={submitting || !newItem.title}
               className="flex items-center gap-2 px-6 py-3 bg-gold hover:bg-gold/90 disabled:opacity-50 disabled:cursor-not-allowed text-black text-xs font-bold uppercase tracking-widest rounded-md transition-colors"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4 stroke-[2]" />} 
@@ -433,17 +419,8 @@ export default function AdminServicesPage() {
                         value={service.title}
                         onChange={(e) => handleInputChangeLocal(service._id, 'title', e.target.value)}
                         onBlur={(e) => saveUpdateToBackend(service._id, 'title', e.target.value)}
-                        className="font-bebas text-xl md:text-2xl tracking-widest uppercase mb-3 md:mb-4 text-white hover:text-gold focus:text-gold transition-colors bg-transparent border-b border-transparent focus:border-gold/50 text-center w-full focus:outline-none placeholder:text-neutral-700"
+                        className="font-bebas text-xl md:text-2xl tracking-widest uppercase text-white hover:text-gold focus:text-gold transition-colors bg-transparent border-b border-transparent focus:border-gold/50 text-center w-full focus:outline-none placeholder:text-neutral-700"
                         placeholder="SERVICE TITLE"
-                      />
-                      
-                      <textarea
-                        value={service.description}
-                        onChange={(e) => handleTextareaChangeLocal(e, service._id)}
-                        onBlur={(e) => saveUpdateToBackend(service._id, 'description', e.target.value)}
-                        className="text-[10px] md:text-xs text-neutral-400 leading-relaxed font-medium flex-1 bg-transparent border border-transparent hover:border-[#222] focus:border-gold/50 rounded p-1 md:p-2 text-center w-full focus:outline-none resize-none overflow-hidden placeholder:text-neutral-700"
-                        rows={3}
-                        placeholder="Service description..."
                       />
 
                     </div>

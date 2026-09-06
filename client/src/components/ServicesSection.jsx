@@ -108,11 +108,6 @@ export default function ServicesSection() {
                       <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tight mb-1 transition-colors duration-500 ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
                         {svc.title}
                       </h3>
-                      {isActive && (
-                        <p className="text-sm md:text-base leading-relaxed text-neutral-400 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                          {svc.description}
-                        </p>
-                      )}
                     </div>
                   </div>
 
@@ -143,9 +138,6 @@ export default function ServicesSection() {
                           <h4 className="text-3xl font-black uppercase tracking-tighter text-white px-6 text-center drop-shadow-lg">
                             {svc.title}
                           </h4>
-                          <p className="text-gold font-script text-2xl mt-3 -rotate-2 drop-shadow-lg text-center px-4">
-                            {svc.description}
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -194,9 +186,6 @@ export default function ServicesSection() {
                       <h4 className="text-3xl xl:text-4xl font-black uppercase tracking-tighter text-white px-8 text-center drop-shadow-2xl">
                         {svc.title}
                       </h4>
-                      <p className="text-gold font-script text-2xl xl:text-3xl mt-4 -rotate-2 drop-shadow-lg text-center px-8">
-                        {svc.description}
-                      </p>
                     </div>
                   </div>
                 </div>

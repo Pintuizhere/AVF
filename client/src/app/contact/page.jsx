@@ -20,7 +20,7 @@ export default function ContactPage() {
 
       <ContactFeaturesSection />
 
-      <Footer />
+      <Footer hideCta={true} />
     </main>
   );
 }
