@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BtsHeroSection from "@/components/BtsHeroSection";
-import StatsSection from "@/components/StatsSection";
+
+
 import BtsGallerySection from "@/components/BtsGallerySection";
 
 export const metadata = {
@@ -14,9 +14,7 @@ export default function BtsPage() {
     <main className="min-h-screen bg-black text-white">
       <Navbar />
       
-      <BtsHeroSection />
-      
-      <StatsSection />
+
 
       <BtsGallerySection />
 

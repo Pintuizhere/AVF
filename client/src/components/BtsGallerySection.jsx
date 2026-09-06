@@ -44,7 +44,7 @@ export default function BtsGallerySection() {
       <div className="w-full px-6 md:px-0 lg:pl-10 lg:pr-2 md:w-[96%] max-w-[1400px] mx-auto">
         
         {/* Minimal Header */}
-        <div className="flex flex-col items-center justify-center text-center mb-16 md:mb-24">
+        <div className="flex flex-col items-center justify-center text-center mt-12 md:mt-20 mb-16 md:mb-24">
           <span className="text-gold text-xs font-bold tracking-[0.4em] uppercase mb-6 block">
             Exclusive
           </span>
