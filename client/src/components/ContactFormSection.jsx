@@ -107,7 +107,7 @@ export default function ContactFormSection() {
           
           {/* Left Column: Contact Details */}
           <div className="flex flex-col items-start pt-8">
-            <span className="font-script text-3xl text-gold mb-1 -rotate-2">Get In Touch</span>
+            <span className="font-bebas text-gold text-base md:text-lg tracking-widest uppercase mb-4 block">Get In Touch</span>
             <h2 className="text-5xl md:text-6xl font-bebas uppercase tracking-widest text-black leading-none mb-6">
               WE&apos;RE HERE TO HELP!
             </h2>
@@ -192,7 +192,7 @@ export default function ContactFormSection() {
                <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/20 pointer-events-none" />
                
                <div className="relative z-10 flex flex-col items-start mb-8">
-                 <span className="font-script text-2xl text-gold mb-1 -rotate-2">Send Us a Message</span>
+                 <span className="font-bebas text-gold text-base md:text-lg tracking-widest uppercase mb-4 block">Send Us a Message</span>
                  <h3 className="text-4xl md:text-5xl font-bebas uppercase tracking-widest text-white leading-none">
                    TELL US ABOUT YOUR PROJECT
                  </h3>

@@ -98,17 +98,16 @@ export default function AboutStorySection() {
 
         {/* Right: Text Content */}
         <div className="flex flex-col items-start z-10 w-full">
-          <span className="font-script text-gold text-2xl md:text-3xl mb-2 font-bold">{story.title}</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-tight mb-6">
+          <span className="font-bebas text-gold text-base md:text-lg tracking-widest uppercase mb-4 block">{story.title}</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-tight mb-6 flex flex-wrap gap-x-[0.1em] gap-y-[0.1em]">
             {story.heading?.split(' ').map((word, i) => {
               const uWord = word.toUpperCase();
-              if (uWord.includes('AVF')) {
-                return <span key={i} className="text-gold">{word} </span>;
-              }
-              if (uWord.includes('PRODUCTION')) {
-                return <span key={i} className="font-bebas text-black tracking-widest text-[1.1em] align-baseline">{word} </span>;
-              }
-              return word + ' ';
+              let isAvf = uWord.includes('AVF');
+              return (
+                <span key={i} className={isAvf ? "text-gold" : ""}>
+                  {word}
+                </span>
+              );
             })}
           </h2>
           <p className="text-neutral-800 leading-relaxed mb-10 text-sm max-w-lg font-medium whitespace-pre-wrap">

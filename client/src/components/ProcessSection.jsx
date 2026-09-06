@@ -21,7 +21,7 @@ export default function ProcessSection() {
       <div className="container mx-auto max-w-5xl relative z-10">
         
         <div className="text-left mb-16 md:mb-24">
-          <span className="font-script text-gold text-4xl md:text-5xl font-bold inline-block -rotate-2 mb-2 drop-shadow-sm ml-2">Our Process</span>
+          <span className="font-bebas text-gold text-4xl md:text-5xl uppercase tracking-widest inline-block mb-2 drop-shadow-sm ml-2">Our Process</span>
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-neutral-900">From Idea to Impact</h2>
         </div>
 

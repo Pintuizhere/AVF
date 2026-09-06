@@ -73,7 +73,7 @@ export default function ServicesSection() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
           <div>
-            <span className="font-script text-gold text-3xl md:text-4xl font-bold">What We Do</span>
+            <span className="font-bebas text-gold text-3xl md:text-4xl uppercase tracking-widest">What We Do</span>
             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mt-2">Our Services</h2>
           </div>
           {/* Desktop Button - hidden on mobile */}

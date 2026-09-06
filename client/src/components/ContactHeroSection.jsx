@@ -40,7 +40,7 @@ export default function ContactHeroSection() {
 
       <div className="container mx-auto px-6 max-w-6xl relative z-10 flex flex-col mt-4 md:mt-8">
         <div className="max-w-3xl flex flex-col items-start gap-2 md:gap-3">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-script text-gold -rotate-2 ml-2 md:ml-4">
+          <h2 className="font-bebas text-gold text-base md:text-lg tracking-widest uppercase ml-2 md:ml-4">
             Let&apos;s Connect
           </h2>
           

@@ -80,7 +80,6 @@ export default function TeamSection() {
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
         <div className="flex flex-col items-center justify-center text-center mb-16">
-          <span className="font-script text-3xl text-gold mb-2 -rotate-2">The Visionaries</span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bebas uppercase tracking-widest text-white leading-none">
             Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-600">Team</span>
           </h2>

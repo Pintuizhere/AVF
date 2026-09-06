@@ -61,7 +61,7 @@ export default function ExploreWorkSection() {
         
         {/* Header */}
         <div className="flex flex-col items-center mb-16 text-center">
-          <span className="font-script text-gold text-3xl mb-2">Let&apos;s Work</span>
+          <span className="font-bebas text-gold text-3xl uppercase tracking-widest mb-2 block">Let&apos;s Work</span>
           <h2 className="text-5xl md:text-6xl font-bebas uppercase tracking-wider text-white">
             EXPLORE OUR WORK
           </h2>
