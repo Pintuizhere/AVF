@@ -46,21 +46,21 @@ export default function ClientsSection() {
         </div>
       </div>
         
-      {/* Infinite Marquee Container */}
-      <div className="flex w-full overflow-hidden group">
-        <div className="flex w-max animate-marquee">
+      {/* Infinite Marquee / Swipeable Container */}
+      <div className="flex w-full overflow-x-auto overflow-y-hidden group [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x">
+        <div className="flex w-max animate-marquee hover:[animation-play-state:paused] active:[animation-play-state:paused]">
           {/* Render the brand list twice for seamless infinite scrolling */}
           {[1, 2].map((setIndex) => (
             <div 
               key={setIndex}
-              className="flex items-center justify-around gap-6 md:gap-10 px-4 md:px-6 w-max"
+              className="flex items-center justify-around gap-8 md:gap-16 px-4 md:px-8 w-max"
             >
               {repeatedBrands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
-                  className="flex-none group/logo"
+                  className="flex-none group/logo snap-center"
                 >
-                  <div className="w-16 sm:w-20 md:w-24 h-8 sm:h-10 md:h-12 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
+                  <div className="w-24 sm:w-32 md:w-48 h-12 sm:h-16 md:h-24 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
                     <img 
                       src={brand.logoUrl} 
                       alt={brand.name} 
