@@ -83,6 +83,7 @@ export default function HeroSection() {
             src={heroData.bgMedia}
             alt="Cinematic Background"
             fill
+            sizes="100vw"
             className={`object-cover opacity-80 ${isReelPlaying ? 'animate-zoom-in-out' : ''}`}
             priority
           />
