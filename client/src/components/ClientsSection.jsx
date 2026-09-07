@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ClientsSection() {
   const [brands, setBrands] = useState([]);
   const [heading, setHeading] = useState("Our Clients");
+  const scrollRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +34,33 @@ export default function ClientsSection() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    let animationId;
+    const scrollContainer = scrollRef.current;
+
+    const scroll = () => {
+      if (!isPaused && scrollContainer) {
+        scrollContainer.scrollLeft += 1;
+        
+        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+          scrollContainer.scrollLeft -= scrollContainer.scrollWidth / 2;
+        }
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    if (brands.length > 0) {
+      animationId = requestAnimationFrame(scroll);
+    }
+    
+    return () => cancelAnimationFrame(animationId);
+  }, [isPaused, brands]);
+
   if (brands.length === 0) return null;
 
-  const repeatedBrands = Array(10).fill(brands).flat();
+  // Render enough brands to fill the screen, but avoid excessive DOM nodes
+  // 4 repetitions per block is safe and prevents mobile memory stacking
+  const repeatedBrands = Array(4).fill(brands).flat();
 
   return (
     <section className="bg-[#e9e6dc] text-black py-10 border-y-[6px] border-dotted border-[#111] overflow-hidden">
@@ -47,20 +73,27 @@ export default function ClientsSection() {
       </div>
         
       {/* Infinite Marquee / Swipeable Container */}
-      <div className="flex w-full overflow-x-auto overflow-y-hidden group [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x">
-        <div className="flex w-max animate-marquee hover:[animation-play-state:paused] active:[animation-play-state:paused]">
+      <div 
+        ref={scrollRef}
+        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setIsPaused(false)}
+      >
+        <div className="flex w-max">
           {/* Render the brand list twice for seamless infinite scrolling */}
           {[1, 2].map((setIndex) => (
             <div 
               key={setIndex}
-              className="flex items-center justify-around gap-4 md:gap-10 px-4 md:px-6 w-max"
+              className="flex items-center gap-6 md:gap-12 pr-6 md:pr-12 w-max flex-nowrap"
             >
               {repeatedBrands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
-                  className="flex-none group/logo snap-center"
+                  className="flex-none snap-center"
                 >
-                  <div className="w-24 sm:w-32 md:w-48 h-12 sm:h-16 md:h-24 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
+                  <div className="w-20 sm:w-28 md:w-40 h-10 sm:h-14 md:h-20 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
                     <img 
                       src={brand.logoUrl} 
                       alt={brand.name} 
@@ -86,16 +119,6 @@ export default function ClientsSection() {
           ))}
         </div>
       </div>
-      
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 350s linear infinite;
-        }
-      `}} />
     </section>
   );
 }

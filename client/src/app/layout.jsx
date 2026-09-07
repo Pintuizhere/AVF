@@ -31,7 +31,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "AVF PRODUCTION",
+  title: "AVF Production | Video Production House in Ranchi, Jharkhand",
   description: "Passionate Photography, Storytellers & Visual Artists",
 };
 
