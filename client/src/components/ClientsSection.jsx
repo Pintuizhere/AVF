@@ -75,7 +75,7 @@ export default function ClientsSection() {
       {/* Infinite Marquee / Swipeable Container */}
       <div 
         ref={scrollRef}
-        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x"
+        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={() => setIsPaused(true)}
@@ -91,7 +91,7 @@ export default function ClientsSection() {
               {repeatedBrands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
-                  className="flex-none snap-center"
+                  className="flex-none"
                 >
                   <div className="w-20 sm:w-28 md:w-40 h-10 sm:h-14 md:h-20 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
                     <img 

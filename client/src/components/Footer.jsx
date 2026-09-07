@@ -134,6 +134,7 @@ export default function Footer({ hideCta = false }) {
                 src="/images/logo.png"
                 alt="AVF Logo"
                 fill
+                sizes="(max-width: 768px) 176px, 176px"
                 className="object-contain object-left"
               />
             </div>
