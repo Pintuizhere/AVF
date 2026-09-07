@@ -53,7 +53,7 @@ export default function ClientsSection() {
           {[1, 2].map((setIndex) => (
             <div 
               key={setIndex}
-              className="flex items-center justify-around gap-8 md:gap-16 px-4 md:px-8 w-max"
+              className="flex items-center justify-around gap-4 md:gap-10 px-4 md:px-6 w-max"
             >
               {repeatedBrands.map((brand, i) => (
                 <div 
