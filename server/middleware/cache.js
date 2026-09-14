@@ -9,6 +9,11 @@ const cacheMiddleware = (keyPrefix) => {
     }
 
     try {
+      // Check if Redis is connected to avoid hanging
+      if (!redisClient.isReady) {
+        return next();
+      }
+
       // The key will be based on the prefix and the URL
       const cacheKey = `${keyPrefix}:${req.originalUrl}`;
       const cachedData = await redisClient.get(cacheKey);
@@ -40,6 +45,8 @@ const cacheMiddleware = (keyPrefix) => {
 // Utility to invalidate cache by prefix
 const invalidateCache = async (keyPrefix) => {
   try {
+    if (!redisClient.isReady) return;
+    
     const keys = await redisClient.keys(`${keyPrefix}:*`);
     if (keys.length > 0) {
       await redisClient.del(keys);

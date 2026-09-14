@@ -31,8 +31,53 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "AVF Production | Video Production House in Ranchi, Jharkhand",
-  description: "Passionate Photography, Storytellers & Visual Artists",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.avfproduction.com'),
+  title: {
+    default: "AVF Production | Video Production House in Ranchi, Jharkhand",
+    template: "%s | AVF Production"
+  },
+  description: "AVF Production is a passionate video production house in Ranchi, Jharkhand specializing in photography, storytelling, and visual arts.",
+  keywords: ["Video Production Ranchi", "Photography Jharkhand", "Filmmaking", "Visual Artists", "AVF Production", "Wedding Photography", "Commercial Video", "Corporate Video Ranchi"],
+  authors: [{ name: "AVF Production" }],
+  creator: "AVF Production",
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://www.avfproduction.com",
+    title: "AVF Production | Video Production House in Ranchi",
+    description: "Passionate Photography, Storytellers & Visual Artists based in Ranchi, Jharkhand.",
+    siteName: "AVF Production",
+    images: [
+      {
+        url: "/icon.png",
+        width: 800,
+        height: 600,
+        alt: "AVF Production Logo",
+      }
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AVF Production | Visual Artists & Storytellers",
+    description: "Passionate Photography, Storytellers & Visual Artists based in Ranchi.",
+    images: ["/icon.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({ children }) {
