@@ -8,9 +8,10 @@ const {
 } = require("../controllers/serviceController");
 const { upload } = require("../config/cloudinary");
 const { protect } = require("../middleware/authMiddleware");
+const { cacheMiddleware } = require("../middleware/cache");
 
 // Public route
-router.get("/", getAllServices);
+router.get("/", cacheMiddleware('services'), getAllServices);
 
 // Admin only routes
 router.post("/", protect, upload.single("media"), addService);

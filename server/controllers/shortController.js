@@ -1,4 +1,5 @@
 const Short = require("../models/Short");
+const { invalidateCache } = require("../middleware/cache");
 
 // @desc    Get all shorts
 // @route   GET /api/shorts
@@ -36,6 +37,7 @@ const addShort = async (req, res) => {
       url,
     });
 
+    await invalidateCache('shorts');
     res.status(201).json({ success: true, data: short });
   } catch (error) {
     console.error("Error creating short:", error);
@@ -67,6 +69,7 @@ const updateShort = async (req, res) => {
     }
 
     await short.save();
+    await invalidateCache('shorts');
     res.json({ success: true, data: short });
   } catch (error) {
     console.error("Error updating short:", error);
@@ -84,6 +87,7 @@ const deleteShort = async (req, res) => {
     if (!short) {
       return res.status(404).json({ message: "Short item not found" });
     }
+    await invalidateCache('shorts');
     res.json({ success: true, message: "Item deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server Error" });

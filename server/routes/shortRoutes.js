@@ -8,9 +8,10 @@ const {
 } = require("../controllers/shortController");
 const { upload } = require("../config/cloudinary");
 const { protect } = require("../middleware/authMiddleware");
+const { cacheMiddleware } = require("../middleware/cache");
 
 // Public route
-router.get("/", getAllShorts);
+router.get("/", cacheMiddleware('shorts'), getAllShorts);
 
 // Admin only routes
 router.post("/", protect, upload.single("media"), addShort);

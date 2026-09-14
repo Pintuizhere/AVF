@@ -1,4 +1,5 @@
 const Service = require("../models/Service");
+const { invalidateCache } = require("../middleware/cache");
 
 // @desc    Get all services
 // @route   GET /api/services
@@ -33,6 +34,7 @@ const addService = async (req, res) => {
       image,
     });
 
+    await invalidateCache('services');
     res.status(201).json({ success: true, data: service });
   } catch (error) {
     console.error("Error creating service:", error);
@@ -63,6 +65,7 @@ const updateService = async (req, res) => {
     }
 
     await service.save();
+    await invalidateCache('services');
     res.json({ success: true, data: service });
   } catch (error) {
     console.error("Error updating service:", error);
@@ -80,6 +83,7 @@ const deleteService = async (req, res) => {
     if (!service) {
       return res.status(404).json({ message: "Service item not found" });
     }
+    await invalidateCache('services');
     res.json({ success: true, message: "Item deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server Error" });

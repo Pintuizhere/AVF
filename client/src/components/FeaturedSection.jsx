@@ -102,6 +102,7 @@ export default function FeaturedSection() {
                       alt={reel.title} 
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-transparent to-black/90"></div>
@@ -166,6 +167,8 @@ export default function FeaturedSection() {
                       src={item.src} 
                       alt={item.title} 
                       className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   

@@ -102,10 +102,16 @@ export default function HeroSection() {
         <span className="tracking-widest font-bold">REC</span>
       </div>
 
-      {/* Audio meter bars mockup */}
-      <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-60 z-20 hidden md:flex">
+      {/* Sharp Transparent Audio Equalizer */}
+      <div className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-1 z-20 hidden md:flex">
         {[...Array(20)].map((_, i) => (
-          <div key={i} className={`h-1 w-6 ${i > 15 ? 'bg-red-500' : i > 10 ? 'bg-yellow-500' : 'bg-white'}`} />
+          <div 
+            key={i} 
+            className={`h-1 w-6 rounded-none ${i > 15 ? 'bg-red-500 text-red-500' : i > 10 ? 'bg-yellow-500 text-yellow-500' : 'bg-green-500 text-green-500'}`} 
+            style={{ 
+              animation: `eq-led 1.2s infinite alternate ease-in-out ${(19 - i) * 0.05}s` 
+            }}
+          />
         ))}
       </div>
 
@@ -191,6 +197,10 @@ export default function HeroSection() {
           0% { transform: scale(1); }
           50% { transform: scale(1.15); }
           100% { transform: scale(1); }
+        }
+        @keyframes eq-led {
+          0% { opacity: 0.15; box-shadow: none; }
+          100% { opacity: 1; box-shadow: 0 0 15px currentColor; }
         }
         .animate-fade-up {
           animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;

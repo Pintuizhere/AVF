@@ -59,8 +59,8 @@ export default function ClientsSection() {
   if (brands.length === 0) return null;
 
   // Render enough brands to fill the screen, but avoid excessive DOM nodes
-  // 4 repetitions per block is safe and prevents mobile memory stacking
-  const repeatedBrands = Array(4).fill(brands).flat();
+  // 2 repetitions per block is safer for mobile performance
+  const repeatedBrands = Array(2).fill(brands).flat();
 
   return (
     <section className="bg-[#f8f9fa] text-black py-16 overflow-hidden">
@@ -103,6 +103,7 @@ export default function ClientsSection() {
                       className="max-w-full max-h-full object-contain"
                       style={{ transform: `scale(${brand.zoom || 1.0})` }}
                       loading="lazy"
+                      decoding="async"
                       suppressHydrationWarning={true}
                       onError={(e) => {
                         e.target.style.display = 'none';

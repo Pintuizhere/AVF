@@ -1,5 +1,6 @@
 const ClientLogo = require('../models/ClientLogo');
 const { cloudinary } = require('../config/cloudinary');
+const { invalidateCache } = require('../middleware/cache');
 
 exports.getClients = async (req, res) => {
   try {
@@ -25,6 +26,7 @@ exports.createClient = async (req, res) => {
     });
 
     await newClient.save();
+    await invalidateCache('clients');
     res.status(201).json(newClient);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,6 +56,7 @@ exports.updateClient = async (req, res) => {
     }
 
     await client.save();
+    await invalidateCache('clients');
     res.json(client);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -85,6 +88,7 @@ exports.deleteClient = async (req, res) => {
     }
 
     await ClientLogo.findByIdAndDelete(id);
+    await invalidateCache('clients');
     res.json({ message: 'Client removed successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

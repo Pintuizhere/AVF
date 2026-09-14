@@ -1,4 +1,5 @@
 const Settings = require("../models/Settings");
+const { invalidateCache } = require("../middleware/cache");
 
 exports.getSettings = async (req, res) => {
   try {
@@ -30,6 +31,7 @@ exports.updateSettings = async (req, res) => {
     }
 
     await settings.save();
+    await invalidateCache('settings');
     res.json(settings);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

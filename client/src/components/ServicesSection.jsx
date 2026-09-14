@@ -118,7 +118,7 @@ export default function ServicesSection() {
                         {/* Background Image if uploaded */}
                         {svc.image && (
                           <div className="absolute inset-0 z-0">
-                            <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50" />
+                            <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50" loading="lazy" decoding="async" />
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70 z-10" />
@@ -166,7 +166,7 @@ export default function ServicesSection() {
                     {/* Background Image if uploaded */}
                     {svc.image && (
                       <div className="absolute inset-0 z-0">
-                        <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-1000" />
+                        <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-1000" loading="lazy" decoding="async" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70 z-10" />

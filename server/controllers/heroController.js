@@ -1,4 +1,5 @@
 const Hero = require('../models/Hero');
+const { invalidateCache } = require('../middleware/cache');
 
 // Get the hero settings (there should only be one)
 exports.getHero = async (req, res) => {
@@ -43,6 +44,7 @@ exports.updateHero = async (req, res) => {
     }
 
     await hero.save();
+    await invalidateCache('hero');
     res.json(hero);
   } catch (error) {
     res.status(500).json({ error: error.message });
