@@ -114,10 +114,10 @@ export default function Footer({ hideCta = false }) {
                 We are committed to creating premium visual experiences and telling stories with trust, quality, and excellence. Let's bring your vision to life.
               </p>
 
-              <button className="mt-4 bg-gold text-black border border-gold hover:bg-white hover:border-white px-8 py-4 font-bold text-xs tracking-widest uppercase transition-all duration-300 flex items-center gap-3 group/btn shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+              <Link href="/contact" className="mt-4 bg-gold text-black border border-gold hover:bg-white hover:border-white px-8 py-4 font-bold text-xs tracking-widest uppercase transition-all duration-300 flex items-center gap-3 group/btn shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                 Start Your Project
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+              </Link>
             </div>
 
           </div>

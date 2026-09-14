@@ -46,7 +46,7 @@ export default function FeaturedSection({ initialData }) {
         </div>
         
         <div className="flex items-center gap-4">
-          <Link href="/work" className="hidden md:flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-white hover:text-gold transition-colors group">
+          <Link href="/our-work" className="hidden md:flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-white hover:text-gold transition-colors group">
             View All
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -206,7 +206,7 @@ export default function FeaturedSection({ initialData }) {
       {/* Mobile View All Button */}
       <div className="flex md:hidden justify-center mt-2 mb-12 relative z-10 px-6">
         <Link 
-          href="/work" 
+          href="/our-work" 
           className="w-full py-4 rounded-full border border-white/20 flex items-center justify-center gap-2 text-sm font-bold tracking-wider uppercase text-white bg-neutral-900/50 hover:bg-white hover:text-black transition-all group"
         >
           View All Work

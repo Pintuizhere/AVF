@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { ArrowRight, Video, CalendarDays, Clapperboard, Package, Coffee, Camera, Film, CarFront, Calendar, MonitorPlay, Smartphone, Car } from "lucide-react";
 
 const iconMap = {
@@ -64,10 +65,10 @@ export default function ServicesSection({ initialData }) {
             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mt-2">Our Services</h2>
           </div>
           {/* Desktop Button - hidden on mobile */}
-          <button className="hidden md:flex items-center gap-2 text-gold text-sm font-bold tracking-widest uppercase hover:text-white transition-colors group">
+          <Link href="/services" className="hidden md:flex items-center gap-2 text-gold text-sm font-bold tracking-widest uppercase hover:text-white transition-colors group">
             View All Services
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
 
         {/* Content: Side-by-side Layout */}
@@ -184,10 +185,10 @@ export default function ServicesSection({ initialData }) {
 
         {/* Mobile Button (Bottom) */}
         <div className="mt-8 flex justify-center md:hidden">
-          <button className="flex items-center gap-2 text-gold text-[11px] font-bold tracking-widest uppercase hover:bg-white/5 transition-colors group border border-gold/20 px-8 py-4 rounded-full">
+          <Link href="/services" className="flex items-center gap-2 text-gold text-[11px] font-bold tracking-widest uppercase hover:bg-white/5 transition-colors group border border-gold/20 px-8 py-4 rounded-full">
             View All Services
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
 
       </div>
