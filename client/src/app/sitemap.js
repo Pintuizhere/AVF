@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.avfproduction.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://avfproduction.co';
 
   // Core static routes for your website
   const routes = [

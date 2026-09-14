@@ -31,7 +31,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.avfproduction.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://avfproduction.co'),
   title: {
     default: "AVF Production | Video Production House in Ranchi, Jharkhand",
     template: "%s | AVF Production"
@@ -43,7 +43,7 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://www.avfproduction.com",
+    url: "https://avfproduction.co",
     title: "AVF Production | Video Production House in Ranchi",
     description: "Passionate Photography, Storytellers & Visual Artists based in Ranchi, Jharkhand.",
     siteName: "AVF Production",
