@@ -63,41 +63,44 @@ export default function ClientsSection() {
   const repeatedBrands = Array(4).fill(brands).flat();
 
   return (
-    <section className="bg-[#e9e6dc] text-black py-10 border-y-[6px] border-dotted border-[#111] overflow-hidden">
-      <div className="container mx-auto max-w-5xl px-6">
-        <div className="flex justify-center mb-10">
-          <h3 className="font-bold text-sm sm:text-base tracking-[0.2em] uppercase bg-[#fbbf24] px-4 py-2 text-black shadow-sm">
-            {heading}
-          </h3>
+    <section className="bg-[#f8f9fa] text-black py-16 overflow-hidden">
+      <div className="container mx-auto max-w-[1400px] px-6 mb-10">
+        <div className="flex justify-start mb-10">
+          <div className="flex items-center gap-4">
+            <div className="h-[2px] w-12 bg-[#fbbf24]"></div>
+            <h3 className="font-extrabold text-sm sm:text-base tracking-[0.2em] uppercase text-black">
+              Our <span className="bg-[#fbbf24] text-black px-3 py-1 ml-1 shadow-sm skew-x-[-10deg] inline-block"><span className="skew-x-[10deg] inline-block">Clients</span></span>
+            </h3>
+          </div>
         </div>
       </div>
         
       {/* Infinite Marquee / Swipeable Container */}
       <div 
         ref={scrollRef}
-        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-4"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => setIsPaused(false)}
       >
-        <div className="flex w-max">
+        <div className="flex w-max pb-6">
           {/* Render the brand list twice for seamless infinite scrolling */}
           {[1, 2].map((setIndex) => (
             <div 
               key={setIndex}
-              className="flex items-center gap-6 md:gap-12 pr-6 md:pr-12 w-max flex-nowrap"
+              className="flex items-start gap-4 md:gap-8 pr-4 md:pr-8 w-max flex-nowrap"
             >
               {repeatedBrands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
-                  className="flex-none"
+                  className="flex-none flex flex-col items-center gap-4 w-[100px] sm:w-[130px] md:w-[150px]"
                 >
-                  <div className="w-20 sm:w-28 md:w-40 h-10 sm:h-14 md:h-20 relative flex items-center justify-center hover:scale-110 transition-all duration-300 ease-out cursor-pointer overflow-hidden">
+                  <div className="w-full aspect-square bg-white rounded-2xl md:rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100/50 flex items-center justify-center p-4 sm:p-6 hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
                     <img 
                       src={brand.logoUrl} 
                       alt={brand.name} 
-                      className="max-w-full max-h-full object-contain transition-transform duration-300"
+                      className="max-w-full max-h-full object-contain"
                       style={{ transform: `scale(${brand.zoom || 1.0})` }}
                       loading="lazy"
                       suppressHydrationWarning={true}
