@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import MobileMenu from "./MobileMenu";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -25,9 +26,18 @@ export default function Navbar() {
         {/* Left Side: Camera Lens & Logo */}
         <div className="relative z-10 flex items-center gap-6 pl-2 md:pl-6 lg:pl-10">
 
-          <div className="flex items-center gap-3">
-            <img src="/images/logo.png" alt="AVF Logo" className="h-[70px] w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
-          </div>
+          <Link href="/" className="relative z-50 flex items-center">
+            <div className="relative h-[70px] w-[140px]">
+              <Image 
+                src="/images/logo.png" 
+                alt="AVF Logo" 
+                fill
+                priority
+                sizes="140px"
+                className="object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" 
+              />
+            </div>
+          </Link>
         </div>
 
         {/* Center: Navigation Panel */}

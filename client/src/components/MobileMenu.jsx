@@ -107,8 +107,16 @@ export default function MobileMenu({ isOpen, onClose }) {
       >
         {/* Top Header */}
         <div className="flex items-center justify-between p-6 border-b border-[#1a1a1a]">
-          <div className="flex items-center">
-            <img src="/images/logo.png" alt="AVF Logo" className="h-[60px] w-auto object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" />
+          <div className="flex items-center gap-2">
+            <div className="relative h-[60px] w-[120px]">
+              <Image 
+                src="/images/logo.png" 
+                alt="AVF Logo" 
+                fill
+                sizes="120px"
+                className="object-contain drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" 
+              />
+            </div>
           </div>
           <button 
             onClick={onClose}

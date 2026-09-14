@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import StatsSection from "./StatsSection";
 import InlineVideoPlayer from "./InlineVideoPlayer";
 
@@ -83,12 +84,12 @@ export default function FeaturedSection({ initialData }) {
               const content = (
                 <>
                   <div className="absolute inset-0 z-0 bg-neutral-900">
-                    <img 
+                    <Image
                       src={reel.src} 
                       alt={reel.title} 
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                      loading="lazy"
-                      decoding="async"
+                      fill
+                      sizes="(max-width: 768px) 280px, 320px"
+                      className="object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
                     />
                   </div>
                   <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-transparent to-black/90"></div>
@@ -149,12 +150,12 @@ export default function FeaturedSection({ initialData }) {
               const innerContent = (
                 <>
                   <div className="absolute inset-0 z-0 bg-neutral-900">
-                    <img 
+                    <Image
                       src={item.src} 
                       alt={item.title} 
-                      className="w-full h-full object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
-                      loading="lazy"
-                      decoding="async"
+                      fill
+                      sizes="(max-width: 768px) 85vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transform group-hover/card:scale-105 transition-transform duration-700 ease-out"
                     />
                   </div>
                   

@@ -1,13 +1,15 @@
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedSection from "@/components/FeaturedSection";
-import ServicesSection from "@/components/ServicesSection";
-import ProcessSection from "@/components/ProcessSection";
-import ReviewsSection from "@/components/ReviewsSection";
-import ClientsSection from "@/components/ClientsSection";
-import Footer from "@/components/Footer";
 import FloatingQuickActions from "@/components/FloatingQuickActions";
-import ExploreWorkSection from "@/components/ExploreWorkSection";
+
+const ClientsSection = dynamic(() => import("@/components/ClientsSection"));
+const ServicesSection = dynamic(() => import("@/components/ServicesSection"));
+const ProcessSection = dynamic(() => import("@/components/ProcessSection"));
+const ExploreWorkSection = dynamic(() => import("@/components/ExploreWorkSection"));
+const ReviewsSection = dynamic(() => import("@/components/ReviewsSection"));
+const Footer = dynamic(() => import("@/components/Footer"));
 
 export const revalidate = 60; // Revalidate page every 60 seconds
 

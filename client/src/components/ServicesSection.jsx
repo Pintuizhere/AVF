@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Video, CalendarDays, Clapperboard, Package, Coffee, Camera, Film, CarFront, Calendar, MonitorPlay, Smartphone, Car } from "lucide-react";
 
 const iconMap = {
@@ -106,7 +107,7 @@ export default function ServicesSection({ initialData }) {
                         {/* Background Image if uploaded */}
                         {svc.image && (
                           <div className="absolute inset-0 z-0">
-                            <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50" loading="lazy" decoding="async" />
+                            <Image src={svc.image} alt={svc.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover opacity-50" />
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70 z-10" />
@@ -154,7 +155,7 @@ export default function ServicesSection({ initialData }) {
                     {/* Background Image if uploaded */}
                     {svc.image && (
                       <div className="absolute inset-0 z-0">
-                        <img src={svc.image} alt={svc.title} className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-1000" loading="lazy" decoding="async" />
+                        <Image src={svc.image} alt={svc.title} fill sizes="50vw" className="object-cover opacity-50 group-hover:scale-105 transition-transform duration-1000" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70 z-10" />

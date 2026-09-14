@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 
 export default function ClientsSection({ initialData }) {
   const [brands, setBrands] = useState(initialData?.clients || []);
@@ -76,17 +77,19 @@ export default function ClientsSection({ initialData }) {
                   className="flex-none flex flex-col items-center gap-4 w-[100px] sm:w-[130px] md:w-[150px]"
                 >
                   <div className="w-full aspect-square bg-white rounded-2xl md:rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100/50 flex items-center justify-center p-4 sm:p-6 hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
-                    <img 
+                    <Image
                       src={brand.logoUrl} 
-                      alt={brand.name} 
+                      alt={brand.name}
+                      width={120}
+                      height={120}
                       className="max-w-full max-h-full object-contain"
                       style={{ transform: `scale(${brand.zoom || 1.0})` }}
-                      loading="lazy"
-                      decoding="async"
                       suppressHydrationWarning={true}
                       onError={(e) => {
                         e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'block';
+                        if (e.target.nextElementSibling) {
+                          e.target.nextElementSibling.style.display = 'block';
+                        }
                       }}
                     />
                     <span 
