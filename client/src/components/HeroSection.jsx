@@ -13,45 +13,39 @@ const subtitleLines = [
   { type: 'dot', text: 'TIMELESS IMPACT.', size: 'text-[10px] md:text-xs mt-1' },
 ];
 
-export default function HeroSection() {
-  const [heroData, setHeroData] = useState(null);
+export default function HeroSection({ initialData }) {
+  const fallbackData = {
+    headingLine1: "We Don't Just\nCreate Videos,",
+    headingLine2: "We Tell Stories.",
+    subtitle: "Cinematic Visuals. Powerful Stories.<br />Timeless Impact.",
+    videoReelUrl: "",
+    bgMedia: "/images/hero-bg.jpg",
+    bgMediaType: "image"
+  };
+
+  // Use initialData if provided, otherwise fallback, or null if loading on client only
+  const [heroData, setHeroData] = useState(() => {
+    if (initialData) {
+      return {
+        headingLine1: initialData.headingLine1 || fallbackData.headingLine1,
+        headingLine2: initialData.headingLine2 || fallbackData.headingLine2,
+        subtitle: initialData.subtitle || fallbackData.subtitle,
+        videoReelUrl: initialData.videoReelUrl || fallbackData.videoReelUrl,
+        bgMedia: initialData.bgMedia || fallbackData.bgMedia,
+        bgMediaType: initialData.bgMediaType || fallbackData.bgMediaType
+      };
+    }
+    return fallbackData; // if initialData is null/undefined due to error, use fallback
+  });
+
   const [isReelPlaying, setIsReelPlaying] = useState(false);
   const [activeTextIndex, setActiveTextIndex] = useState(0);
 
   useEffect(() => {
-    const fetchHero = async () => {
-      const fallbackData = {
-        headingLine1: "We Don't Just\nCreate Videos,",
-        headingLine2: "We Tell Stories.",
-        subtitle: "Cinematic Visuals. Powerful Stories.<br />Timeless Impact.",
-        videoReelUrl: "",
-        bgMedia: "/images/hero-bg.jpg",
-        bgMediaType: "image"
-      };
-
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/hero`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        
-        if (data && Object.keys(data).length > 0) {
-          setHeroData({
-            headingLine1: data.headingLine1 || fallbackData.headingLine1,
-            headingLine2: data.headingLine2 || fallbackData.headingLine2,
-            subtitle: data.subtitle || fallbackData.subtitle,
-            videoReelUrl: data.videoReelUrl || fallbackData.videoReelUrl,
-            bgMedia: data.bgMedia || fallbackData.bgMedia,
-            bgMediaType: data.bgMediaType || fallbackData.bgMediaType
-          });
-        } else {
-          setHeroData(fallbackData);
-        }
-      } catch (error) {
-        console.error("Error fetching hero data:", error);
-        setHeroData(fallbackData);
-      }
-    };
-    fetchHero();
+    // Keep this one if there is any dynamic need, else remove it if we just use the prop.
+    // Since we're passing data, we don't need to fetch here anymore.
+    // If we wanted to update it on the client side, we could use SWR or React Query,
+    // but for now, we rely on the Server Component's initialData (ISR).
   }, []);
 
   useEffect(() => {

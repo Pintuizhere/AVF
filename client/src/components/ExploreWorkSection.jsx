@@ -6,33 +6,20 @@ import Link from "next/link";
 import { ArrowUpRight, Loader2, Play } from "lucide-react";
 import InlineVideoPlayer from "./InlineVideoPlayer";
 
-export default function ExploreWorkSection() {
+export default function ExploreWorkSection({ initialData }) {
   const [activeTab, setActiveTab] = useState("ALL");
-  const [workItems, setWorkItems] = useState([]);
-  const [categories, setCategories] = useState(["ALL"]);
-  const [loading, setLoading] = useState(true);
+  const [workItems, setWorkItems] = useState(initialData || []);
+  const [categories, setCategories] = useState(() => {
+    if (initialData && Array.isArray(initialData)) {
+      return ["ALL", ...new Set(initialData.map(item => item.category))];
+    }
+    return ["ALL"];
+  });
+  const [loading, setLoading] = useState(false);
   const [playingCardId, setPlayingCardId] = useState(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`);
-        if (res.ok) {
-          const data = await res.json();
-          setWorkItems(data);
-          
-          // Extract unique categories
-          const uniqueCats = ["ALL", ...new Set(data.map(item => item.category))];
-          setCategories(uniqueCats);
-        }
-      } catch (err) {
-        console.error("Failed to fetch projects", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchProjects();
+    // Data is loaded via initialData from Server Component
   }, []);
 
   const filteredWork = activeTab === "ALL" ? workItems : workItems.filter(w => w.category === activeTab);

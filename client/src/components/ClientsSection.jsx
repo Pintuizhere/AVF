@@ -2,36 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 
-export default function ClientsSection() {
-  const [brands, setBrands] = useState([]);
-  const [heading, setHeading] = useState("Our Clients");
+export default function ClientsSection({ initialData }) {
+  const [brands, setBrands] = useState(initialData?.clients || []);
+  const [heading, setHeading] = useState(initialData?.settings?.clientsSectionHeading || "Our Clients");
   const scrollRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [brandsRes, settingsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/clients?t=` + Date.now()),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings?t=` + Date.now())
-        ]);
-        
-        if (brandsRes.ok) {
-          const brandsData = await brandsRes.json();
-          setBrands(brandsData);
-        }
-
-        if (settingsRes.ok) {
-          const settingsData = await settingsRes.json();
-          if (settingsData.clientsSectionHeading) {
-            setHeading(settingsData.clientsSectionHeading);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load client data", err);
-      }
-    };
-    fetchData();
+    // We already have the initial data from the Server Component
+    // No need to fetch on client side on mount for SEO and performance
   }, []);
 
   useEffect(() => {

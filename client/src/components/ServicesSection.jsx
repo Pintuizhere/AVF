@@ -29,37 +29,24 @@ const bgColors = [
   "from-cyan-900/80 to-black"
 ];
 
-export default function ServicesSection() {
+export default function ServicesSection({ initialData }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [servicesData, setServicesData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+  
+  // Filter out "Automotive" and "Reels", then slice to max 6 items
+  const [servicesData, setServicesData] = useState(() => {
+    if (!initialData || !Array.isArray(initialData)) return [];
+    return initialData
+      .filter(svc => {
+        const title = svc.title.toLowerCase();
+        return !title.includes('automotive') && !title.includes('reel');
+      })
+      .slice(0, 6);
+  });
+  
   useEffect(() => {
-    fetchServices();
+    // Data is loaded via initialData from Server Component
   }, []);
 
-  const fetchServices = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/services`);
-      const data = await res.json();
-      
-      // Filter out "Automotive" and "Reels", then slice to max 6 items
-      const filteredData = data
-        .filter(svc => {
-          const title = svc.title.toLowerCase();
-          return !title.includes('automotive') && !title.includes('reel');
-        })
-        .slice(0, 6);
-        
-      setServicesData(filteredData);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) return null; // or a skeleton
   if (servicesData.length === 0) return null;
 
   return (

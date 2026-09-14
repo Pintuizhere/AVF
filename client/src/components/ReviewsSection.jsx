@@ -3,12 +3,12 @@
 import { ArrowRight, ArrowLeft, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export default function ReviewsSection() {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function ReviewsSection({ initialData }) {
+  const [reviews, setReviews] = useState(initialData?.testimonials || []);
+  const [loading, setLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState(3);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(initialData?.settings?.testimonialsSectionVisible ?? true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,7 +20,7 @@ export default function ReviewsSection() {
   }, []);
 
   useEffect(() => {
-    fetchTestimonials();
+    // Data is loaded via initialData from Server Component
   }, []);
 
   useEffect(() => {
@@ -35,28 +35,6 @@ export default function ReviewsSection() {
     
     return () => clearInterval(interval);
   }, [reviews.length, visibleCards]);
-
-  const fetchTestimonials = async () => {
-    try {
-      const [testRes, settingsRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/testimonials`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`)
-      ]);
-      const data = await testRes.json();
-      setReviews(data);
-
-      if (settingsRes.ok) {
-        const settingsData = await settingsRes.json();
-        if (settingsData.testimonialsSectionVisible !== undefined) {
-          setIsVisible(settingsData.testimonialsSectionVisible);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!isVisible) return null;
 

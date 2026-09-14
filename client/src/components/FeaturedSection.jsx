@@ -6,34 +6,20 @@ import Link from "next/link";
 import StatsSection from "./StatsSection";
 import InlineVideoPlayer from "./InlineVideoPlayer";
 
-export default function FeaturedSection() {
+export default function FeaturedSection({ initialData }) {
   const scrollContainerRefHorizontal = useRef(null);
   const scrollContainerRefVertical = useRef(null);
   
-  const [featuredItems, setFeaturedItems] = useState([]);
-  const [shortsItems, setShortsItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isVisible, setIsVisible] = useState(true);
+  const [featuredItems, setFeaturedItems] = useState(initialData?.featured || []);
+  const [shortsItems, setShortsItems] = useState(initialData?.shorts || []);
+  const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(initialData?.settings?.featuredSectionVisible ?? true);
   
   // Track which card is currently playing video
   const [playingCardId, setPlayingCardId] = useState(null);
 
   useEffect(() => {
-    Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/featured`).then(res => res.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/shorts`).then(res => res.json()),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/settings`).then(res => res.json())
-    ]).then(([featuredData, shortsData, settingsData]) => {
-      setFeaturedItems(featuredData);
-      setShortsItems(shortsData);
-      if (settingsData && settingsData.featuredSectionVisible !== undefined) {
-        setIsVisible(settingsData.featuredSectionVisible);
-      }
-    }).catch(err => {
-      console.error(err);
-    }).finally(() => {
-      setLoading(false);
-    });
+    // Data is loaded via initialData from Server Component
   }, []);
 
   const scroll = (direction) => {
