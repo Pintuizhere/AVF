@@ -5,17 +5,17 @@ import ContactFormSection from "@/components/ContactFormSection";
 import ContactFeaturesSection from "@/components/ContactFeaturesSection";
 
 export const metadata = {
-  title: "Contact Us | Akash Verma Film Products",
-  description: "Have a story to tell? Let's create it together. Get in touch with our team.",
+  title: "Contact Us | AVF Production – Film & Video Production Company",
+  description: "Get in touch with AVF Production for professional video production, photography, commercials, film production, events, and creative visual projects in India.",
 };
 
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-black text-white">
       <Navbar />
-      
+
       <ContactHeroSection />
-      
+
       <ContactFormSection />
 
       <ContactFeaturesSection />

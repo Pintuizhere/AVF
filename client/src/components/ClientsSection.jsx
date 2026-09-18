@@ -43,7 +43,7 @@ export default function ClientsSection({ initialData }) {
   const repeatedBrands = Array(2).fill(brands).flat();
 
   return (
-    <section className="bg-[#f8f9fa] text-black py-16 overflow-hidden">
+    <section className="bg-[#f8f9fa] text-black py-6 overflow-hidden">
       <div className="container mx-auto max-w-[1400px] px-6 mb-10">
         <div className="flex justify-start mb-10">
           <div className="flex items-center gap-4">
@@ -64,7 +64,7 @@ export default function ClientsSection({ initialData }) {
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => setIsPaused(false)}
       >
-        <div className="flex w-max pb-6">
+        <div className="flex w-max pb-0">
           {/* Render the brand list twice for seamless infinite scrolling */}
           {[1, 2].map((setIndex) => (
             <div 
