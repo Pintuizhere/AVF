@@ -32,6 +32,10 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://avfproduction.co'),
+  applicationName: "AVF Production",
+  appleWebApp: {
+    title: "AVF Production",
+  },
   title: {
     default: "AVF Production | Video Production House in Ranchi, Jharkhand",
     template: "%s | AVF Production"

@@ -50,6 +50,17 @@ export default async function Home() {
 
   return (
     <div className="bg-black text-white min-h-screen font-sans selection:bg-gold selection:text-black relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "AVF Production",
+            "url": "https://avfproduction.co/"
+          })
+        }}
+      />
       <Navbar />
       <FloatingQuickActions />
       
