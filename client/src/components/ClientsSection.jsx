@@ -44,8 +44,8 @@ export default function ClientsSection({ initialData }) {
 
   return (
     <section className="bg-[#f8f9fa] text-black py-6 overflow-hidden">
-      <div className="container mx-auto max-w-[1400px] px-6 mb-10">
-        <div className="flex justify-start mb-10">
+      <div className="container mx-auto max-w-[1400px] px-6 mb-6 md:mb-10">
+        <div className="flex justify-start">
           <div className="flex items-center gap-4">
             <div className="h-[2px] w-12 bg-[#fbbf24]"></div>
             <h3 className="font-extrabold text-sm sm:text-base tracking-[0.2em] uppercase text-black">
