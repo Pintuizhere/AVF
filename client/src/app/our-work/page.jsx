@@ -2,22 +2,22 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WorkHeroSection from "@/components/WorkHeroSection";
 import WorkGridContainer from "@/components/WorkGridContainer";
-import { 
-  Film, 
-  CalendarDays, 
-  Video, 
-  Package, 
-  UtensilsCrossed, 
-  Camera, 
-  Diamond, 
-  Smartphone 
+import {
+  Film,
+  CalendarDays,
+  Video,
+  Package,
+  UtensilsCrossed,
+  Camera,
+  Diamond,
+  Smartphone
 } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: "Our Work | Akash Verma Film Products",
-  description: "Explore our portfolio of documentaries, events, commercials, and more.",
+  title: "Our Work | AVF Production - Portfolio & Visual Projects",
+  description: "Explore the diverse portfolio of AVF Production. View our latest documentaries, commercial videos, wedding photography, and creative visual storytelling.",
 };
 
 async function getProjects() {
@@ -33,14 +33,14 @@ async function getProjects() {
 
 export default async function OurWorkPage() {
   const projects = await getProjects();
-  
+
   // Extract unique categories
   const uniqueCategories = [...new Set(projects.map(p => p.category))].filter(Boolean);
 
   return (
     <main className="min-h-screen bg-black text-white">
       <Navbar />
-      
+
       <WorkHeroSection />
 
       <WorkGridContainer customCategories={uniqueCategories} projects={projects} />
