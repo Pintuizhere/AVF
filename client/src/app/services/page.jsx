@@ -4,8 +4,8 @@ import ServicesHeroSection from "@/components/ServicesHeroSection";
 import ServicesGridSection from "@/components/ServicesGridSection";
 
 export const metadata = {
-  title: "Services | AVF - Akash Verma Film Products",
-  description: "End-to-end visual storytelling services by AVF including documentaries, events, commercials, products, food, model photography, and reels.",
+  title: "Our Services | AVF Production - Video, Photography & Visual Arts",
+  description: "Explore AVF Production's premium services, including documentary filmmaking, commercial video production, wedding photography, and creative visual storytelling.",
 };
 
 export default function ServicesPage() {

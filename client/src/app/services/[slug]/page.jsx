@@ -37,12 +37,12 @@ export function generateMetadata({ params }) {
   
   if (!service) {
     return {
-      title: "Service Not Found | AVF",
+      title: "Service Not Found | AVF Production",
     };
   }
 
   return {
-    title: `${service.title} | AVF - Akash Verma Film Products`,
+    title: `${service.title} | AVF Production`,
     description: service.description,
   };
 }
