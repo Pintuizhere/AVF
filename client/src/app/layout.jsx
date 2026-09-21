@@ -85,12 +85,24 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AVF Production",
+    "alternateName": ["AVF", "AVFProduction"],
+    "url": "https://avfproduction.co/"
+  };
+
   return (
     <html
       lang="en"
       className={`${outfit.variable} ${constanley.variable} ${geistMono.variable} ${bebasNeue.variable} ${montserrat.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#0a0a0a] text-white">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <ScrollToTop />
         <div className="flex-1 w-full overflow-x-hidden relative">
           {children}
