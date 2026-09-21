@@ -43,8 +43,8 @@ export default function ClientsSection({ initialData }) {
   const repeatedBrands = Array(2).fill(brands).flat();
 
   return (
-    <section className="bg-[#f8f9fa] text-black py-6 overflow-hidden">
-      <div className="container mx-auto max-w-[1400px] px-6 mb-6 md:mb-10">
+    <section className="bg-[#f8f9fa] text-black py-4 overflow-hidden">
+      <div className="container mx-auto max-w-[1400px] px-6 mb-4 md:mb-6">
         <div className="flex justify-start">
           <div className="flex items-center gap-4">
             <div className="h-[2px] w-12 bg-[#fbbf24]"></div>
@@ -58,7 +58,7 @@ export default function ClientsSection({ initialData }) {
       {/* Infinite Marquee / Swipeable Container */}
       <div 
         ref={scrollRef}
-        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-4"
+        className="flex w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-2"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={() => setIsPaused(true)}
@@ -69,14 +69,14 @@ export default function ClientsSection({ initialData }) {
           {[1, 2].map((setIndex) => (
             <div 
               key={setIndex}
-              className="flex items-start gap-4 md:gap-8 pr-4 md:pr-8 w-max flex-nowrap"
+              className="flex items-start gap-4 md:gap-6 pr-4 md:pr-6 w-max flex-nowrap"
             >
               {repeatedBrands.map((brand, i) => (
                 <div 
                   key={`${setIndex}-${i}`} 
-                  className="flex-none flex flex-col items-center gap-4 w-[100px] sm:w-[130px] md:w-[150px]"
+                  className="flex-none flex flex-col items-center gap-4 w-[85px] sm:w-[110px] md:w-[125px]"
                 >
-                  <div className="w-full aspect-square bg-white rounded-2xl md:rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100/50 flex items-center justify-center p-4 sm:p-6 hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
+                  <div className="w-full aspect-square bg-white rounded-xl md:rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100/50 flex items-center justify-center p-3 sm:p-5 hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
                     <Image
                       src={brand.logoUrl} 
                       alt={brand.name}
